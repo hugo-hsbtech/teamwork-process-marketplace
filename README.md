@@ -1,14 +1,14 @@
-# teamwork-process-marketplace
+# Teamwork Process Marketplace
 
 > The **`hsb-tech`** Claude Code plugin marketplace — and the development home of
 > **`hsb-teamwork`**, a demand-to-delivery toolkit for Claude Code and Codex.
 
-| | |
-|---|---|
-| **Marketplace** | `hsb-tech` |
-| **Plugin** | `hsb-teamwork` (v0.1.0) |
-| **Author** | Hugo Seabra |
-| **Repo** | `hugo-hsbtech/teamwork-process-marketplace` |
+|                 |                                             |
+|-----------------|---------------------------------------------|
+| **Marketplace** | `hsb-tech`                                  |
+| **Plugin**      | `hsb-teamwork` (v0.1.0)                     |
+| **Author**      | Hugo Seabra                                 |
+| **Repo**        | `hugo-hsbtech/teamwork-process-marketplace` |
 
 This repository is two things at once:
 
@@ -46,12 +46,12 @@ Torres), Theory of Constraints (Goldratt), Lean Software Development
 A **multi-step toolkit**. Each step is a skill, invoked as `/hsb-teamwork:<skill>`
 on Claude Code or `/hsb-teamwork-<skill>` on Codex.
 
-| Step | Skill | Status |
-|---|---|---|
-| Intake | **`intake-brainstorm`** | ✅ available |
-| Readiness | `readiness-package` | 🔜 planned |
-| Tech assessment | `tech-assessment` | 🔜 planned |
-| PRD | `prd-generation` | 🔜 planned |
+| Step            | Skill                   | Status      |
+|-----------------|-------------------------|-------------|
+| Intake          | **`intake-brainstorm`** | ✅ available |
+| Readiness       | `readiness-package`     | 🔜 planned  |
+| Tech assessment | `tech-assessment`       | 🔜 planned  |
+| PRD             | `prd-generation`        | 🔜 planned  |
 
 Planned steps reuse the same agents and reference files, so the mechanics below
 carry across the whole toolkit.
@@ -89,7 +89,7 @@ own context lean by delegating the heavy work.
 
 ```mermaid
 flowchart TD
-    H(["Submitter / human"]) -->|"statement + files + language"| O["Orchestrator<br/>(the conversation)"]
+    H(["Submitter / human"]) -->|" statement + files + language "| O["Orchestrator<br/>(the conversation)"]
 
     subgraph P1["Phase 1 · Setup"]
         TV["Template Validator"] --> TA["Template Analyst"]
@@ -114,21 +114,20 @@ flowchart TD
 
     CONTRACT --> QS
     SRC --> FE
-    QS -.proposes Q.-> LW
-    FE -.proposes A.-> LW
-    RC -.resolves.-> LW
-    O <-->|"open questions / answers"| H
+    QS -. proposes Q .-> LW
+    FE -. proposes A .-> LW
+    RC -. resolves .-> LW
+    O <-->|" open questions / answers "| H
     LW --> DU --> CA
-    CA -->|"gate open · re-ask"| QS
-    CA -->|"conflict"| RC
+    CA -->|" gate open · re-ask "| QS
+    CA -->|" conflict "| RC
     CA --> RR
-    CA -->|"gate clear"| HU
-
+    CA -->|" gate clear "| HU
     LEDGER --> GK
     DOC --> GK
-    GLOSS -.terms.-> DU
-    GLOSS -.terms.-> HU
-    GLOSS -.terms.-> TR
+    GLOSS -. terms .-> DU
+    GLOSS -. terms .-> HU
+    GLOSS -. terms .-> TR
 
     subgraph P3["Phase 3 · Production (isolated, parallel variants)"]
         HU["Humanizer"] --> HMD[("humanized.md")]
@@ -145,7 +144,7 @@ flowchart TD
     TMD --> PK
     EMD --> PK
     PK --> O
-    O -->|"report + readiness"| H
+    O -->|" report + readiness "| H
 ```
 
 - **Phase 1 — Setup:** the Validator checks the template; then the Source Indexer
@@ -164,23 +163,23 @@ flowchart TD
 
 ### The 15 agents (+ orchestrator)
 
-| Phase | Agent | Role |
-|---|---|---|
-| 1 | `intake-template-validator` | validates the template (read-only) |
-| 1 | `intake-source-indexer` | writes `sources/`, `sources-index.md` |
-| 1 | `intake-template-analyst` | writes `contract.lock.md` (+ hash / restart) |
-| 2 | `intake-question-strategist` | proposes next questions (read-only) |
-| 2 | `intake-file-extraction` | proposes answers from files (read-only) |
-| 2 | `intake-reconciler` | resolves evidence conflicts (read-only) |
-| 2 | `intake-ledger-writer` | writes `qa-log.md` |
-| 2 | `intake-doc-updater` | writes `target-document.md` |
-| 2 | `intake-glossary-keeper` | writes `glossary.md` |
-| 2 | `intake-readiness-reporter` | writes `readiness-report.md` |
-| 2 | `intake-confidence-auditor` | re-scores + gate verdict (read-only) |
-| 3 | `intake-humanizer` | writes `output/humanized.md` |
-| 3 | `intake-translator` | writes `output/translated.<lang>.md` |
-| 3 | `intake-visual-enricher` | writes `output/enriched.md` |
-| 4 | `intake-packager` | writes `output/manifest.md` |
+| Phase | Agent                        | Role                                         |
+|-------|------------------------------|----------------------------------------------|
+| 1     | `intake-template-validator`  | validates the template (read-only)           |
+| 1     | `intake-source-indexer`      | writes `sources/`, `sources-index.md`        |
+| 1     | `intake-template-analyst`    | writes `contract.lock.md` (+ hash / restart) |
+| 2     | `intake-question-strategist` | proposes next questions (read-only)          |
+| 2     | `intake-file-extraction`     | proposes answers from files (read-only)      |
+| 2     | `intake-reconciler`          | resolves evidence conflicts (read-only)      |
+| 2     | `intake-ledger-writer`       | writes `qa-log.md`                           |
+| 2     | `intake-doc-updater`         | writes `target-document.md`                  |
+| 2     | `intake-glossary-keeper`     | writes `glossary.md`                         |
+| 2     | `intake-readiness-reporter`  | writes `readiness-report.md`                 |
+| 2     | `intake-confidence-auditor`  | re-scores + gate verdict (read-only)         |
+| 3     | `intake-humanizer`           | writes `output/humanized.md`                 |
+| 3     | `intake-translator`          | writes `output/translated.<lang>.md`         |
+| 3     | `intake-visual-enricher`     | writes `output/enriched.md`                  |
+| 4     | `intake-packager`            | writes `output/manifest.md`                  |
 
 ### Session artifacts
 
