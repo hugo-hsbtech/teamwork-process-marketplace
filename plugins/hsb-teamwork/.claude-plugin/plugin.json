@@ -1,0 +1,9 @@
+{
+  "name": "hsb-teamwork",
+  "version": "0.1.0",
+  "description": "HSB Teamwork — a demand-to-delivery toolkit. Each step is a skill invoked as /hsb-teamwork:<skill>. Available: intake-brainstorm (raw demand -> a fully-filled, confidence-graded document via a multi-agent pipeline, plus humanized/translated/enriched variants). Planned: readiness-package, tech-assessment, prd-generation. Template-driven and portable; includes a Codex adapter.",
+  "author": { "name": "Hugo Seabra", "email": "contato.hsbtec@gmail.com" },
+  "homepage": "https://github.com/hugo-hsbtech/teamwork-process-marketplace",
+  "repository": "https://github.com/hugo-hsbtech/teamwork-process-marketplace",
+  "keywords": ["intake", "brainstorm", "requirements", "triage", "product", "multi-agent", "codex"]
+}
