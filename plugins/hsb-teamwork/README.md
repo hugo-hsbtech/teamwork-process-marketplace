@@ -1,9 +1,14 @@
-# Get started — hsb-teamwork
+# hsb-teamwork
 
-A multi-agent pipeline that turns a rough demand description (and any files you
-point at) into a fully-filled, confidence-graded document, then humanized,
-translated, and visually-enriched variants. It runs on **Claude Code** and on
-**Codex**. Pick your tool below.
+> ↑ Part of the **`hsb-tech`** marketplace. For the project overview, the
+> architecture of the pipeline, and the eval suite, see the
+> [repository README](../../README.md).
+
+A demand-to-delivery toolkit for **Claude Code** and **Codex**. Its first skill,
+`intake-brainstorm`, turns a rough demand description (and any files you point at)
+into a fully-filled, confidence-graded document, then produces humanized,
+translated, and visually-enriched variants. This page is the **install-and-use
+guide**; pick your tool below.
 
 - Marketplace: **`hsb-tech`** · Plugin: **`hsb-teamwork`**
 - Author: Hugo Seabra · Dedicated repo: `hugo-hsbtech/teamwork-process-marketplace`
@@ -11,7 +16,8 @@ translated, and visually-enriched variants. It runs on **Claude Code** and on
 **`hsb-teamwork` is a multi-step toolkit.** Today it ships one skill,
 `intake-brainstorm`. Planned siblings in the same plugin: `readiness-package`,
 `tech-assessment`, `prd-generation` — each invoked as `/hsb-teamwork:<skill>`
-(Claude) or `/hsb-teamwork-<skill>` (Codex).
+(Claude) or `/hsb-teamwork-<skill>` (Codex). They share this plugin's agents and
+reference files, so the pipeline mechanics carry across every step.
 
 ---
 
