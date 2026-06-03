@@ -12,6 +12,10 @@ import re, sys, json
 
 SENTINEL = "<!-- END OF DOCUMENT -->"
 ANNOT = re.compile(r"<!--\s*intake:\s*(.*?)\s*-->")
+# Evals are en-US only (the eval prompts force en-US output regardless of source
+# language), so the grader matches the canonical English field labels and the
+# contract's English disposition enum. Honest dispositions clear the blocking gate
+# even below min-confidence; direct answers (answered/inferred) clear via confidence.
 HONEST = {"assumption", "discovery", "deferred"}
 TRUNC = ["(unchanged)", "[continues]", "remaining sections omitted",
          "[fill]", "[placeholder]", "[Demand name]"]

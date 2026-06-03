@@ -51,11 +51,16 @@ for e in json.load(open("evals.json"))["evals"]:
     [ -n "$seed" ] && cp "$seed" "$OUT/seed.md" 2>/dev/null || true
     p="${prompt//\{OUT\}/$OUT}"
     echo "== eval $id ($name) [$mode] =="
+    # NOTE: redirect claude's stdin from /dev/null. This loop is fed by a pipe
+    # (the python3 case list), and `claude -p` reads stdin — without </dev/null it
+    # drains the remaining case lines, so the loop runs only once AND the agent
+    # receives the leaked lines as instructions (running the wrong cases). See the
+    # case-list pipe at the `| while read` above.
     if [ "$mode" = "baseline" ]; then
       # Baseline: same task, explicitly WITHOUT the skill, from a clean cwd.
-      ( cd "$REPO_ROOT" && claude -p "Do NOT use any skill or plugin. $p" ) >"$OUT/agent.log" 2>&1 || true
+      ( cd "$REPO_ROOT" && claude -p "Do NOT use any skill or plugin. $p" ) </dev/null >"$OUT/agent.log" 2>&1 || true
     else
-      ( cd "$REPO_ROOT" && claude -p "$p" ) >"$OUT/agent.log" 2>&1 || true
+      ( cd "$REPO_ROOT" && claude -p "$p" ) </dev/null >"$OUT/agent.log" 2>&1 || true
     fi
     if [ -f "$OUT/target-document.md" ]; then
       res=$(grade "$OUT/target-document.md") || res="FAIL\t-\t-"

@@ -1,268 +1,268 @@
-# Documento do Submitter — Room Access Control (Controle de Acesso à Sala)
+# Submitter Document — Room Access Control
 
-> **Este é o documento do Submitter** — o primeiro artefato da jornada (`00`) e o entregável da persona Submitter. Ele **tangibiliza** o modelo de [`personas/01-submitter.md`](../personas/01-submitter.md): o raciocínio (requisitos de compliance, geração de ToDos, fórmula de score) vive na persona; este documento o **instancia** por demanda, na **linguagem do Submitter** — problema, valor, dor, oportunidade. Cada resposta carrega o quão sólida ela é e de onde veio: a camada de confiança viaja *com* a captura.
+> **This is the Submitter Document** — the first artifact of the journey (`00`) and the deliverable of the Submitter persona. It **makes tangible** the model from [`personas/01-submitter.md`](../personas/01-submitter.md): the reasoning (compliance requirements, ToDo generation, score formula) lives in the persona; this document **instantiates** it per demand, in the **Submitter's language** — problem, value, pain, opportunity. Each answer carries how solid it is and where it came from: the confidence layer travels *with* the capture.
 >
-> **Jornada:** `00 Documento do Submitter` → [`01 Intake Record (PO — triagem)`](./01-intake-record-access-control.md) → [`02 Readiness Package (PO)`](./02-readiness-package-access-control.md) → [`03 Technical Assessment (CTO)`](./03-technical-assessment-access-control.md) → [`04 PRD (PO+CTO → PM)`](./04-prd-access-control.md). Ver [`README.md`](./README.md).
+> **Journey:** `00 Submitter Document` → [`01 Intake Record (PO — triage)`](./01-intake-record-access-control.md) → [`02 Readiness Package (PO)`](./02-readiness-package-access-control.md) → [`03 Technical Assessment (CTO)`](./03-technical-assessment-access-control.md) → [`04 PRD (PO+CTO → PM)`](./04-prd-access-control.md). See [`README.md`](./README.md).
 >
-> **Nada antecede este documento como artefato.** O que vem antes é **sinal cru** — chamada de pré-fechamento com o cliente, thread de email com Vendas, anotação de reunião — que **não é artefato**. Esse sinal entra *aqui* como evidência/fonte (disposição `inferred`, com `source`); é a **captura** que o transforma neste primeiro documento formal.
+> **Nothing precedes this document as an artifact.** What comes before is **raw signal** — a pre-close call with the customer, an email thread with Sales, a meeting note — which **is not an artifact**. That signal enters *here* as evidence/source (disposition `inferred`, with `source`); it is the **capture** that transforms it into this first formal document.
 >
-> **Handoff:** congela quando `gateReady = true` (todo requisito bloqueante resolvido por uma disposição honesta) e é entregue ao **PO**, que o formaliza e tria no [`01 Intake Record`](./01-intake-record-access-control.md).
+> **Handoff:** it freezes when `gateReady = true` (every blocking requirement resolved by an honest disposition) and is handed off to the **PO**, who formalizes and triages it in the [`01 Intake Record`](./01-intake-record-access-control.md).
 
-## As duas lentes (toda demanda é lida pelas duas ao mesmo tempo)
+## The two lenses (every demand is read through both at the same time)
 
-> Ver [`personas/01-submitter.md` §2](../personas/01-submitter.md). Os ToDos vivem onde as lentes se cruzam: "dado o que *esta* demanda significa, o que o contrato ainda precisa?"
+> See [`personas/01-submitter.md` §2](../personas/01-submitter.md). The ToDos live where the lenses intersect: "given what *this* demand means, what does the contract still need?"
 
-| Lente | O que é | Onde aparece neste documento |
+| Lens | What it is | Where it appears in this document |
 |---|---|---|
-| **Contrato** (determinístico) | Os requisitos fixos de compliance que toda demanda precisa satisfazer para avançar | **Resumo de Prontidão** + os requisitos numerados (score + pendências) |
-| **Semântica** (contextual) | O que *esta* demanda significa: a dor real (acesso aberto expõe identidades em cerimônias mistas), sua tese de valor (deal de R$ 42k bloqueado), suas incógnitas (Azure AD, LGPD, Jira) | **Enunciado do Problema**, **Impacto**, **Indicadores de Valor** e suas tensões |
+| **Contract** (deterministic) | The fixed compliance requirements that every demand must satisfy to advance | **Readiness Summary** + the numbered requirements (score + open items) |
+| **Semantic** (contextual) | What *this* demand means: the real pain (open access exposes identities in mixed ceremonies), its value thesis (R$ 42k deal blocked), its unknowns (Azure AD, LGPD, Jira) | **Problem Statement**, **Impact**, **Value Indicators** and their tensions |
 
-## Metadados
+## Metadata
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
-| **Demanda** | Room Access Control — Controle de Acesso à Sala |
-| **Registrado por** | Rafael Souza (Vendas) |
-| **Data de captura** | 2026-03-15 |
-| **Status** | Pronto para handoff (`gateReady`) |
-| **Intake Record vinculado** | INT-2026-002 (atribuído pelo PO na triagem) |
+| **Demand** | Room Access Control |
+| **Logged by** | Rafael Souza (Sales) |
+| **Capture date** | 2026-03-15 |
+| **Status** | Ready for handoff (`gateReady`) |
+| **Linked Intake Record** | INT-2026-002 (assigned by the PO at triage) |
 
-## Histórico de Revisão
+## Revision History
 
-| Versão | Data | Evento | Resumo |
+| Version | Date | Event | Summary |
 |---|---|---|---|
-| v1 | 2026-03-15 | Captura iniciada e concluída | Vendas (Rafael Souza) capturou a demanda imediatamente após chamada de pré-fechamento com a Construtora Ágil. Todos os requisitos bloqueantes resolvidos por disposição honesta; 3 incógnitas de integração registradas como Discovery. |
+| v1 | 2026-03-15 | Capture started and completed | Sales (Rafael Souza) captured the demand immediately after a pre-close call with Construtora Ágil. All blocking requirements resolved by honest disposition; 3 integration unknowns logged as Discovery. |
 
 ---
 
-## Resumo de Prontidão (Readiness)
+## Readiness Summary
 
-> Snapshot da captura. O score é derivado dos requisitos abaixo; `low_confidence` conta como parcial. A demanda só é entregue ao PO quando todos os requisitos bloqueantes estão resolvidos (`gateReady = Sim`).
+> Snapshot of the capture. The score is derived from the requirements below; `low_confidence` counts as partial. The demand is only handed off to the PO when all blocking requirements are resolved (`gateReady = Yes`).
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
 | **Readiness Score** | 84 % |
-| **Gate liberado (gateReady)** | Sim |
-| **Requisitos bloqueantes pendentes** | — (todos resolvidos por disposição honesta) |
-| **Dispositions** | 5 respondidos · 1 inferido · 4 premissas · 3 discovery · 0 delegados |
+| **Gate released (gateReady)** | Yes |
+| **Open blocking requirements** | — (all resolved by honest disposition) |
+| **Dispositions** | 5 answered · 1 inferred · 4 assumptions · 3 discovery · 0 delegated |
 
-> **Como ler o score:** os requisitos bloqueantes (1, 2, 3, 4) estão todos resolvidos. O score fica abaixo de 100% porque urgência (req. 5) e constraints (req. 7) têm campos com `low_confidence` e as 3 incógnitas de integração entram como `discovery` — disposição honesta que conta parcialmente no cálculo. Isso não bloqueia o gate; apenas sinaliza o que o PO precisa observar.
+> **How to read the score:** the blocking requirements (1, 2, 3, 4) are all resolved. The score sits below 100% because urgency (req. 5) and constraints (req. 7) have fields with `low_confidence` and the 3 integration unknowns enter as `discovery` — an honest disposition that counts partially in the calculation. This does not block the gate; it only signals what the PO needs to watch.
 
-### Legenda de confiança (aplica-se a cada seção respondida)
+### Confidence legend (applies to each answered section)
 
-| Atributo | Valores |
+| Attribute | Values |
 |---|---|
-| **Confiança** | 0–100 |
-| **Fonte** | Submitter direto · Documento anexo (p.X) · Inferido · Premissa · Outro stakeholder |
-| **Status** | Vazio · Baixa confiança · Resolvido |
-| **Disposição** | Respondido · Inferido · Premissa (a validar) · Discovery (a investigar) · Delegado (dono: __) |
-| **Hint** | Por que a confiança está baixa / o que a elevaria |
+| **Confidence** | 0–100 |
+| **Source** | Submitter direct · Attached document (p.X) · Inferred · Assumption · Other stakeholder |
+| **Status** | Empty · Low confidence · Resolved |
+| **Disposition** | Answered · Inferred · Assumption (to validate) · Discovery (to investigate) · Delegated (owner: __) |
+| **Hint** | Why confidence is low / what would raise it |
 
-> **"Não sei" não bloqueia.** Um requisito atinge prontidão por qualquer disposição honesta — inclusive "ninguém sabe ainda, e este é o plano" (Discovery) ou "estamos assumindo X" (Premissa). Ver [`personas/01-submitter.md` §6](../personas/01-submitter.md).
+> **"I don't know" doesn't block.** A requirement reaches readiness by any honest disposition — including "nobody knows yet, and this is the plan" (Discovery) or "we're assuming X" (Assumption). See [`personas/01-submitter.md` §6](../personas/01-submitter.md).
 
 ---
 
-## Origem  ·  *(Requisito 2 — Originador e contexto)*
+## Origin  ·  *(Requirement 2 — Originator and context)*
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
-| **Fonte** | Cliente |
-| **Cliente / Solicitante** | Construtora Ágil (mid-market, processo de onboarding em andamento) |
-| **Originador e contexto** | Rafael Souza (Vendas), chamada de pré-fechamento em 2026-03-15. TI Lead da Construtora Ágil (Fernanda Ramos) e Scrum Masters participaram da chamada. |
-| **Reportado via** | Chamada de vídeo de pré-fechamento — notas registradas por Rafael imediatamente após a ligação |
+| **Source** | Customer |
+| **Customer / Requester** | Construtora Ágil (mid-market, onboarding process underway) |
+| **Originator and context** | Rafael Souza (Sales), pre-close call on 2026-03-15. Construtora Ágil's IT Lead (Fernanda Ramos) and Scrum Masters joined the call. |
+| **Reported via** | Pre-close video call — notes logged by Rafael immediately after the call |
 
-`Confiança:` 95 · `Fonte:` Submitter direto · `Status:` Resolvido · `Disposição:` Respondido · `Hint:` —
+`Confidence:` 95 · `Source:` Submitter direct · `Status:` Resolved · `Disposition:` Answered · `Hint:` —
 
 ---
 
-## Tipo
+## Type
 
-- [x] Funcionalidade
+- [x] Feature
 - [ ] Bug
-- [ ] Melhoria
+- [ ] Enhancement
 - [x] Compliance
-- [x] Integração
-- [ ] Operacional
+- [x] Integration
+- [ ] Operational
 
 ---
 
-## Enunciado do Problema  ·  *(Requisito 1 — bloqueia gate)*
+## Problem Statement  ·  *(Requirement 1 — blocks gate)*
 
-> Qual a dor existente? Descreva o problema, não a solução.
+> What is the existing pain? Describe the problem, not the solution.
 
-A Construtora Ágil realiza cerimônias de planejamento ágil com equipes mistas: desenvolvedores internos, prestadores externos e gestores de produto. O modelo atual da plataforma é completamente aberto — qualquer pessoa com o link da sala entra, vê os nomes de todos os participantes e pode votar. Isso cria três dores concretas:
+Construtora Ágil runs agile planning ceremonies with mixed teams: internal developers, external contractors, and product managers. The platform's current model is completely open — anyone with the room link gets in, sees the names of all participants, and can vote. This creates three concrete pains:
 
-1. **Ausência de controle de entrada:** prestadores externos com o link conseguem entrar sem aprovação do facilitador, violando a política interna de governança de dados da empresa.
-2. **Falta de anonimato entre votantes:** em sessões com prestadores, a visibilidade cruzada de identidades é proibida pela política interna. Hoje não há como ocultar quem está na sala.
-3. **Sem distinção de papéis:** gerentes de produto e executivos que querem acompanhar a cerimônia sem influenciar as estimativas não têm um modo de observação — ou entram como votantes ou ficam de fora.
+1. **No entry control:** external contractors with the link can join without facilitator approval, violating the company's internal data governance policy.
+2. **No anonymity among voters:** in sessions with contractors, cross-visibility of identities is prohibited by internal policy. Today there is no way to hide who is in the room.
+3. **No role distinction:** product managers and executives who want to follow the ceremony without influencing the estimates have no observation mode — they either join as voters or stay out.
 
-O resultado é que a Construtora Ágil **não pode fazer onboarding** sem que essas lacunas sejam endereçadas. O deal está condicionado à funcionalidade.
+The result is that Construtora Ágil **cannot onboard** without these gaps being addressed. The deal is conditioned on the feature.
 
-`Confiança:` 92 · `Fonte:` Submitter direto · `Status:` Resolvido · `Disposição:` Respondido · `Hint:` —
+`Confidence:` 92 · `Source:` Submitter direct · `Status:` Resolved · `Disposition:` Answered · `Hint:` —
 
 ---
 
-## Quem é Impactado (Alcance)  ·  *(Requisito 3 — bloqueia gate)*
+## Who Is Impacted (Reach)  ·  *(Requirement 3 — blocks gate)*
 
-> Personas, segmentos ou times que sentem essa dor.
+> Personas, segments, or teams that feel this pain.
 
-| Persona / Segmento | Como é impactado |
+| Persona / Segment | How it is impacted |
 |---|---|
-| **Scrum Masters da Construtora Ágil** | Precisam de controle granular de quem entra e o que vê; hoje gerenciam o acesso fora da plataforma (workaround manual). |
-| **Prestadores externos da Construtora Ágil** | Participam de sessões mas não devem ver identidades dos colegas; hoje veem tudo. |
-| **Product Managers / Executivos** | Querem observar as cerimônias sem votar; hoje ou entram como votantes (influenciam o processo) ou não entram. |
-| **TI Lead da Construtora Ágil (Fernanda Ramos)** | Responsável por compliance LGPD e integração Azure AD; precisa de garantias técnicas antes do go-live. |
-| **Deals enterprise em pipeline (2 identificados)** | Outros 2 prospects com o mesmo requisito sinalizado por Vendas em Q1. |
+| **Construtora Ágil's Scrum Masters** | Need granular control over who enters and what they see; today they manage access outside the platform (manual workaround). |
+| **Construtora Ágil's external contractors** | Take part in sessions but should not see peers' identities; today they see everything. |
+| **Product Managers / Executives** | Want to observe the ceremonies without voting; today they either join as voters (influencing the process) or don't join at all. |
+| **Construtora Ágil's IT Lead (Fernanda Ramos)** | Responsible for LGPD compliance and Azure AD integration; needs technical guarantees before go-live. |
+| **Enterprise deals in pipeline (2 identified)** | 2 other prospects with the same requirement flagged by Sales in Q1. |
 
-`Confiança:` 88 · `Fonte:` Submitter direto + inferido da chamada · `Status:` Resolvido · `Disposição:` Respondido · `Hint:` Os 2 deals em pipeline são sinalizações de Vendas, sem confirmação escrita do cliente — confiança ligeiramente abaixo do deal principal.
+`Confidence:` 88 · `Source:` Submitter direct + inferred from the call · `Status:` Resolved · `Disposition:` Answered · `Hint:` The 2 pipeline deals are Sales signals, with no written confirmation from the customer — confidence slightly below the main deal.
 
 ---
 
-## Impacto de Negócio  ·  *(Requisito 4 — bloqueia gate)*
+## Business Impact  ·  *(Requirement 4 — blocks gate)*
 
-> Dimensões aplicáveis quantificadas quando possível.
+> Applicable dimensions quantified when possible.
 
-| Dimensão | Detalhe |
+| Dimension | Detail |
 |---|---|
-| **Receita** | Deal da Construtora Ágil: R$ 42.000/ano (ARR). Condicionado a esta funcionalidade — sem ela, o contrato não fecha. Vendas fez compromisso informal de entrega em 60 dias (a validar com o PM antes de confirmar ao cliente). |
-| **Mercado** | Outros 2 deals enterprise em pipeline com o mesmo requisito sinalizados por Vendas em Q1. Potencial de R$ 84.000+ em ARR adicional se a funcionalidade for genérica o suficiente. |
-| **Retenção** | Não aplicável — cliente ainda não integrado. Passa a ser relevante após o onboarding. |
-| **Operacional** | Scrum Masters usam workarounds manuais hoje (controle de quem recebe o link, notificação fora da plataforma). Impacto operacional real para o facilitador. |
-| **Compliance** | A Construtora Ágil opera sob políticas internas de governança de dados. Requisito LGPD: dados de identidade de participantes devem residir no Brasil. Não é negociável para este cliente. |
+| **Revenue** | Construtora Ágil deal: R$ 42,000/year (ARR). Conditioned on this feature — without it, the contract doesn't close. Sales made an informal delivery commitment of 60 days (to validate with the PM before confirming to the customer). |
+| **Market** | 2 other enterprise deals in pipeline with the same requirement flagged by Sales in Q1. Potential of R$ 84,000+ in additional ARR if the feature is generic enough. |
+| **Retention** | Not applicable — customer not yet onboarded. Becomes relevant after onboarding. |
+| **Operational** | Scrum Masters use manual workarounds today (controlling who receives the link, notifying outside the platform). Real operational impact for the facilitator. |
+| **Compliance** | Construtora Ágil operates under internal data governance policies. LGPD requirement: participant identity data must reside in Brazil. Non-negotiable for this customer. |
 
-`Confiança:` 90 · `Fonte:` Submitter direto (deal principal) + inferido (pipeline) · `Status:` Resolvido · `Disposição:` Respondido · `Hint:` O valor dos 2 deals em pipeline não está quantificado — premissa de que seguem perfil similar à Construtora Ágil. O compromisso de 60 dias de Vendas não tem validação de capacidade; PO deve investigar antes de confirmar.
+`Confidence:` 90 · `Source:` Submitter direct (main deal) + inferred (pipeline) · `Status:` Resolved · `Disposition:` Answered · `Hint:` The value of the 2 pipeline deals is not quantified — assumption that they follow a profile similar to Construtora Ágil. The Sales 60-day commitment has no capacity validation; the PO should investigate before confirming.
 
 ---
 
-## Indicadores de Valor (RICE-lite)
+## Value Indicators (RICE-lite)
 
-> Espelho para desafiar o pensamento — **não** ranking automático. O Esforço fica *soft* (chute do Submitter; firmado depois pelo CTO).
+> A mirror to challenge the thinking — **not** an automatic ranking. Effort stays *soft* (Submitter's guess; firmed up later by the CTO).
 
-| Indicador | Score | Justificativa (na linguagem dele) | Confiança |
+| Indicator | Score | Rationale (in their language) | Confidence |
 |---|---|---|---|
-| **Impacto** ("quanto move o negócio?") | Alto | R$ 42k ARR bloqueado + 2 deals em pipeline com mesmo requisito. Funcionalidade destrava um segmento enterprise que hoje não consegue fazer onboarding. | 88 |
-| **Alcance** ("quantos sentem isso?") | Médio | Afeta diretamente Construtora Ágil + os 2 deals em pipeline. Na plataforma atual, impacta o segmento enterprise/regulado — minoria do volume total mas alto valor por conta. | 75 |
-| **Urgência** ("por que agora? custo de esperar?") | Alto | Cada semana sem a funcionalidade atrasa o fechamento do deal e aumenta o risco de o cliente procurar alternativa. Vendas já fez compromisso informal de 60 dias. | 85 |
-| **Esforço** *(soft — adiado ao CTO)* | Alto | Intuição de Vendas: envolve controle de acesso, integração Azure AD e compliance LGPD. Provavelmente maior do que parece. | low_confidence |
+| **Impact** ("how much does it move the business?") | High | R$ 42k ARR blocked + 2 deals in pipeline with the same requirement. The feature unlocks an enterprise segment that today cannot onboard. | 88 |
+| **Reach** ("how many feel this?") | Medium | Directly affects Construtora Ágil + the 2 pipeline deals. On the current platform, it impacts the enterprise/regulated segment — a minority of total volume but high value per account. | 75 |
+| **Urgency** ("why now? cost of waiting?") | High | Every week without the feature delays closing the deal and increases the risk of the customer looking for an alternative. Sales already made an informal 60-day commitment. | 85 |
+| **Effort** *(soft — deferred to the CTO)* | High | Sales intuition: involves access control, Azure AD integration, and LGPD compliance. Probably larger than it looks. | low_confidence |
 
-> **Tensões registradas:**
-> - **Impacto alto + Alcance médio:** o impacto unitário por conta é alto (R$ 42k), mas o alcance imediato é restrito a um segmento específico. Resolução: o valor por conta é suficiente para justificar; o padrão criado serve de base para o segmento enterprise mais amplo.
-> - **Urgência alta + Esforço (soft) alto:** risco real de o prazo informal de 60 dias não ser viável se o esforço for maior do que o esperado. Disposição: Discovery técnico antes de qualquer compromisso externo de data.
-
----
-
-## Urgência  ·  *(Requisito 5)*
-
-**Prazo / janela:** Vendas fez um compromisso informal ao cliente de entrega em 60 dias a partir de meados de março. Nenhuma data é confirmada até o PM executar avaliação de capacidade. Janela crítica: se o deal não fechar em Q2, entra em risco de churn de prospect.
-
-**Custo de esperar:** A Construtora Ágil não inicia onboarding sem essa funcionalidade. Cada semana de atraso é uma semana de MRR perdida. Além disso, os 2 deals em pipeline podem procurar alternativas se a entrega atrasar muito.
-
-`Confiança:` 80 · `Fonte:` Submitter direto · `Status:` Baixa confiança · `Disposição:` Premissa (a validar) · `Hint:` O prazo de 60 dias é compromisso informal de Vendas, sem validação de capacidade do PM. A confiança sobe após o PM confirmar viabilidade do prazo.
+> **Tensions logged:**
+> - **High Impact + Medium Reach:** the per-account impact is high (R$ 42k), but immediate reach is restricted to a specific segment. Resolution: the value per account is enough to justify it; the pattern created serves as a basis for the broader enterprise segment.
+> - **High Urgency + High Effort (soft):** real risk that the informal 60-day deadline is not viable if the effort is larger than expected. Disposition: technical Discovery before any external date commitment.
 
 ---
 
-## Evidência e Documentos  ·  *(Requisito 6)*
+## Urgency  ·  *(Requirement 5)*
 
-> Anexos ou conversas anteriores que embasam a demanda.
+**Deadline / window:** Sales made an informal commitment to the customer of delivery in 60 days starting mid-March. No date is confirmed until the PM runs a capacity assessment. Critical window: if the deal doesn't close in Q2, it enters prospect churn risk.
 
-| Documento / Conversa | Tipo | Relevância |
+**Cost of waiting:** Construtora Ágil does not start onboarding without this feature. Each week of delay is a week of lost MRR. In addition, the 2 pipeline deals may look for alternatives if delivery slips too much.
+
+`Confidence:` 80 · `Source:` Submitter direct · `Status:` Low confidence · `Disposition:` Assumption (to validate) · `Hint:` The 60-day deadline is an informal Sales commitment, with no PM capacity validation. Confidence rises once the PM confirms the deadline is feasible.
+
+---
+
+## Evidence and Documents  ·  *(Requirement 6)*
+
+> Attachments or prior conversations that back the demand.
+
+| Document / Conversation | Type | Relevance |
 |---|---|---|
-| Notas da chamada de pré-fechamento (2026-03-15) | Notas internas de Vendas | Fonte primária: dor descrita pelos Scrum Masters e pela TI Lead da Construtora Ágil |
-| Email de follow-up de Fernanda Ramos (TI Lead) | Thread de email | Confirmação escrita dos requisitos LGPD e da necessidade de integração Azure AD |
-| Sinalizações de pipeline Q1 (Vendas) | CRM interno | 2 deals com requisito similar identificados por Rafael Souza |
+| Pre-close call notes (2026-03-15) | Internal Sales notes | Primary source: pain described by Construtora Ágil's Scrum Masters and IT Lead |
+| Follow-up email from Fernanda Ramos (IT Lead) | Email thread | Written confirmation of the LGPD requirements and the need for Azure AD integration |
+| Q1 pipeline signals (Sales) | Internal CRM | 2 deals with a similar requirement identified by Rafael Souza |
 
-`Confiança:` 78 · `Fonte:` Submitter direto + documento · `Status:` Baixa confiança · `Disposição:` Respondido · `Hint:` Notas de chamada são da percepção de Vendas, não transcrição. O email de Fernanda eleva a confiança no requisito LGPD/Azure AD. Os sinalizamentos de pipeline são CRM sem detalhamento — PO deve confirmar com Vendas se são requisitos análogos ou apenas similares.
+`Confidence:` 78 · `Source:` Submitter direct + document · `Status:` Low confidence · `Disposition:` Answered · `Hint:` Call notes are Sales' perception, not a transcript. Fernanda's email raises confidence on the LGPD/Azure AD requirement. The pipeline signals are CRM entries without detail — the PO should confirm with Sales whether they are analogous requirements or just similar.
 
 ---
 
-## Stakeholders  ·  *(Requisito 8)*
+## Stakeholders  ·  *(Requirement 8)*
 
-| Stakeholder | Papel | Interesse | Influência |
+| Stakeholder | Role | Interest | Influence |
 |---|---|---|---|
-| Rafael Souza | Vendas — reportador da demanda | Fechar o contrato da Construtora Ágil | Alta |
-| Fernanda Ramos (TI Lead — Construtora Ágil) | Autoridade técnica do cliente | Integração Azure AD e conformidade LGPD confirmadas antes do go-live | Alta |
-| Scrum Masters da Construtora Ágil | Usuários finais primários | Controle de acesso em conformidade para cerimônias com prestadores | Alta |
-| Ana Costa | Customer Success — dona do relacionamento pós-venda | Onboarding tranquilo e saúde pós-fechamento | Média |
-| Lucas Mendes | PO — dono da racionalização | Alinhamento de produto e definição de escopo | Alta |
-| Rodrigo Lima | CTO — avaliação técnica | Integridade arquitetural, conformidade LGPD, viabilidade Azure AD | Alta |
-| CEO | Sponsor executivo | Receita do novo contrato e postura de compliance | Média |
+| Rafael Souza | Sales — demand reporter | Close the Construtora Ágil contract | High |
+| Fernanda Ramos (IT Lead — Construtora Ágil) | Customer's technical authority | Azure AD integration and LGPD compliance confirmed before go-live | High |
+| Construtora Ágil's Scrum Masters | Primary end users | Compliant access control for ceremonies with contractors | High |
+| Ana Costa | Customer Success — owner of the post-sale relationship | Smooth onboarding and post-close health | Medium |
+| Lucas Mendes | PO — owner of the rationalization | Product alignment and scope definition | High |
+| Rodrigo Lima | CTO — technical assessment | Architectural integrity, LGPD compliance, Azure AD feasibility | High |
+| CEO | Executive sponsor | Revenue from the new contract and compliance posture | Medium |
 
-`Confiança:` 92 · `Fonte:` Submitter direto · `Status:` Resolvido · `Disposição:` Respondido · `Hint:` —
-
----
-
-## Premissas
-
-Condições assumidas como verdadeiras na captura. Se uma premissa se provar falsa, a demanda deve ser retriada.
-
-1. A Construtora Ágil está disposta e é capaz de registrar a plataforma como aplicação aprovada no seu tenant Azure AD — `a validar com:` Fernanda Ramos (TI Lead) no início do Discovery
-2. A equipe de TI do cliente pode completar o registro Azure AD dentro da janela de entrega após as especificações técnicas serem fornecidas — `a validar com:` Fernanda Ramos no início do projeto
-3. A camada de autenticação existente (OAuth2) pode ser estendida para validação de group-claim OIDC sem substituição ou reescrita — `a validar com:` CTO (spike técnico)
-4. Conformidade LGPD pode ser alcançada com roteamento por tenant (sem migração completa da plataforma) — `a validar com:` CTO (revisão de infraestrutura)
-5. Integração Jira não é obrigatória para fechar o deal — `a validar com:` Construtora Ágil (chamada com o cliente)
-6. Aliases no modo anônimo são suficientes para compliance — sem necessidade de mascaramento adicional a nível de banco de dados além do que é exibido — `a validar com:` PO + CTO
-7. O escopo do controle de acesso é por sala, não por conta de organização — `a validar com:` PO na racionalização
+`Confidence:` 92 · `Source:` Submitter direct · `Status:` Resolved · `Disposition:` Answered · `Hint:` —
 
 ---
 
-## Constraints  ·  *(Requisito 7)*
+## Assumptions
 
-Condições que limitam o espaço de solução, a respeitar independentemente do que for construído.
+Conditions assumed true at capture. If an assumption proves false, the demand must be re-triaged.
 
-| Constraint | Tipo | Detalhe |
+1. Construtora Ágil is willing and able to register the platform as an approved application in its Azure AD tenant — `to validate with:` Fernanda Ramos (IT Lead) at the start of Discovery
+2. The customer's IT team can complete the Azure AD registration within the delivery window once the technical specs are provided — `to validate with:` Fernanda Ramos at project start
+3. The existing authentication layer (OAuth2) can be extended for OIDC group-claim validation without replacement or rewrite — `to validate with:` CTO (technical spike)
+4. LGPD compliance can be achieved with per-tenant routing (without a full platform migration) — `to validate with:` CTO (infrastructure review)
+5. Jira integration is not required to close the deal — `to validate with:` Construtora Ágil (customer call)
+6. Aliases in anonymous mode are sufficient for compliance — no need for additional database-level masking beyond what is displayed — `to validate with:` PO + CTO
+7. The scope of access control is per room, not per organization account — `to validate with:` PO at rationalization
+
+---
+
+## Constraints  ·  *(Requirement 7)*
+
+Conditions that limit the solution space, to be respected regardless of what is built.
+
+| Constraint | Type | Detail |
 |---|---|---|
-| Prazo do deal (informal) | Tempo | Vendas fez compromisso informal de 60 dias ao cliente. Sem confirmação até avaliação de capacidade do PM. |
-| Conformidade LGPD | Legal / Regulatório | Dados de identidade de participantes de clientes brasileiros devem residir em `sa-east-1`. Inegociável para este cliente. |
-| Dependência Azure AD (lado do cliente) | Externo | A Construtora Ágil controla seu próprio tenant Azure AD. Integração não pode ser completada sem ação do TI deles. O prazo está parcialmente fora do nosso controle. |
-| Sem SSO enterprise completo | Escopo | Apenas validação de group-claim OIDC para este release — não uma implementação SSO/SAML completa. |
-| Compatibilidade retroativa | Técnico | Salas com link aberto existentes devem continuar funcionando sem alterações. Controle de acesso é opt-in por sala, não uma mudança breaking a nível de plataforma. |
-| Sem novos provedores de auth externos | Orçamento | Nenhum novo provedor de identidade (Okta, Auth0, etc.) pode ser contratado. Apenas extensão da camada de auth existente. |
+| Deal deadline (informal) | Time | Sales made an informal 60-day commitment to the customer. Not confirmed until the PM's capacity assessment. |
+| LGPD compliance | Legal / Regulatory | Identity data of Brazilian customers' participants must reside in `sa-east-1`. Non-negotiable for this customer. |
+| Azure AD dependency (customer side) | External | Construtora Ágil controls its own Azure AD tenant. Integration cannot be completed without action from their IT. The timeline is partially outside our control. |
+| No full enterprise SSO | Scope | Only OIDC group-claim validation for this release — not a full SSO/SAML implementation. |
+| Backward compatibility | Technical | Existing open-link rooms must keep working unchanged. Access control is opt-in per room, not a platform-level breaking change. |
+| No new external auth providers | Budget | No new identity provider (Okta, Auth0, etc.) may be contracted. Only an extension of the existing auth layer. |
 
-`Confiança:` 85 · `Fonte:` Submitter direto (constraints de negócio) + inferido (técnicas) · `Status:` Resolvido · `Disposição:` Respondido · `Hint:` As constraints técnicas (compatibilidade retroativa, sem SSO completo) foram confirmadas na chamada pelo TI do cliente. O constraint de prazo tem confiança mais baixa porque é compromisso informal.
+`Confidence:` 85 · `Source:` Submitter direct (business constraints) + inferred (technical) · `Status:` Resolved · `Disposition:` Answered · `Hint:` The technical constraints (backward compatibility, no full SSO) were confirmed on the call by the customer's IT. The deadline constraint has lower confidence because it is an informal commitment.
 
 ---
 
-## Riscos Preliminares
+## Preliminary Risks
 
-Riscos identificados na captura — antes da avaliação técnica. Registro completo pertence ao Readiness Package.
+Risks identified at capture — before the technical assessment. The full register belongs to the Readiness Package.
 
-| Risco | Categoria | Avaliação Inicial |
+| Risk | Category | Initial Assessment |
 |---|---|---|
-| Registro Azure AD atrasado pelo TI do cliente | Externo / Prazo | Médio — dependência fora do nosso controle; mitigação: fornecer spec e checklist ao TI do cliente cedo |
-| Postura LGPD requer trabalho de infraestrutura além do esperado | Compliance | Médio — CTO deve confirmar escopo antes do compromisso |
-| Compromisso informal de prazo de Vendas conflita com capacidade real | Operacional | Alto — PM deve executar avaliação de capacidade antes de qualquer comunicação externa |
-| Integração Jira escalada para obrigatória durante a entrega | Escopo | Baixo — a ser encerrado definitivamente em chamada com o cliente |
-| Pressão de expansão de escopo (audit logs, SSO, guest access) | Escopo | Médio — exclusões explícitas devem ser documentadas e aplicadas pelo PO |
+| Azure AD registration delayed by the customer's IT | External / Timeline | Medium — dependency outside our control; mitigation: provide spec and checklist to the customer's IT early |
+| LGPD posture requires more infrastructure work than expected | Compliance | Medium — CTO must confirm scope before committing |
+| Sales' informal deadline commitment conflicts with real capacity | Operational | High — PM must run a capacity assessment before any external communication |
+| Jira integration escalated to mandatory during delivery | Scope | Low — to be settled definitively in a customer call |
+| Scope-creep pressure (audit logs, SSO, guest access) | Scope | Medium — explicit exclusions must be documented and enforced by the PO |
 
 ---
 
-## Limite de Escopo de Alto Nível
+## High-Level Scope Boundary
 
-**Dentro:** Modos de acesso (Aberto / Somente convite / Aprovação obrigatória), modo anônimo, atribuição de papel Votante/Observador, remoção de participante, mapeamento de group-claim Azure AD OIDC, roteamento de residência de dados `sa-east-1` por cliente com flag LGPD.
+**In:** Access modes (Open / Invite-only / Approval required), anonymous mode, Voter/Observer role assignment, participant removal, Azure AD OIDC group-claim mapping, per-customer `sa-east-1` data residency routing with an LGPD flag.
 
-**Fora:** SSO / SAML completo, audit logs, integração Jira, guest access sem registro de conta, configurações padrão a nível de organização, proteção de sala com senha.
+**Out:** Full SSO / SAML, audit logs, Jira integration, guest access without account registration, organization-level default settings, password-protected rooms.
 
-**Adiado:** Convite em massa via CSV, atribuição automática de observador por papel organizacional, exportação de compliance para governança — alimenta o backlog.
-
----
-
-## Prioridade
-
-**Nível:** Alta
-
-**Motivo:** Bloqueador pré-fechamento do deal da Construtora Ágil (R$ 42.000 ARR). Urgência validada pela dependência do deal e pelo compromisso informal de Vendas. Sem resolução das incógnitas de integração, não é possível confirmar prazo.
+**Deferred:** Bulk invite via CSV, automatic observer assignment by organizational role, compliance export for governance — feeds the backlog.
 
 ---
 
-## Critérios de Sucesso
+## Priority
 
-Indicadores de alto nível que definem "concluído e valioso". Metas mensuráveis detalhadas pertencem ao Readiness Package.
+**Level:** High
 
-| Critério | Tipo | Indicador | Valor projetado |
+**Reason:** Pre-close blocker for the Construtora Ágil deal (R$ 42,000 ARR). Urgency validated by the deal dependency and Sales' informal commitment. Without resolving the integration unknowns, a deadline cannot be confirmed.
+
+---
+
+## Success Criteria
+
+High-level indicators that define "done and valuable." Detailed measurable targets belong to the Readiness Package.
+
+| Criterion | Type | Indicator | Projected value |
 |---|---|---|---|
-| Contrato da Construtora Ágil fechado | Negócio | Contrato assinado após o release | R$ 42.000 ARR |
-| Zero incidentes de acesso não autorizado | Segurança / Compliance | Sem reportados após go-live | 0 incidentes |
-| Conformidade LGPD confirmada pelo cliente | Legal | TI da Construtora Ágil confirma residência de dados antes do go-live | Sign-off de Fernanda Ramos |
-| Mapeamento Azure AD funcionando end-to-end | Técnico | Funcionários e prestadores recebem papéis corretos automaticamente | 100% na homologação |
-| Pelo menos 1 deal adicional em pipeline desbloqueado | Negócio | Um dos 2 deals sinalizados avança para fechamento | Em até 90 dias do release |
-| Modo anônimo adotado em sessões enterprise | Produto | Adoção em ≥ 30% das sessões enterprise | Em até 60 dias do release |
+| Construtora Ágil contract closed | Business | Contract signed after the release | R$ 42,000 ARR |
+| Zero unauthorized access incidents | Security / Compliance | None reported after go-live | 0 incidents |
+| LGPD compliance confirmed by the customer | Legal | Construtora Ágil's IT confirms data residency before go-live | Sign-off from Fernanda Ramos |
+| Azure AD mapping working end-to-end | Technical | Employees and contractors receive correct roles automatically | 100% in staging |
+| At least 1 additional pipeline deal unblocked | Business | One of the 2 flagged deals advances to closing | Within 90 days of the release |
+| Anonymous mode adopted in enterprise sessions | Product | Adoption in ≥ 30% of enterprise sessions | Within 60 days of the release |

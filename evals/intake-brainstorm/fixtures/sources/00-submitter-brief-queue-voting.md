@@ -1,256 +1,256 @@
-# Documento do Submitter — Queue Voting (Fila de Votação)
+# Submitter Document — Queue Voting
 
-> **Este é o documento do Submitter** — o primeiro artefato da jornada (`00`) e o entregável da persona Submitter. Ele **tangibiliza** o modelo de [`personas/01-submitter.md`](../personas/01-submitter.md): o raciocínio (requisitos de compliance, geração de ToDos, fórmula de score) vive na persona; este documento o **instancia** por demanda, na **linguagem do Submitter** — problema, valor, dor, oportunidade. Cada resposta carrega o quão sólida ela é e de onde veio: a camada de confiança viaja *com* a captura.
+> **This is the Submitter document** — the first artifact of the journey (`00`) and the deliverable of the Submitter persona. It **makes tangible** the model from [`personas/01-submitter.md`](../personas/01-submitter.md): the reasoning (compliance requirements, ToDo generation, score formula) lives in the persona; this document **instantiates** it per demand, in the **Submitter's language** — problem, value, pain, opportunity. Each answer carries how solid it is and where it came from: the confidence layer travels *with* the capture.
 >
-> **Jornada:** `00 Documento do Submitter` → [`01 Intake Record (PO — triagem)`](./01-intake-record-queue-voting.md) → [`02 Readiness Package (PO)`](./02-readiness-package-queue-voting.md) → `03 Technical Assessment — não requisitado` → [`04 PRD (PO+CTO → PM)`](./04-prd-queue-voting.md). Ver [`README.md`](./README.md).
+> **Journey:** `00 Submitter Document` → [`01 Intake Record (PO — triage)`](./01-intake-record-queue-voting.md) → [`02 Readiness Package (PO)`](./02-readiness-package-queue-voting.md) → `03 Technical Assessment — not requested` → [`04 PRD (PO+CTO → PM)`](./04-prd-queue-voting.md). See [`README.md`](./README.md).
 >
-> **Nada antecede este documento como artefato.** O que vem antes é **sinal cru** — uma chamada trimestral de revisão com o cliente — que **não é artefato**. Esse sinal entra *aqui* como evidência/fonte (disposição `inferred`, com `source`); é a **captura** que o transforma neste primeiro documento formal.
+> **Nothing precedes this document as an artifact.** What comes before is **raw signal** — a quarterly review call with the customer — which **is not an artifact**. That signal enters *here* as evidence/source (disposition `inferred`, with `source`); it is the **capture** that turns it into this first formal document.
 >
-> **Handoff:** congela quando `gateReady = true` (todo requisito bloqueante resolvido por uma disposição honesta) e é entregue ao **PO**, que o formaliza e tria no [`01 Intake Record`](./01-intake-record-queue-voting.md).
+> **Handoff:** freezes when `gateReady = true` (every blocking requirement resolved by an honest disposition) and is delivered to the **PO**, who formalizes and triages it in the [`01 Intake Record`](./01-intake-record-queue-voting.md).
 
-## As duas lentes (toda demanda é lida pelas duas ao mesmo tempo)
+## The two lenses (every demand is read through both at the same time)
 
-> Ver [`personas/01-submitter.md` §2](../personas/01-submitter.md). Os ToDos vivem onde as lentes se cruzam: "dado o que *esta* demanda significa, o que o contrato ainda precisa?"
+> See [`personas/01-submitter.md` §2](../personas/01-submitter.md). The ToDos live where the lenses intersect: "given what *this* demand means, what does the contract still need?"
 
-| Lente | O que é | Onde aparece neste documento |
+| Lens | What it is | Where it shows up in this document |
 |---|---|---|
-| **Contrato** (determinístico) | Os requisitos fixos de compliance que toda demanda precisa satisfazer para avançar | **Resumo de Prontidão** + os requisitos numerados (score + pendências) |
-| **Semântica** (contextual) | O que *esta* demanda significa: falta de controle do facilitador no fluxo de estimativas — a dor real é a cerimônia desgovernada, não a ausência de um "botão" | **Enunciado do Problema**, **Impacto**, **Indicadores de Valor** e suas tensões |
+| **Contract** (deterministic) | The fixed compliance requirements every demand must satisfy to move forward | **Readiness Summary** + the numbered requirements (score + open items) |
+| **Semantic** (contextual) | What *this* demand means: the facilitator's lack of control over the estimation flow — the real pain is the ungoverned ceremony, not the absence of a "button" | **Problem Statement**, **Impact**, **Value Indicators** and their tensions |
 
-## Metadados
+## Metadata
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
-| **Demanda** | Queue Voting (Fila de Votação) |
-| **Registrado por** | Ana Costa (Customer Success) |
-| **Data de captura** | 2026-03-12 |
-| **Status** | Pronto para handoff (`gateReady`) |
-| **Intake Record vinculado** | INT-2026-001 |
+| **Demand** | Queue Voting |
+| **Recorded by** | Ana Costa (Customer Success) |
+| **Capture date** | 2026-03-12 |
+| **Status** | Ready for handoff (`gateReady`) |
+| **Linked Intake Record** | INT-2026-001 |
 
-## Histórico de Revisão
+## Revision History
 
-| Versão | Data | Evento | Resumo |
+| Version | Date | Event | Summary |
 |---|---|---|---|
-| v1 | 2026-03-12 | Captura iniciada | Ana Costa registrou a demanda a partir de chamada trimestral de revisão com Banco Meridional. Todos os requisitos bloqueantes resolvidos. Handoff ao PO no mesmo dia. |
+| v1 | 2026-03-12 | Capture started | Ana Costa recorded the demand from a quarterly review call with Banco Meridional. All blocking requirements resolved. Handoff to PO the same day. |
 
 ---
 
-## Resumo de Prontidão (Readiness)
+## Readiness Summary
 
-> Snapshot da captura. O score é derivado dos requisitos abaixo; `low_confidence` conta como parcial. A demanda só é entregue ao PO quando todos os requisitos bloqueantes estão resolvidos (`gateReady = Sim`).
+> Snapshot of the capture. The score is derived from the requirements below; `low_confidence` counts as partial. The demand is only delivered to the PO when all blocking requirements are resolved (`gateReady = Yes`).
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
 | **Readiness Score** | 87 % |
-| **Gate liberado (gateReady)** | Sim |
-| **Requisitos bloqueantes pendentes** | — (todos os 4 bloqueantes resolvidos) |
-| **Dispositions** | 5 respondidos · 1 inferido · 3 premissas · 0 discovery · 0 delegados |
+| **Gate released (gateReady)** | Yes |
+| **Pending blocking requirements** | — (all 4 blocking requirements resolved) |
+| **Dispositions** | 5 answered · 1 inferred · 3 assumptions · 0 discovery · 0 deferred |
 
-### Legenda de confiança (aplica-se a cada seção respondida)
+### Confidence legend (applies to each answered section)
 
-| Atributo | Valores |
+| Attribute | Values |
 |---|---|
-| **Confiança** | 0–100 |
-| **Fonte** | Submitter direto · Documento anexo (p.X) · Inferido · Premissa · Outro stakeholder |
-| **Status** | Vazio · Baixa confiança · Resolvido |
-| **Disposição** | Respondido · Inferido · Premissa (a validar) · Discovery (a investigar) · Delegado (dono: __) |
-| **Hint** | Por que a confiança está baixa / o que a elevaria |
+| **Confidence** | 0–100 |
+| **Source** | Submitter direct · Attached document (p.X) · Inferred · Assumption · Other stakeholder |
+| **Status** | Empty · Low confidence · Resolved |
+| **Disposition** | Answered · Inferred · Assumption (to validate) · Discovery (to investigate) · Delegated (owner: __) |
+| **Hint** | Why confidence is low / what would raise it |
 
-> **"Não sei" não bloqueia.** Um requisito atinge prontidão por qualquer disposição honesta — inclusive "ninguém sabe ainda, e este é o plano" (Discovery) ou "estamos assumindo X" (Premissa). Ver [`personas/01-submitter.md` §6](../personas/01-submitter.md).
+> **"I don't know" does not block.** A requirement reaches readiness through any honest disposition — including "nobody knows yet, and this is the plan" (Discovery) or "we're assuming X" (Assumption). See [`personas/01-submitter.md` §6](../personas/01-submitter.md).
 
 ---
 
-## Origem  ·  *(Requisito 2 — Originador e contexto)*
+## Origin  ·  *(Requirement 2 — Originator and context)*
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
-| **Fonte** | Cliente |
-| **Cliente / Solicitante** | Banco Meridional |
-| **Originador e contexto** | Scrum Masters / facilitadores do Banco Meridional, chamada trimestral de revisão com CS em 2026-03-12. A dor foi levantada espontaneamente durante a pauta de renovação de contrato: "sem isso fica difícil justificar a renovação para os squads que ainda não aderiram." |
-| **Reportado via** | Chamada trimestral de revisão (CS → cliente) |
+| **Source** | Customer |
+| **Customer / Requester** | Banco Meridional |
+| **Originator and context** | Scrum Masters / facilitators at Banco Meridional, quarterly review call with CS on 2026-03-12. The pain was raised spontaneously during the contract renewal agenda: "without this it's hard to justify the renewal to the squads that haven't adopted yet." |
+| **Reported via** | Quarterly review call (CS → customer) |
 
-`Confiança:` 95 · `Fonte:` Submitter direto (Ana Costa, presente na chamada) · `Status:` Resolvido · `Disposição:` Respondido · `Hint:` —
+`Confidence:` 95 · `Source:` Submitter direct (Ana Costa, present on the call) · `Status:` Resolved · `Disposition:` Answered · `Hint:` —
 
 ---
 
-## Tipo
+## Type
 
-- [x] Funcionalidade
+- [x] Feature
 - [ ] Bug
-- [ ] Melhoria
+- [ ] Enhancement
 - [ ] Compliance
-- [ ] Integração
-- [ ] Operacional
+- [ ] Integration
+- [ ] Operational
 
 ---
 
-## Enunciado do Problema  ·  *(Requisito 1 — bloqueia gate)*
+## Problem Statement  ·  *(Requirement 1 — blocks gate)*
 
-> Qual a dor existente? Descreva o problema, não a solução. Se o enunciado contém solução proposta, ele volta para reformulação.
+> What is the existing pain? Describe the problem, not the solution. If the statement contains a proposed solution, it goes back for reformulation.
 
-Durante cerimônias de sprint planning, os times do Banco Meridional utilizam a plataforma para estimar histórias de usuário. O facilitador (Scrum Master) não tem como controlar quais histórias serão apresentadas e em que ordem — todos os participantes veem o backlog completo simultaneamente.
+During sprint planning ceremonies, the Banco Meridional teams use the platform to estimate user stories. The facilitator (Scrum Master) has no way to control which stories will be presented and in what order — all participants see the full backlog simultaneously.
 
-A consequência direta: participantes leem itens futuros antes da hora, formam opiniões antecipadas e desestabilizam o fluxo de estimativa. A cerimônia perde cadência. Para contornar isso, os facilitadores enviam uma história por vez via chat — um workaround que adiciona 15–20 minutos de overhead por sessão.
+The direct consequence: participants read future items ahead of time, form early opinions, and destabilize the estimation flow. The ceremony loses cadence. To work around this, facilitators send one story at a time via chat — a workaround that adds 15–20 minutes of overhead per session.
 
-Há uma segunda camada do problema: os votos aparecem em tempo real conforme são submetidos. Participantes que votam por último copiam os primeiros votos que veem, criando viés de ancoragem e degradando a qualidade das estimativas.
+There is a second layer to the problem: votes appear in real time as they are submitted. Participants who vote last copy the first votes they see, creating anchoring bias and degrading estimate quality.
 
-`Confiança:` 92 · `Fonte:` Submitter direto (relatado pelos Scrum Masters na chamada) · `Status:` Resolvido · `Disposição:` Respondido · `Hint:` —
+`Confidence:` 92 · `Source:` Submitter direct (reported by the Scrum Masters on the call) · `Status:` Resolved · `Disposition:` Answered · `Hint:` —
 
 ---
 
-## Quem é Impactado (Alcance)  ·  *(Requisito 3 — bloqueia gate)*
+## Who Is Impacted (Reach)  ·  *(Requirement 3 — blocks gate)*
 
-> Personas, segmentos ou times que sentem essa dor. É o "Reach" dos indicadores de valor.
+> Personas, segments, or teams that feel this pain. This is the "Reach" of the value indicators.
 
-| Persona / Segmento | Como é impactado |
+| Persona / Segment | How they are impacted |
 |---|---|
-| Scrum Masters / Facilitadores do Banco Meridional | Perdem o controle do fluxo da cerimônia. Recorrem a workarounds manuais custosos. São os usuários diretos que solicitam a mudança. |
-| Desenvolvedores / Votantes do Banco Meridional | Expostos a viés de ancoragem. Estimativas menos precisas. Cerimônias mais longas. |
-| 3 squads pendentes (não ativos na plataforma) | A ausência desta funcionalidade é o bloqueador de adoção citado explicitamente na chamada. |
-| CS (Ana Costa) | Carrega o risco de renovação do maior contrato enterprise da carteira. |
+| Scrum Masters / Facilitators at Banco Meridional | Lose control of the ceremony flow. Resort to costly manual workarounds. They are the direct users requesting the change. |
+| Developers / Voters at Banco Meridional | Exposed to anchoring bias. Less accurate estimates. Longer ceremonies. |
+| 3 pending squads (not active on the platform) | The absence of this feature is the adoption blocker cited explicitly on the call. |
+| CS (Ana Costa) | Carries the renewal risk of the largest enterprise contract in the portfolio. |
 
-`Confiança:` 88 · `Fonte:` Submitter direto + inferido a partir do contexto de conta (12 squads, 4 ativos, 3 bloqueados por esta lacuna) · `Status:` Resolvido · `Disposição:` Respondido · `Hint:` O número exato de usuários únicos por squad não foi coletado na chamada — a elevação para 95 requereria dados de uso da conta.
+`Confidence:` 88 · `Source:` Submitter direct + inferred from the account context (12 squads, 4 active, 3 blocked by this gap) · `Status:` Resolved · `Disposition:` Answered · `Hint:` The exact number of unique users per squad was not collected on the call — raising it to 95 would require account usage data.
 
 ---
 
-## Impacto de Negócio  ·  *(Requisito 4 — bloqueia gate)*
+## Business Impact  ·  *(Requirement 4 — blocks gate)*
 
-> Use as dimensões aplicáveis. Receita, Retenção, Operacional, Competitivo, Compliance, Mercado são os mais comuns. Não force dimensões irrelevantes. Quantifique quando possível.
+> Use the applicable dimensions. Revenue, Retention, Operational, Competitive, Compliance, Market are the most common. Don't force irrelevant dimensions. Quantify when possible.
 
-| Dimensão | Detalhe |
+| Dimension | Detail |
 |---|---|
-| **Receita** | 3 squads do Banco Meridional não integrados; expansão bloqueada diretamente por esta lacuna de UX. ARR de expansão estimado: R$ 28.000/ano (premissa: mesmo ticket por squad que os 4 ativos). |
-| **Retenção** | Renovação do contrato em 90 dias. CS sinalizou como risco de churn se a lacuna não for endereçada antes da conversa de renovação. ARR em risco: R$ 84.000 (4 squads ativos × R$ 21.000). |
-| **Operacional** | Workaround de compartilhamento manual via chat adiciona 15–20 min por cerimônia. Custo estimado em horas perdidas de time não calculado na captura. |
-| **Competitivo** | Duas ferramentas concorrentes já oferecem controle sequencial e ocultação de votos. Citado como lacuna de diferenciação na chamada de renovação — o cliente tem alternativa viável no mercado. |
+| **Revenue** | 3 Banco Meridional squads not onboarded; expansion blocked directly by this UX gap. Estimated expansion ARR: R$ 28,000/year (assumption: same ticket per squad as the 4 active ones). |
+| **Retention** | Contract renewal in 90 days. CS flagged it as a churn risk if the gap is not addressed before the renewal conversation. ARR at risk: R$ 84,000 (4 active squads × R$ 21,000). |
+| **Operational** | Manual sharing workaround via chat adds 15–20 min per ceremony. Estimated cost in lost team hours not calculated at capture. |
+| **Competitive** | Two competing tools already offer sequential control and vote hiding. Cited as a differentiation gap on the renewal call — the customer has a viable alternative in the market. |
 
-`Confiança:` 80 · `Fonte:` Submitter direto (retenção e competitivo); inferido a partir de dados de conta (receita) · `Status:` Resolvido · `Disposição:` Respondido + Premissa (ARR de expansão assume mesmo ticket dos squads ativos) · `Hint:` Confirmar ticket por squad com CS / Finance antes do RP para firmar o número de expansão.
+`Confidence:` 80 · `Source:` Submitter direct (retention and competitive); inferred from account data (revenue) · `Status:` Resolved · `Disposition:` Answered + Assumption (expansion ARR assumes the same ticket as the active squads) · `Hint:` Confirm ticket per squad with CS / Finance before the RP to firm up the expansion number.
 
 ---
 
-## Indicadores de Valor (RICE-lite)
+## Value Indicators (RICE-lite)
 
-> Espelho para desafiar o pensamento — **não** ranking automático. Pontue cada um (Baixo / Médio / Alto). A confiança reusa a coluna acima — não se pontua de novo. O Esforço fica *soft* (chute do Submitter, firmado depois pelo CTO).
+> A mirror to challenge the thinking — **not** an automatic ranking. Score each one (Low / Medium / High). Confidence reuses the column above — don't score it again. Effort stays *soft* (Submitter's guess, firmed up later by the CTO).
 
-| Indicador | Score | Justificativa (na linguagem dele) | Confiança |
+| Indicator | Score | Rationale (in their language) | Confidence |
 |---|---|---|---|
-| **Impacto** ("quanto move o negócio?") | Alto | Renovação de R$ 84k ARR em risco + expansão de R$ 28k bloqueada. Lacuna competitiva com alternativas no mercado. | 80 |
-| **Alcance** ("quantos sentem isso?") | Médio | 4 squads ativos (usuários diretos da dor) + 3 squads bloqueados. Dentro de uma conta, mas é o maior cliente enterprise da carteira. | 75 |
-| **Urgência** ("por que agora? custo de esperar?") | Alto | Renovação em 90 dias cria janela não-negociável. Cada mês sem entrega é um mês a mais de workaround e de risco de perder a conversa de renovação. | 90 |
-| **Esforço** *(soft — adiado ao CTO)* | Médio | Chute inicial do CS: parece ser UI + estado de sessão, sem nova infraestrutura. CTO deve confirmar. | low_confidence |
+| **Impact** ("how much does it move the business?") | High | R$ 84k ARR renewal at risk + R$ 28k expansion blocked. Competitive gap with alternatives in the market. | 80 |
+| **Reach** ("how many feel this?") | Medium | 4 active squads (direct users of the pain) + 3 blocked squads. Within one account, but it is the largest enterprise customer in the portfolio. | 75 |
+| **Urgency** ("why now? cost of waiting?") | High | Renewal in 90 days creates a non-negotiable window. Each month without delivery is another month of workaround and of risk of losing the renewal conversation. | 90 |
+| **Effort** *(soft — deferred to the CTO)* | Medium | CS's initial guess: looks like UI + session state, no new infrastructure. CTO must confirm. | low_confidence |
 
-> **Tensões registradas:**
-> - **Alcance Médio + Impacto Alto:** tensão aparente — o alcance é limitado a uma conta. Resolução: o impacto financeiro é desproporcional ao alcance porque é o maior cliente enterprise. A renovação de R$ 84k mais a expansão de R$ 28k justificam o score alto de impacto mesmo com alcance concentrado.
-> - **Urgência Alta + Esforço soft:** o prazo de 90 dias pressiona, mas o esforço não está firmado. Resolução honesta: se o CTO identificar bloqueador arquitetural, o prazo vira o constraint de corte de escopo, não de adiamento.
-
----
-
-## Urgência  ·  *(Requisito 5)*
-
-**Prazo / janela:** Renovação do contrato do Banco Meridional em 90 dias a partir de 2026-03-12 (vencimento ~2026-06-10). A funcionalidade precisa estar em produção antes da conversa de renovação.
-
-**Custo de esperar:** Se a entrega não ocorrer antes da renovação, o cliente tem argumento concreto para não renovar ou reduzir o contrato — e tem alternativas no mercado. CS já sinalou que o assunto foi colocado explicitamente na pauta da chamada de renovação.
-
-`Confiança:` 90 · `Fonte:` Submitter direto (Ana Costa) · `Status:` Resolvido · `Disposição:` Respondido · `Hint:` —
+> **Tensions recorded:**
+> - **Medium Reach + High Impact:** apparent tension — reach is limited to one account. Resolution: the financial impact is disproportionate to the reach because it is the largest enterprise customer. The R$ 84k renewal plus the R$ 28k expansion justify the high impact score even with concentrated reach.
+> - **High Urgency + soft Effort:** the 90-day deadline applies pressure, but effort is not firmed up. Honest resolution: if the CTO identifies an architectural blocker, the deadline becomes the scope-cutting constraint, not a reason to postpone.
 
 ---
 
-## Evidência e Documentos  ·  *(Requisito 6)*
+## Urgency  ·  *(Requirement 5)*
 
-> Anexos ou conversas anteriores que embasam a demanda. Fonte de pré-preenchimento por IA.
+**Deadline / window:** Banco Meridional contract renewal in 90 days from 2026-03-12 (expiration ~2026-06-10). The feature must be in production before the renewal conversation.
 
-| Documento / Conversa | Tipo | Relevância |
+**Cost of waiting:** If delivery does not happen before the renewal, the customer has a concrete argument to not renew or to reduce the contract — and has alternatives in the market. CS has already flagged that the topic was explicitly placed on the renewal call agenda.
+
+`Confidence:` 90 · `Source:` Submitter direct (Ana Costa) · `Status:` Resolved · `Disposition:` Answered · `Hint:` —
+
+---
+
+## Evidence and Documents  ·  *(Requirement 6)*
+
+> Attachments or prior conversations that ground the demand. Source for AI pre-filling.
+
+| Document / Conversation | Type | Relevance |
 |---|---|---|
-| Chamada trimestral de revisão com Banco Meridional — 2026-03-12 | Call (notas de CS) | Fonte primária: dor levantada pelos Scrum Masters, menção ao risco de renovação e à lacuna competitiva. |
-| Histórico de tickets de suporte do Banco Meridional | Registros internos | CS menciona que outros 3 clientes enterprise relataram dor similar de forma informal. Tickets não foram formalizados. |
+| Quarterly review call with Banco Meridional — 2026-03-12 | Call (CS notes) | Primary source: pain raised by the Scrum Masters, mention of the renewal risk and the competitive gap. |
+| Banco Meridional support ticket history | Internal records | CS mentions that 3 other enterprise customers reported a similar pain informally. The tickets were not formalized. |
 
-`Confiança:` 70 · `Fonte:` Submitter direto (notas da chamada) + inferido (tickets informais) · `Status:` Resolvido · `Disposição:` Respondido + Inferido · `Hint:` Formalizar os tickets dos 3 outros clientes elevaria a confiança e reforçaria o caso de negócio para além do Banco Meridional.
+`Confidence:` 70 · `Source:` Submitter direct (call notes) + inferred (informal tickets) · `Status:` Resolved · `Disposition:` Answered + Inferred · `Hint:` Formalizing the tickets from the 3 other customers would raise confidence and strengthen the business case beyond Banco Meridional.
 
 ---
 
-## Stakeholders  ·  *(Requisito 8)*
+## Stakeholders  ·  *(Requirement 8)*
 
-| Stakeholder | Papel | Interesse | Influência |
+| Stakeholder | Role | Interest | Influence |
 |---|---|---|---|
-| Ana Costa | Customer Success — registradora da demanda, dona do relacionamento | Retenção da renovação do Banco Meridional; evitar churn de R$ 84k ARR | Alta |
-| Scrum Masters do Banco Meridional | Usuários finais (facilitadores) — originadores diretos da dor | Controle do fluxo da cerimônia e integridade dos votos | Alta — usuários que adotam ou não adotam |
-| Desenvolvedores do Banco Meridional | Usuários finais (votantes) | Menos distração, estimativas mais focadas, cerimônias mais curtas | Média |
-| Lucas Mendes | PO | Alinhamento do produto com a dor e qualidade da entrega | Alta — decide se avança e em qual forma |
-| CEO | Sponsor executivo | Retenção de receita e saúde do relacionamento enterprise | Média — informado do risco, não envolvido no detalhe |
+| Ana Costa | Customer Success — recorder of the demand, owner of the relationship | Retention of the Banco Meridional renewal; avoid R$ 84k ARR churn | High |
+| Scrum Masters at Banco Meridional | End users (facilitators) — direct originators of the pain | Control of the ceremony flow and vote integrity | High — users who adopt or don't adopt |
+| Developers at Banco Meridional | End users (voters) | Less distraction, more focused estimates, shorter ceremonies | Medium |
+| Lucas Mendes | PO | Alignment of the product with the pain and quality of the delivery | High — decides whether it moves forward and in what form |
+| CEO | Executive sponsor | Revenue retention and health of the enterprise relationship | Medium — informed of the risk, not involved in the detail |
 
-`Confiança:` 85 · `Fonte:` Submitter direto · `Status:` Resolvido · `Disposição:` Respondido · `Hint:` PM ainda não definido (a definir pelo PO na triagem).
-
----
-
-## Premissas
-
-Condições assumidas como verdadeiras na captura. Se uma premissa se provar falsa, a demanda deve ser retriada. Premissas são uma **disposição válida** para requisitos sem resposta direta.
-
-1. A infraestrutura WebSocket existente suporta novos tipos de eventos sem requerer um novo broker ou camada de mensageria. — `a validar com:` CTO / Tech Lead durante racionalização
-2. A persistência de estado de sessão pode ser estendida com novos campos (ordem da fila, estado de revelação) sem uma migração completa de schema. — `a validar com:` CTO / Tech Lead durante racionalização
-3. Os Scrum Masters do Banco Meridional têm autonomia para adotar novos recursos sem aprovação de TI da organização deles. — `a validar com:` Ana Costa (CS) + contato direto com o cliente
-4. Co-facilitação não é necessária neste release — modelo de facilitador único é suficiente para o Banco Meridional agora. — `a validar com:` Ana Costa (CS) na próxima chamada com o cliente
-5. O ticket por squad dos 3 squads pendentes é equivalente ao dos 4 ativos (base do ARR de expansão estimado). — `a validar com:` Finance / CS antes do RP
+`Confidence:` 85 · `Source:` Submitter direct · `Status:` Resolved · `Disposition:` Answered · `Hint:` PM not yet defined (to be defined by the PO during triage).
 
 ---
 
-## Constraints  ·  *(Requisito 7)*
+## Assumptions
 
-Condições que limitam o espaço de solução, a respeitar independentemente do que for construído.
+Conditions assumed true at capture. If an assumption proves false, the demand must be re-triaged. Assumptions are a **valid disposition** for requirements without a direct answer.
 
-| Constraint | Tipo | Detalhe |
+1. The existing WebSocket infrastructure supports new event types without requiring a new broker or messaging layer. — `to validate with:` CTO / Tech Lead during rationalization
+2. Session state persistence can be extended with new fields (queue order, reveal state) without a full schema migration. — `to validate with:` CTO / Tech Lead during rationalization
+3. The Banco Meridional Scrum Masters have the autonomy to adopt new features without approval from their organization's IT. — `to validate with:` Ana Costa (CS) + direct contact with the customer
+4. Co-facilitation is not needed in this release — a single-facilitator model is sufficient for Banco Meridional now. — `to validate with:` Ana Costa (CS) on the next call with the customer
+5. The ticket per squad of the 3 pending squads is equivalent to that of the 4 active ones (basis for the estimated expansion ARR). — `to validate with:` Finance / CS before the RP
+
+---
+
+## Constraints  ·  *(Requirement 7)*
+
+Conditions that limit the solution space, to be respected regardless of what is built.
+
+| Constraint | Type | Detail |
 |---|---|---|
-| Prazo de renovação | Tempo | Renovação em ~90 dias. A funcionalidade deve estar em produção antes da conversa de renovação do Banco Meridional. |
-| Sem redesign mobile | Escopo | O layout mobile existente se aplica. Sem investimento em UI mobile neste release. |
-| Modelo de facilitador único | Escopo | Co-facilitação está explicitamente fora do escopo neste release. A arquitetura não deve impossibilitá-la futuramente, mas não precisa implementá-la agora. |
-| Deploy sem downtime | Técnico | A funcionalidade deve ser implantável sem interrupção de sessões ativas. |
-| Sem novos serviços externos | Orçamento | Construída na infraestrutura existente. Nenhum novo serviço de terceiros pode ser contratado. |
+| Renewal deadline | Time | Renewal in ~90 days. The feature must be in production before the Banco Meridional renewal conversation. |
+| No mobile redesign | Scope | The existing mobile layout applies. No investment in mobile UI in this release. |
+| Single-facilitator model | Scope | Co-facilitation is explicitly out of scope in this release. The architecture must not make it impossible in the future, but does not need to implement it now. |
+| Zero-downtime deploy | Technical | The feature must be deployable without interrupting active sessions. |
+| No new external services | Budget | Built on existing infrastructure. No new third-party service may be contracted. |
 
-`Confiança:` 88 · `Fonte:` Submitter direto (prazo + escopo) + inferido (deploy sem downtime, padrão da plataforma) · `Status:` Resolvido · `Disposição:` Respondido + Premissa (deploy sem downtime inferido como padrão operacional) · `Hint:` —
+`Confidence:` 88 · `Source:` Submitter direct (deadline + scope) + inferred (zero-downtime deploy, platform standard) · `Status:` Resolved · `Disposition:` Answered + Assumption (zero-downtime deploy inferred as the operational standard) · `Hint:` —
 
 ---
 
-## Riscos Preliminares
+## Preliminary Risks
 
-Riscos identificados na captura — antes da avaliação técnica. Registro completo pertence ao Readiness Package.
+Risks identified at capture — before the technical assessment. The full record belongs to the Readiness Package.
 
-| Risco | Categoria | Avaliação Inicial |
+| Risk | Category | Initial Assessment |
 |---|---|---|
-| Inconsistências de ordenação de eventos WebSocket sob carga | Técnico | Desconhecido — requer load testing durante QA |
-| Bypass de ocultação de votos via inspeção client-side | Segurança | Provavelmente mitigável — servidor deve aplicar a ocultação, não o cliente |
-| Perda de estado de sessão na reconexão do facilitador | Técnico | Requer design de resiliência — período de graça ou snapshot de sessão |
-| Viés de ancoragem não totalmente eliminado (participantes ainda podem falar verbalmente) | Produto | Aceito — a plataforma controla apenas a visibilidade digital |
-| Prazo de renovação não cumprido se a racionalização revelar bloqueadores | Prazo | Baixa probabilidade com base na avaliação inicial; demanda parece circunscrita a UI e estado de sessão |
+| WebSocket event-ordering inconsistencies under load | Technical | Unknown — requires load testing during QA |
+| Vote-hiding bypass via client-side inspection | Security | Likely mitigable — the server must enforce the hiding, not the client |
+| Session state loss on facilitator reconnection | Technical | Requires resilience design — grace period or session snapshot |
+| Anchoring bias not fully eliminated (participants can still speak verbally) | Product | Accepted — the platform controls only digital visibility |
+| Renewal deadline missed if rationalization reveals blockers | Schedule | Low probability based on the initial assessment; the demand appears circumscribed to UI and session state |
 
 ---
 
-## Limite de Escopo de Alto Nível
+## High-Level Scope Boundary
 
-**Dentro:** Gerenciamento de fila pelo facilitador (adicionar, ordenar, revelar um a um), ocultação de votos até revelação explícita, revelação de votos controlada pelo facilitador, persistência de estado de sessão, controles básicos (pular, retornar, encerrar).
+**In:** Facilitator queue management (add, order, reveal one by one), vote hiding until explicit reveal, facilitator-controlled vote reveal, session state persistence, basic controls (skip, return, end).
 
-**Fora:** Temporizadores por item, revelação automática de votos, co-facilitação / controle multi-facilitador, redesign mobile, relatórios e analytics, integração Jira/Linear.
+**Out:** Per-item timers, automatic vote reveal, co-facilitation / multi-facilitator control, mobile redesign, reports and analytics, Jira/Linear integration.
 
-**Adiado:** Toggle de preferência de revelação automática, reuso de template de fila entre sessões, dashboard de analytics de cerimônias.
-
----
-
-## Prioridade
-
-**Nível:** Alta
-
-**Motivo:** Renovação do contrato do Banco Meridional em 90 dias. CS sinalizou como potencial risco de churn se não resolvido antes da conversa de renovação.
+**Deferred:** Automatic-reveal preference toggle, queue template reuse across sessions, ceremony analytics dashboard.
 
 ---
 
-## Critérios de Sucesso
+## Priority
 
-Indicadores de alto nível que definem "concluído e valioso". Metas mensuráveis detalhadas pertencem ao Readiness Package; estes são os sinais no nível da captura. **Servem de baseline projetado** para o acompanhamento pós-handoff (ver [`metrics.md`](../metrics.md)).
+**Level:** High
 
-| Critério | Tipo | Indicador | Valor projetado |
+**Reason:** Banco Meridional contract renewal in 90 days. CS flagged it as a potential churn risk if not resolved before the renewal conversation.
+
+---
+
+## Success Criteria
+
+High-level indicators that define "done and valuable." Detailed measurable targets belong to the Readiness Package; these are the capture-level signals. **They serve as a projected baseline** for post-handoff tracking (see [`metrics.md`](../metrics.md)).
+
+| Criterion | Type | Indicator | Projected value |
 |---|---|---|---|
-| Contrato do Banco Meridional renovado | Negócio | Renovação assinada antes da data de expiração | R$ 84.000 ARR retido |
-| 3 squads pendentes integrados | Negócio | Contagem de ativação de squads no dashboard da conta em até 60 dias do release | +R$ 28.000 ARR de expansão |
-| Duração das cerimônias reduzida | Operacional | Tempo médio de sessão para cerimônias com 10+ itens cai ≥ 20% vs. baseline | ≥ 20% redução |
-| Workaround do facilitador eliminado | Operacional | Zero tickets de CS reportando compartilhamento manual de histórias pós-release | 0 tickets |
-| Zero reclamações de ancoragem de votos | Qualidade | Zero tickets de CS citando visibilidade prematura de votos | 0 tickets |
-| Funcionalidade adotada sem treinamento | UX | Facilitadores ativam fila e revelação sem intervenção de suporte | 0 chamados de onboarding |
+| Banco Meridional contract renewed | Business | Renewal signed before the expiration date | R$ 84,000 ARR retained |
+| 3 pending squads onboarded | Business | Squad activation count in the account dashboard within 60 days of release | +R$ 28,000 expansion ARR |
+| Ceremony duration reduced | Operational | Average session time for ceremonies with 10+ items drops ≥ 20% vs. baseline | ≥ 20% reduction |
+| Facilitator workaround eliminated | Operational | Zero CS tickets reporting manual story sharing post-release | 0 tickets |
+| Zero vote-anchoring complaints | Quality | Zero CS tickets citing premature vote visibility | 0 tickets |
+| Feature adopted without training | UX | Facilitators enable the queue and reveal without support intervention | 0 onboarding calls |
