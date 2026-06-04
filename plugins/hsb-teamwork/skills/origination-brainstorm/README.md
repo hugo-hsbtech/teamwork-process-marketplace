@@ -156,7 +156,7 @@ same roster is reused by `readiness-package` and the planned stages.
 | 2 | `hsb-ledger-writer` | writes `qa-log.md` |
 | 2 | `hsb-doc-updater` | writes the target document (`DOC`) |
 | 2 | `hsb-synthesizer` | composes `derived` sections for the writer (read-only) |
-| 2 | `hsb-glossary-keeper` | writes `glossary.md` |
+| 2 | `hsb-glossary-keeper` | writes the initiative's shared `glossary.md` + `decisions.md` |
 | 2 | `hsb-gap-reporter` | writes `readiness-report.md` |
 | 2 | `hsb-confidence-auditor` | re-scores + gate verdict (read-only) |
 | 3 | `hsb-humanizer` | writes `output/humanized.md` |
@@ -172,17 +172,24 @@ A run resolves an **initiative** and writes into its `origination/` **phase** fo
 
 ```
 <TEAMWORK_ROOT>/<YYYYMMDD>-<HHMM>-<project>-<hash6>/   # TEAMWORK_ROOT = $TEAMWORK_HOME or the project (git) root + /.teamwork
-├── initiative.json         # manifest: project, created, status (open|closed), phases
+├── initiative.json         # works + definitions index: status, phases, artifacts, readiness, owes
+├── glossary.md             # shared canonical terms — one per initiative
+├── decisions.md            # shared cross-phase decisions ledger
 └── origination/            # the origination phase (PHASE_DIR) — readiness/ sits beside it later
     ├── contract.lock.md    # derived contract + template hash
     ├── sources-index.md    # index of ingested inputs
     ├── sources/            # normalized input files
     ├── qa-log.md           # the Q&A ledger (questions + rationale + answers)
     ├── target-document.md  # the document being filled
-    ├── glossary.md         # canonical terms
+    ├── glossary.md         # brokered read-only copy of the shared glossary
     ├── readiness-report.md # live gap map
     └── output/             # humanized · translated · enriched · manifest
 ```
+
+The three initiative-level files (`initiative.json`, `glossary.md`, `decisions.md`)
+are owned by the orchestrator and **brokered** down to the phase agents, so a later
+front discovers all prior definitions and works by reading the index — see
+[`references/initiatives.md`](references/initiatives.md).
 
 ## Modes
 

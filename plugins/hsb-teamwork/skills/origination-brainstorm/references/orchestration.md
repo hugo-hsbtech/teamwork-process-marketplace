@@ -19,12 +19,19 @@ the pen on the same file, so concurrent writes are impossible by construction.
 | `sources/`, `sources-index.md` | Source Indexer | read-only |
 | `qa-log.md` | Ledger Writer | read-only |
 | `target-document.md` | Doc Updater | read-only |
-| `glossary.md` | Glossary Keeper | read-only |
+| `<initiative>/glossary.md`, `<initiative>/decisions.md` | Glossary Keeper | read-only |
 | `readiness-report.md` | Gap Reporter | read-only |
 | `output/humanized.md` | Humanizer | read-only |
 | `output/translated.<lang>.md` | Translator | read-only |
 | `output/enriched.md` | Visual Enricher | read-only |
 | `output/manifest.md` | Packager | read-only |
+| `<initiative>/initiative.json` | Orchestrator (you) | read-only |
+
+The last two rows are **initiative-level** (above any `PHASE_DIR`): the shared
+definitions store and the works+definitions index. Phase agents never reach up to
+them — the orchestrator brokers reads down into each phase and the Glossary Keeper
+is the one agent it hands the store path (`DEFINITIONS_DIR`) to. See
+[`initiatives.md`](initiatives.md) §§ *Shared definitions* and *Brokering*.
 
 **Serialize, queue, and merge — never clobber.** Beyond one-writer-per-file: you
 never spawn two writers on the *same* file at once, you **queue** pending changes
@@ -46,6 +53,9 @@ an agent assume a location:
 - `SKILL_DIR` — this skill's base directory (you are told it at launch).
 - `PHASE_DIR` — `<INITIATIVE_DIR>/origination/`, resolved per [`initiatives.md`](initiatives.md) (resume if it exists). The origination front of the selected initiative.
 - `TEMPLATE` — the target template file (default: `SKILL_DIR/assets/target-template.origination-record.md`, or a user-supplied template).
+- `DEFINITIONS_DIR` — `<INITIATIVE_DIR>` — injected to the **Glossary Keeper only**,
+  the sole writer of the shared `glossary.md` + `decisions.md`. No other agent
+  receives it; readers get the brokered `PHASE_DIR/glossary.md` instead.
 
 ## The phase folder
 
@@ -57,15 +67,19 @@ the origination front lives at `INITIATIVE_DIR/origination/`. If that phase fold
 already exists you **resume** it rather than creating a duplicate.
 
 ```
-<INITIATIVE_DIR>/origination/
-├── contract.lock.md          # Template Analyst
-├── sources-index.md          # Source Indexer
-├── sources/                  # Source Indexer (copies/links of inputs)
-├── qa-log.md                 # Ledger Writer
-├── target-document.md        # Doc Updater
-├── glossary.md               # Glossary Keeper
-├── readiness-report.md       # Gap Reporter
-└── output/                   # Humanizer · Translator · Enricher · Packager
+<INITIATIVE_DIR>/
+├── initiative.json           # Orchestrator — works + definitions index
+├── glossary.md               # Glossary Keeper — shared canonical terms (one per initiative)
+├── decisions.md              # Glossary Keeper — shared cross-phase decisions
+└── origination/              # PHASE_DIR for this front
+    ├── contract.lock.md      # Template Analyst
+    ├── sources-index.md      # Source Indexer
+    ├── sources/              # Source Indexer (copies/links of inputs)
+    ├── qa-log.md             # Ledger Writer
+    ├── target-document.md    # Doc Updater
+    ├── glossary.md           # brokered read-only copy of the initiative glossary
+    ├── readiness-report.md   # Gap Reporter
+    └── output/               # Humanizer · Translator · Enricher · Packager
 ```
 
 ## Phase 0 — Origination (you + the human)
@@ -75,9 +89,11 @@ the **desired output language(s)**, and (optional) a custom `TEMPLATE`. Decide t
 **mode**: *fresh* (no `target-document.md` yet) or *revisit* (one exists — re-score
 it). **Resolve-or-select** the initiative, then its origination `PHASE_DIR`
 ([`initiatives.md`](initiatives.md)): confirm the latest open initiative or pick
-from the open list (or start a new one); if that initiative's `origination/` phase
-already exists, resume it instead of creating a second one.
-Do not ask a wall of questions yet.
+from the open list (or start a new one); **read `initiative.json`** to take in what
+prior fronts defined, produced, and owe; if that initiative's `origination/` phase
+already exists, resume it instead of creating a second one, otherwise register it in
+the index. Seed the brokered `PHASE_DIR/glossary.md` from the initiative store
+before spawning readers. Do not ask a wall of questions yet.
 
 ## Phase 1 — Setup (parallel, then gate)
 
@@ -132,12 +148,15 @@ Each iteration:
      Ledger Writer.
    - To show the human where things stand, spawn the **Gap Reporter** (writes
      `readiness-report.md`) — the live gap map.
-   - When domain terms accumulate (typically after the first capture rounds, and
-     again before production), spawn the **Glossary Keeper**: it reads `qa-log.md`
-     and `target-document.md` and writes canonical terms to `glossary.md`. That
-     file is then read by the **Doc Updater** (this phase) and by the **Humanizer**
-     and **Translator** (Phase 3) so terminology never drifts. Optional for trivial
-     demands with no special vocabulary.
+   - When domain terms or cross-phase decisions accumulate (typically after the
+     first capture rounds, and again before production), spawn the **Glossary
+     Keeper** with `DEFINITIONS_DIR` injected: it reads `qa-log.md` and
+     `target-document.md` and writes canonical terms to the initiative's shared
+     `glossary.md` (and cross-phase decisions to `decisions.md`). You then **re-seed**
+     the brokered `PHASE_DIR/glossary.md` so the **Doc Updater** (this phase) and the
+     **Humanizer** and **Translator** (Phase 3) read the refreshed terms — and so do
+     later fronts. Terminology never drifts because it is defined once, at the
+     initiative. Optional for trivial demands with no special vocabulary.
 6. Gate check: **stop** when every `blocks=true` section is either ≥ its
    `min-confidence` *or* honestly disposed (`assumption`/`discovery`/`deferred`).
    Otherwise loop — Strategist's next batch targets the Auditor's flagged gaps.
@@ -163,6 +182,11 @@ this keeps your context lean ("isolate when satisfied"):
 
 - **Packager** assembles `output/`, writes `output/manifest.md` (artifact index,
   readiness score, open dispositions, template hash/version).
+- **Record the front in the initiative index.** Update this phase's
+  `initiative.json` entry: `state: frozen`, final `readiness`, the `artifacts` paths
+  (including `canonical: origination/output/humanized.md` — the copy downstream
+  fronts inherit), `produces: origination-record`, and any `owes`. This is what lets
+  a later front (e.g. readiness) discover and inherit this work by reading one file.
 - You report to the human: what was produced, the readiness score, and every item
   still parked as assumption/discovery/deferred.
 

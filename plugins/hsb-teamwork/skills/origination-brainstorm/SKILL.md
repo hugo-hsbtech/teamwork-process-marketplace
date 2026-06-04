@@ -65,7 +65,7 @@ ownership table is in `orchestration.md`.
 | 2 | `hsb-ledger-writer` | commit questions/answers to `qa-log.md` |
 | 2 | `hsb-doc-updater` | fill `target-document.md` (`DOC`) |
 | 2 | `hsb-synthesizer` | compose `derived` sections (exec summary, triage draft) for the Doc Updater (read-only) |
-| 2 | `hsb-glossary-keeper` | maintain canonical terms in `glossary.md` |
+| 2 | `hsb-glossary-keeper` | maintain the initiative's shared `glossary.md` + `decisions.md` (sole writer) |
 | 2 | `hsb-gap-reporter` | write the live gap map `readiness-report.md` |
 | 2 | `hsb-confidence-auditor` | re-score + gate verdict (read-only) |
 | 3 | `hsb-humanizer` | write `output/humanized.md` |
@@ -79,6 +79,15 @@ target document's filename — `target-document.md` for this skill), and the
 template's companion guide if one exists. **Run independent agents in the same
 turn** so they execute in parallel (Indexer ∥ Analyst; Strategist ∥ Extraction;
 Translator ∥ Enricher).
+
+**You are the broker for everything above `PHASE_DIR`.** The three initiative-level
+files — `initiative.json` (the works + definitions index), `glossary.md`, and
+`decisions.md` — are yours; agents stay `PHASE_DIR`-scoped. So: seed each phase's
+read-only `PHASE_DIR/glossary.md` from the initiative store before spawning readers;
+spawn the **Glossary Keeper** with `DEFINITIONS_DIR` (= `INITIATIVE_DIR`) injected,
+since it is the sole writer of the shared store; and update each phase's
+`initiative.json` entry when the front starts and when it freezes. Full rules in
+[`references/initiatives.md`](references/initiatives.md).
 
 ## Modes
 
@@ -111,9 +120,11 @@ any additional requested languages as separate `output/` files. Keep section
    optional custom `TEMPLATE`; pick the mode; then **resolve-or-select** the
    initiative — anchor `TEAMWORK_ROOT` at the project (git) root + `/.teamwork`,
    not the cwd; confirm the latest open initiative or pick from the open list (or
-   start a new one); then resolve its origination `PHASE_DIR = INITIATIVE_DIR/origination/`,
-   resuming it if it already exists instead of creating a duplicate. See
-   [`references/initiatives.md`](references/initiatives.md).
+   start a new one); **read `initiative.json`** to become aware of what prior fronts
+   defined, produced, and owe; then resolve its origination
+   `PHASE_DIR = INITIATIVE_DIR/origination/`, resuming it if it already exists
+   instead of creating a duplicate, registering the phase in the index, and seeding
+   the brokered `glossary.md`. See [`references/initiatives.md`](references/initiatives.md).
 2. **Phase 1 (parallel, gate):** spawn Indexer ∥ Analyst. Contract must exist before
    looping; a changed template hash restarts analysis.
 3. **Phase 2 (loop):** Strategist ∥ Extraction propose → Ledger Writer commits →
@@ -122,7 +133,10 @@ any additional requested languages as separate `output/` files. Keep section
    every blocking section is ≥ its `min-confidence` or honestly disposed.
 4. **Phase 3 (isolated, parallel variants):** Humanizer writes the canonical clean
    copy; then Translator ∥ Enricher each read it and write their own file.
-5. **Phase 4:** Packager writes the manifest. You report: artifacts produced,
+5. **Phase 4:** Packager writes the manifest; then **you record the front in the
+   initiative index** — set its `initiative.json` entry to `state: frozen` with the
+   final `readiness`, the `artifacts` paths (incl. the canonical humanized copy),
+   `produces: origination-record`, and any `owes`. You report: artifacts produced,
    readiness score, and every item parked as assumption/discovery/deferred.
 
 ## Installing in other projects
@@ -153,7 +167,7 @@ lives alongside at the plugin's `codex/` (see its README). See the plugin
 | `references/questioning-method.md` | how to ask, dispositions, tensions |
 | `references/grounding.md` | quality bar + pointer to the exemplar |
 | `references/writing-integrity.md` | no-truncation + queue/merge/conflict rules for writers |
-| `references/initiatives.md` | initiative model, `.teamwork/` + phase-folder layout, resolve-or-select, cross-run idempotency |
+| `references/initiatives.md` | initiative model, `.teamwork/` + phase-folder layout, the works+definitions index (`initiative.json`), shared definitions (`glossary.md`/`decisions.md`), brokering, resolve-or-select, cross-run idempotency |
 | `assets/target-template.origination-record.md` | default target template (annotated) |
 | `assets/target-template.origination-record.guide.md` | companion filling guide (incl. triage drafting) |
 | `assets/golden-example.md` | self-contained calibration exemplar |

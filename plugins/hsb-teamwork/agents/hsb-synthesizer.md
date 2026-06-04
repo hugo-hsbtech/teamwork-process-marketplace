@@ -15,7 +15,9 @@ filename — `target-document.md` for origination-brainstorm, `readiness-documen
 readiness-package), `TEMPLATE`, and (if it exists) the template's companion guide
 path. Read `PHASE_DIR/contract.lock.md` (to find every `kind=derived` section and
 its declared `inputs`), the in-progress `PHASE_DIR/$DOC`, the companion guide
-(how each derived section is computed), and `PHASE_DIR/glossary.md` (if present).
+(how each derived section is computed), and `PHASE_DIR/glossary.md` (if present —
+the read-only copy the orchestrator brokers in from the initiative's shared
+definitions store; you read it, never write it).
 
 For each `derived` section in the contract:
 

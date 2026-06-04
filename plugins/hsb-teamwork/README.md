@@ -123,11 +123,23 @@ Work is organized into **initiatives**. An initiative folder is created at
 `20260603-1833-pokerplan-a8432a`), where `TEAMWORK_ROOT` is `$TEAMWORK_HOME` or
 your project's git root + `/.teamwork`. Each front of the demand runs as a **phase
 subfolder** of the same initiative — `origination/` (origination-brainstorm) and
-`readiness/` (readiness-package) side by side — plus an `initiative.json` manifest
-recording the project, the phases, and the open/closed status. Each phase holds
-the contract, the Q&A ledger, the filled document, the glossary, a readiness
-report, and an `output/` folder with the humanized, translated, and enriched
-variants plus a manifest.
+`readiness/` (readiness-package) side by side. Each phase holds the contract, the
+Q&A ledger, the filled document, a readiness report, and an `output/` folder with
+the humanized, translated, and enriched variants plus a manifest.
+
+Three files live at the **initiative root** and tie the fronts together:
+
+- `initiative.json` — the **works + definitions index**. Per phase it records
+  status, what was produced (canonical artifact paths), the readiness score, and
+  what the front still **owes** downstream (e.g. a Technical Assessment). A new
+  front reads this one file to discover everything prior fronts defined and
+  produced — no path hard-coding.
+- `glossary.md` + `decisions.md` — the **shared definitions store**: canonical terms
+  and cross-phase decisions defined once, so nothing drifts as fronts multiply.
+
+The orchestrator owns these three and **brokers** them down into each phase; the
+phase agents stay scoped to their own folder. This is how a skill that starts a new
+front becomes aware of all the definitions and works on the initiative.
 
 **Re-running is safe.** Each run resolves the open initiative (confirm the latest
 or pick from the open list — closed ones are omitted) and **resumes** its phase —

@@ -51,12 +51,25 @@ by performing each role yourself as a step, in this order:
    answers from files (Extraction role) → record them in `qa-log.md` (Ledger
    role) → ask the human only the still-open questions → fill `target-document.md`
    (Doc Updater role) → re-score against the rubric and gate (Auditor role).
-   Resolve conflicts (Reconciler role) and keep terms consistent (Glossary role).
-   Loop until every blocking section is at or above its `min-confidence` or has an
-   honest disposition.
+   Resolve conflicts (Reconciler role) and keep terms consistent (Glossary role) by
+   writing the initiative's shared `glossary.md` + `decisions.md`. Loop until every
+   blocking section is at or above its `min-confidence` or has an honest disposition.
 3. **Production:** write `output/humanized.md`, then `output/translated.<lang>.md`
    and `output/enriched.md`.
-4. **Wrap:** write `output/manifest.md`.
+4. **Wrap:** write `output/manifest.md`, then update the front's entry in
+   `initiative.json` (the works + definitions index): `state: frozen`, final
+   `readiness`, `artifacts`, `produces`, and any `owes`.
+
+### The initiative-level index and shared definitions (you maintain these)
+
+Beyond the phase folder, every initiative has three **initiative-level** files you
+own: `initiative.json` (the works + definitions index — what each front produced,
+how ready, what it owes), and the shared `glossary.md` + `decisions.md`. They live
+at the initiative root, above any phase. In Codex you are the broker yourself: read
+the index when a front starts to see prior works/definitions; keep the shared
+glossary/decisions canonical (one place, no per-phase copies); and update the index
+on freeze. Full spec: `../skills/origination-brainstorm/references/initiatives.md`
+(§§ *index of definitions and works*, *Shared definitions*, *Brokering*).
 
 ## The two guarantees still apply
 
@@ -102,11 +115,12 @@ Read these once, then follow them for the whole run:
 Run the phases **sequentially** — either as Codex subagents or by performing each
 role yourself as a step, in this order:
 
-1. **Setup:** resolve-or-select the initiative; its `origination/` phase is the
-   linked origination-record; pick mode (fresh / revisit / batch) and output
-   language (default pt-BR); resolve-or-resume the `readiness/` phase
-   (`INITIATIVE_DIR/readiness/`); validate the RP template and derive
-   `contract.lock.md`.
+1. **Setup:** resolve-or-select the initiative; **read `initiative.json`** and find
+   the linked origination-record from the works index (the phase that `produces` an
+   `origination-record`, via its `artifacts.canonical`); pick mode (fresh / revisit
+   / batch) and output language (default pt-BR); resolve-or-resume the `readiness/`
+   phase (`INITIATIVE_DIR/readiness/`) and register it in the index; validate the RP
+   template and derive `contract.lock.md`.
 2. **Draft pass:** Inheritor role (`hsb-stage-inheritor`) carries graded
    sections from the origination-record forward (Origin=inherited). Drafter role
    (`hsb-section-drafter`) proposes first-draft content for all new RP sections
@@ -118,7 +132,10 @@ role yourself as a step, in this order:
    (`hsb-escalation-flagger`) records the tech-assessment-ref disposition
    (deferred when a CTO TA is owed, so the RP freezes provisionally rather than
    blocking indefinitely).
-5. **Wrap:** write `output/manifest.md`.
+5. **Wrap:** write `output/manifest.md`, then update the `readiness/` entry in
+   `initiative.json` — `state: frozen` (or provisional), final `readiness`,
+   `artifacts`, `produces: readiness-package`, and push the owed Technical Assessment
+   into `owes` so the next front reads it.
 
 ### The three stage-agnostic subagents this skill drives
 

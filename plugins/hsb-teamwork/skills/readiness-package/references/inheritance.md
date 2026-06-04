@@ -12,10 +12,14 @@ blank form.
 
 ## How the origination-record is indexed
 
-`hsb-source-indexer` indexes the initiative's `origination/` phase folder
-(its `output/humanized.md` or `target-document.md`) into `sources/` alongside any
-extra files the PO provides. The origination artefact is flagged as the **primary
-source** in `sources-index.md`.
+The orchestrator discovers the origination-record from the **works index** in
+`initiative.json` (the phase whose `produces` is `origination-record`, via its
+`artifacts.canonical` path) — not by assuming `origination/`. It hands that path to
+`hsb-source-indexer`, which indexes the artefact into the readiness phase's
+`sources/` alongside any extra files the PO provides, flagging it as the **primary
+source** in `sources-index.md`. Shared terms come from the brokered
+`PHASE_DIR/glossary.md` (seeded from the initiative's glossary store), so the RP
+uses the same vocabulary the origination settled on.
 
 `hsb-stage-inheritor` reads the indexed origination-record and the RP contract
 (`contract.lock.md`). It does **not** perform fresh inference — it maps
