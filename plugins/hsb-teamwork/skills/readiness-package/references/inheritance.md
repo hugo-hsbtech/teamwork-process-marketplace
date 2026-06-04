@@ -31,7 +31,7 @@ intake sections to RP sections, preserving the intake's already-graded values.
 | `scope` (Scope in/out, if present) | `scope` (Escopo Incluído e Excluído) | Direct carry; if the intake did not define scope explicitly, confidence is lowered and the PO is prompted to deepen. |
 | `metrics` / `success-criteria` | `metrics` (Métricas de Sucesso) and `release-criteria` (Critérios de Sucesso e Aceite) | Split into two RP sections; each inherits the relevant intake entries. |
 | `risks` / `dependencies` | `risks` (Riscos e Dependências) | Carry product/business risks only; the inheritor adds a hint that technical risks move to the Technical Assessment. |
-| `effort-estimate` (if present) | `effort-cost` (Avaliação Preliminar de Esforço e Custo) | Carry as preliminary; hint that the firm number comes from the CTO's Technical Assessment. |
+| `effort-estimate` (if present) | `effort-estimate` (Avaliação Preliminar de Esforço e Custo) | Carry as preliminary; hint that the firm number comes from the CTO's Technical Assessment. |
 | `roadmap` (if present) | `roadmap` (Roadmap Sugerido) | Direct carry. |
 
 Sections with no intake coverage are left for `readiness-drafter` to propose
