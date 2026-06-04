@@ -2,7 +2,7 @@
 <!-- rev: 1 · updated: 2026-06-03 -->
 
 > Written by the Source Indexer. This file is the authoritative inventory of
-> every source brought under `SESSION_DIR/sources/` for this RP session.
+> every source brought under `PHASE_DIR/sources/` for this RP phase.
 > Inheritors (File Extraction, Strategist, Doc Updater) read this index to know
 > what exists and where each piece of information lives.
 >

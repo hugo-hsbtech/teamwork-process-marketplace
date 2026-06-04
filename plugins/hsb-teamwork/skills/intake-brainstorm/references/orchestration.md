@@ -44,18 +44,20 @@ symlinked in-repo), so you inject paths into every agent's spawn prompt — neve
 an agent assume a location:
 
 - `SKILL_DIR` — this skill's base directory (you are told it at launch).
-- `SESSION_DIR` — `<SESSION_ROOT>/<demand-slug>/`, resolved per [`sessions.md`](sessions.md) (resume if it exists).
+- `PHASE_DIR` — `<INITIATIVE_DIR>/intake/`, resolved per [`initiatives.md`](initiatives.md) (resume if it exists). The intake front of the selected initiative.
 - `TEMPLATE` — the target template file (default: `SKILL_DIR/assets/target-template.intake-record.md`, or a user-supplied template).
 
-## The session folder
+## The phase folder
 
-Resolve-or-resume at the start of every run (see [`sessions.md`](sessions.md)):
-`SESSION_ROOT` anchors at `$INTAKE_HOME` or the project (git) root, **not** the
-cwd, and if the demand's folder already exists you **resume** it rather than
-creating a duplicate.
+Resolve-or-select the **initiative** at the start of every run, then resolve its
+**intake phase** folder (see [`initiatives.md`](initiatives.md)): `TEAMWORK_ROOT`
+anchors at `$TEAMWORK_HOME` or the project (git) root + `/.teamwork`, **not** the
+cwd. You select the open initiative to run in (or start a new one), and the intake
+front lives at `INITIATIVE_DIR/intake/`. If that phase folder already exists you
+**resume** it rather than creating a duplicate.
 
 ```
-<SESSION_ROOT>/<demand-slug>/
+<INITIATIVE_DIR>/intake/
 ├── contract.lock.md          # Template Analyst
 ├── sources-index.md          # Source Indexer
 ├── sources/                  # Source Indexer (copies/links of inputs)
@@ -71,9 +73,11 @@ creating a duplicate.
 Collect, in the human's language: the opening statement, any **file references**,
 the **desired output language(s)**, and (optional) a custom `TEMPLATE`. Decide the
 **mode**: *fresh* (no `target-document.md` yet) or *revisit* (one exists — re-score
-it). **Resolve-or-resume** the session ([`sessions.md`](sessions.md)): if the
-demand's `SESSION_DIR` already exists, resume it instead of creating a second one.
-Do not ask a wall of questions yet.
+it). **Resolve-or-select** the initiative, then its intake `PHASE_DIR`
+([`initiatives.md`](initiatives.md)): confirm the latest open initiative or pick
+from the open list (or start a new one); if that initiative's `intake/` phase
+already exists, resume it instead of creating a second one. Do not ask a wall of
+questions yet.
 
 ## Phase 1 — Setup (parallel, then gate)
 

@@ -4,10 +4,11 @@ Act as the **hsb-teamwork readiness-package orchestrator**. Read `codex/AGENTS.m
 in the package (the readiness-package section) and follow it for this run. You are
 the only layer that talks to the user.
 
-1. Identify the demand and the linked Product Ready intake-record. Pick the mode
-   (fresh / revisit / batch) and the output language (default pt-BR).
-2. Resolve-or-resume the `<demand-slug>-readiness/` session (see the package's
-   `skills/intake-brainstorm/references/sessions.md`).
+1. Resolve-or-select the initiative (confirm the latest open one or pick from the
+   open list); its `intake/` phase is the linked Product Ready intake-record. Pick
+   the mode (fresh / revisit / batch) and the output language (default pt-BR).
+2. Resolve-or-resume the `readiness/` phase (`INITIATIVE_DIR/readiness/`; see the
+   package's `skills/intake-brainstorm/references/initiatives.md`).
 3. Run the phases — setup, draft pass, confirm loop, production, wrap — performing
    each specialist role yourself, or by delegating to the Codex subagents in
    `codex/agents/` (run sequentially; Codex is single-agent).

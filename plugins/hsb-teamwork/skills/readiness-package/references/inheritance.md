@@ -12,7 +12,7 @@ blank form.
 
 ## How the intake-record is indexed
 
-`intake-source-indexer` indexes the intake session folder (its
+`intake-source-indexer` indexes the initiative's `intake/` phase folder (its
 `output/humanized.md` or `target-document.md`) into `sources/` alongside any
 extra files the PO provides. The intake artefact is flagged as the **primary
 source** in `sources-index.md`.

@@ -161,20 +161,22 @@ caught. Full rules: [`references/writing-integrity.md`](references/writing-integ
 
 Agent definitions live in `.claude/agents/intake-*.md`.
 
-## Session artifacts
+## Initiative artifacts
 
-A run creates one folder per demand:
+A run resolves an **initiative** and writes into its `intake/` **phase** folder:
 
 ```
-<SESSION_ROOT>/<demand-slug>/      # SESSION_ROOT = $INTAKE_HOME or the project (git) root + /intake
-├── contract.lock.md        # derived contract + template hash
-├── sources-index.md        # index of ingested inputs
-├── sources/                # normalized input files
-├── qa-log.md               # the Q&A ledger (questions + rationale + answers)
-├── target-document.md      # the document being filled
-├── glossary.md             # canonical terms
-├── readiness-report.md     # live gap map
-└── output/                 # humanized · translated · enriched · manifest
+<TEAMWORK_ROOT>/<YYYYMMDD>-<HHMM>-<project>-<hash6>/   # TEAMWORK_ROOT = $TEAMWORK_HOME or the project (git) root + /.teamwork
+├── initiative.json         # manifest: project, created, status (open|closed), phases
+└── intake/                 # the intake phase (PHASE_DIR) — readiness/ sits beside it later
+    ├── contract.lock.md    # derived contract + template hash
+    ├── sources-index.md    # index of ingested inputs
+    ├── sources/            # normalized input files
+    ├── qa-log.md           # the Q&A ledger (questions + rationale + answers)
+    ├── target-document.md  # the document being filled
+    ├── glossary.md         # canonical terms
+    ├── readiness-report.md # live gap map
+    └── output/             # humanized · translated · enriched · manifest
 ```
 
 ## Modes
@@ -184,7 +186,7 @@ A run creates one folder per demand:
   the gap map is reported, and questions re-open only on the weak sections.
 - **Batch / headless** — a pile of raw signals and no live human; runs the
   no-question path (extract → fill → score) and produces "draft for review"
-  documents, one session per signal, in parallel.
+  documents, one initiative per signal, in parallel.
 
 ## Language
 
@@ -238,7 +240,7 @@ plugins/hsb-teamwork/        # the Claude Code plugin (self-contained)
 │   │   ├── ledger-schema.md
 │   │   ├── questioning-method.md
 │   │   ├── writing-integrity.md       # no-truncation + queue/merge/conflict
-│   │   ├── sessions.md                # resolve-or-resume, cross-run idempotency
+│   │   ├── initiatives.md                # resolve-or-resume, cross-run idempotency
 │   │   └── grounding.md
 │   └── assets/
 │       ├── target-template.intake-record.md

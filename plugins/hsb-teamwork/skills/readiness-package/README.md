@@ -42,29 +42,31 @@ Two principles underpin correctness and parallelism:
 /hsb-teamwork:readiness-package
 ```
 
-When you invoke it, have the path to the demand's intake session folder ready
-(the `<demand-slug>/` folder produced by `intake-brainstorm`). The skill will
-confirm the intake-record path, resolve-or-resume the
-`<demand-slug>-readiness/` session folder, and default the output language to
-pt-BR unless you specify otherwise.
+When you invoke it, it resolves the **initiative** to run in (confirm the latest
+open one or pick from the open list). Readiness runs as the `readiness/` **phase**
+of that initiative, inheriting from its `intake/` phase (the intake-record). The
+skill resolve-or-resumes `INITIATIVE_DIR/readiness/` and defaults the output
+language to pt-BR unless you specify otherwise.
 
 ## Input
 
 A **Product Ready intake-record** — the `target-document.md` (or its
-`output/humanized.md`) produced by `/hsb-teamwork:intake-brainstorm` after the
-demand has been triaged to `Product Ready` status.
+`output/humanized.md`) in the initiative's `intake/` phase, produced by
+`/hsb-teamwork:intake-brainstorm` after the demand has been triaged to
+`Product Ready` status.
 
 The PO provides:
-- The intake session folder path (e.g. `SESSION_ROOT/<demand-slug>/`).
+- The initiative to run in (its `intake/` phase is the intake-record; an external
+  intake-record path may be given instead).
 - Optionally: additional files to index (specs, research, prior ADRs).
 - Optionally: a custom RP template (if not using the default).
 
 ## Outputs
 
-All artifacts land in `SESSION_ROOT/<demand-slug>-readiness/`:
+All artifacts land in the initiative's `readiness/` phase, `INITIATIVE_DIR/readiness/`:
 
 ```
-<demand-slug>-readiness/
+<INITIATIVE_DIR>/readiness/
 ├── contract.lock.md            # derived RP contract + template hash
 ├── sources-index.md            # index of ingested inputs (incl. intake-record)
 ├── sources/                    # normalized input files
@@ -104,7 +106,7 @@ behavior and is documented in
 ## Modes
 
 - **Fresh** (default) — intake-record exists, no RP yet. Full pipeline.
-- **Revisit** — existing `readiness-document.md` in the session folder. Re-score,
+- **Revisit** — existing `readiness-document.md` in the `readiness/` phase folder. Re-score,
   report the gap map, re-open questions only on weak sections.
 - **Batch / headless** — a set of intake-records, no live PO. No-question draft
   path; output is always "draft for review," never frozen on its own.

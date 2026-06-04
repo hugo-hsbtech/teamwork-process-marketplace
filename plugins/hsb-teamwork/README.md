@@ -117,14 +117,20 @@ the no-truncation and read-modify-write rules still apply.
 
 ## What you get (both tools)
 
-A session folder is created at `SESSION_ROOT/<demand-slug>/`, where `SESSION_ROOT`
-is `$INTAKE_HOME` or your project's git root + `/intake`. It holds the contract,
-the Q&A ledger, the filled document, the glossary, a readiness report, and an
-`output/` folder with the humanized, translated, and enriched variants plus a
-manifest.
+Work is organized into **initiatives**. An initiative folder is created at
+`TEAMWORK_ROOT/<YYYYMMDD>-<HHMM>-<project>-<hash6>/` (e.g.
+`20260603-1833-pokerplan-a8432a`), where `TEAMWORK_ROOT` is `$TEAMWORK_HOME` or
+your project's git root + `/.teamwork`. Each front of the demand runs as a **phase
+subfolder** of the same initiative — `intake/` (intake-brainstorm) and
+`readiness/` (readiness-package) side by side — plus an `initiative.json` manifest
+recording the project, the phases, and the open/closed status. Each phase holds
+the contract, the Q&A ledger, the filled document, the glossary, a readiness
+report, and an `output/` folder with the humanized, translated, and enriched
+variants plus a manifest.
 
-**Re-running is safe.** The same demand resolves to the same session and
-**resumes** — answers are merged, never duplicated, and nothing is re-asked.
+**Re-running is safe.** Each run resolves the open initiative (confirm the latest
+or pick from the open list — closed ones are omitted) and **resumes** its phase —
+answers are merged, never duplicated, and nothing is re-asked.
 
 ## Customize the target document
 

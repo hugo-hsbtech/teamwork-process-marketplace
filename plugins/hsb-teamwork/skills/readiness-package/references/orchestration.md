@@ -15,7 +15,7 @@ Do not copy their rules here; cite and apply them:
 |---|---|
 | [`../../intake-brainstorm/references/contract-and-template.md`](../../intake-brainstorm/references/contract-and-template.md) | Template annotation format (`intake:` markers), `contract.lock.md` derivation, template-hash restart policy |
 | [`../../intake-brainstorm/references/ledger-schema.md`](../../intake-brainstorm/references/ledger-schema.md) | `qa-log.md` schema — `Q###` blocks, header summary, rationale/spawned-by fields |
-| [`../../intake-brainstorm/references/sessions.md`](../../intake-brainstorm/references/sessions.md) | Session root resolution (`$INTAKE_HOME` → git-root → cwd), resolve-or-resume, slug derivation |
+| [`../../intake-brainstorm/references/initiatives.md`](../../intake-brainstorm/references/initiatives.md) | Initiatives root resolution (`$TEAMWORK_HOME` → git-root + `/.teamwork` → cwd), resolve-or-select, `.teamwork/<initiative>/` + phase-folder layout |
 | [`../../intake-brainstorm/references/writing-integrity.md`](../../intake-brainstorm/references/writing-integrity.md) | Single-writer rule, read-modify-write, queue/drain, `rev` marker, no-truncation sentinel |
 | [`../../intake-brainstorm/references/grounding.md`](../../intake-brainstorm/references/grounding.md) | Quality calibration against the golden exemplar |
 | [`../../intake-brainstorm/references/questioning-method.md`](../../intake-brainstorm/references/questioning-method.md) | Question rendering (`open` / `choice`), disposition routes, the `AskUserQuestion` protocol |
@@ -25,9 +25,10 @@ Do not copy their rules here; cite and apply them:
   others return read-only proposals to the orchestrator.
 - **Read-modify-write** — every writer re-reads the file before editing and
   merges changes keyed by stable id; it never clobbers.
-- **Session resolve-or-resume** — the `-readiness` session folder is resolved
-  per [`../../intake-brainstorm/references/sessions.md`](../../intake-brainstorm/references/sessions.md);
-  re-running resumes the same folder, nothing duplicates.
+- **Initiative resolve-or-select** — the `readiness/` phase folder is resolved
+  under the selected initiative
+  per [`../../intake-brainstorm/references/initiatives.md`](../../intake-brainstorm/references/initiatives.md);
+  re-running resumes the same phase folder, nothing duplicates.
 - **Ledger schema** — `qa-log.md` uses the same `Q###` block structure; the
   ledger-writer is the sole editor.
 - **Annotation marker** — the RP template uses the same `<!-- intake: id=...; blocks=...; ... -->`
@@ -72,19 +73,26 @@ template and guide, not through code changes.
 `readiness-*` agents are read-only proposers; they return structured proposals
 to the orchestrator, who routes them through the single writers.
 
-## Phase 0 — Identify the demand (you + the PO)
+## Phase 0 — Select the initiative (you + the PO)
 
-1. **Resolve the linked intake-record path.** Confirm which `Product Ready`
-   demand's intake session folder to inherit from (`SESSION_ROOT/<demand-slug>/`).
-2. **Resolve-or-resume the `-readiness` session** per
-   [`../../intake-brainstorm/references/sessions.md`](../../intake-brainstorm/references/sessions.md):
-   session folder is `SESSION_ROOT/<demand-slug>-readiness/`. If it already
-   exists, resume it; if ambiguous, list candidates and ask.
-3. **Confirm output language.** Default is `pt-BR` (mirrors the intake default).
-   Record in session context; the translator will target this language in Phase 4.
+1. **Resolve-or-select the initiative** per
+   [`../../intake-brainstorm/references/initiatives.md`](../../intake-brainstorm/references/initiatives.md):
+   confirm the latest open initiative or pick one from the open list (closed ones
+   omitted). Readiness runs as a **phase of that same initiative**, not a separate
+   folder.
+2. **Confirm the linked intake-record.** The intake-record is the selected
+   initiative's `intake/` phase (`INITIATIVE_DIR/intake/`, its
+   `output/humanized.md` or `target-document.md`). It must be `Product Ready`; if
+   the initiative has no intake phase, say so and stop — there is nothing to
+   inherit. (A PO may override with an external intake-record path.)
+3. **Resolve-or-resume the `readiness/` phase** at `INITIATIVE_DIR/readiness/`. If
+   it already exists, resume it; otherwise create it and register it in
+   `initiative.json.phases`.
+4. **Confirm output language.** Default is `pt-BR` (mirrors the intake default).
+   Record it; the translator will target this language in Phase 4.
 
-Do not ask a wall of questions at this stage — just collect the intake-record
-path and confirm language.
+Do not ask a wall of questions at this stage — just select the initiative, confirm
+the intake-record, and confirm language.
 
 ## Phase 1 — Setup
 
@@ -92,9 +100,9 @@ path and confirm language.
    passes; fix the template if it fails the audit checklist
    ([`../../intake-brainstorm/references/contract-and-template.md`](../../intake-brainstorm/references/contract-and-template.md) § audit checklist).
 2. Then spawn **in the same turn** (independent → parallel):
-   - **`intake-source-indexer`** indexes the linked intake-record folder (its
-     `output/humanized.md` or `target-document.md` as the primary source) plus
-     any extra files the PO provides. Writes `sources/` and `sources-index.md`.
+   - **`intake-source-indexer`** indexes the initiative's `intake/` phase folder
+     (its `output/humanized.md` or `target-document.md` as the primary source)
+     plus any extra files the PO provides. Writes `sources/` and `sources-index.md`.
    - **`intake-template-analyst`** derives `contract.lock.md` from the RP
      template (hash-locked). If a prior `contract.lock.md` exists with a
      different hash, it restarts analysis and supersedes stale ledger entries.
@@ -175,10 +183,13 @@ Once `freezeReady`:
 4. Report to the PO: what was produced, the readiness score, the TA flag if
    present, and every item still parked as `discovery` or `deferred`.
 
-## The session folder layout
+## The phase folder layout
+
+The readiness front lives at `INITIATIVE_DIR/readiness/`, beside the `intake/`
+phase it inherits from:
 
 ```
-SESSION_ROOT/<demand-slug>-readiness/
+INITIATIVE_DIR/readiness/        # PHASE_DIR for the readiness front
 ├── contract.lock.md            # intake-template-analyst
 ├── sources-index.md            # intake-source-indexer
 ├── sources/                    # intake-source-indexer (incl. inherited intake-record)

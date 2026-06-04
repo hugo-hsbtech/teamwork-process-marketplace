@@ -9,7 +9,7 @@
 
 ## 1. Artefatos produzidos
 
-A tabela abaixo indexa todos os arquivos existentes na sessão. Caminhos relativos à raiz da sessão (`intake/pokerplan/`).
+A tabela abaixo indexa todos os arquivos existentes na fase. Caminhos relativos à raiz da fase (`.teamwork/20260603-1833-pokerplan-a8432a/intake/`).
 
 | Caminho (relativo à sessão) | O que é | Idioma | Autor (agente) |
 |---|---|---|---|
@@ -128,10 +128,11 @@ As premissas abaixo foram capturadas no campo `assumptions` do registro canônic
 | **Template** | `target-template.intake-record.md` |
 | **Template version** | `v1` |
 | **Template hash** | `7d95916c27cef9200f18c5c754b84941efa1ec5267be61604833a3aa224194d9` |
-| **Sessão** | `intake/pokerplan` |
+| **Iniciativa** | `20260603-1833-pokerplan-a8432a` |
+| **Fase** | `.teamwork/20260603-1833-pokerplan-a8432a/intake` |
 | **Record ID** | INT-2026-001 |
 | **Data de geração** | 2026-06-03 |
-| **Modo de sessão** | Fresh — nenhuma sessão anterior, nenhum delta de restart |
+| **Modo da fase** | Fresh — nenhuma fase anterior, nenhum delta de restart |
 | **Idioma de saída** | pt-BR |
 | **Revisão do ledger na coleta** | Rev 6 |
 | **Número de questões no ledger** | 11 (Q001–Q011) |

@@ -1,0 +1,17 @@
+{
+  "name": "20260603-1833-pokerplan-a8432a",
+  "project": "pokerplan",
+  "created": "2026-06-03T18:33:00-03:00",
+  "status": "open",
+  "language": "pt-BR",
+  "phases": {
+    "intake": {
+      "started": "2026-06-03T18:33:00-03:00",
+      "state": "frozen"
+    },
+    "readiness": {
+      "started": "2026-06-04T09:10:00-03:00",
+      "state": "active"
+    }
+  }
+}
