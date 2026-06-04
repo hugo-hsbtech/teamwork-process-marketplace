@@ -2,13 +2,16 @@
 
 A condensed, fictional, repo-independent example of a *well-filled* Readiness
 Package. Use it to calibrate quality: problem-not-solution depth, honest confidence
-and origin per section, used dispositions, testable Given/When/Then acceptance
-criteria, NFRs that don't claim feasibility, and an honestly-flagged Technical
-Assessment reference. Do not copy its content — copy its *bar*.
+and origin per section, used dispositions, an end-to-end user journey from which the
+user stories derive, testable Given/When/Then acceptance criteria, NFRs that don't
+claim feasibility, the demand-nature classification inherited from the Intake, and an
+honestly-flagged Technical Assessment reference. Do not copy its content — copy its *bar*.
 
 ---
 
 **Demand:** Self-service seat management for enterprise admins (origination INT-2026-014).
+
+**Natureza da demanda:** Brownfield (altera o módulo de faturamento existente) · **Base de conhecimento:** `tech-landscape-billing.md` (parcial — herdado do Intake INT-2026-014).
 
 ---
 
@@ -20,7 +23,27 @@ Enterprise admins não conseguem adicionar ou remover assentos sem abrir ticket 
 
 ---
 
-**User Stories + Critérios de Aceite** — `Confidence: 80 · Origin: ai_drafted · Source: drafted from scope + origination personas · Status: resolved · Disposition: ai_drafted · Hint: PO confirmou ST-001 e ST-002; AC verificáveis por QA sem acesso ao código`
+**Jornada do Usuário (ponta-a-ponta)** — `Confidence: 78 · Origin: ai_drafted · Source: drafted from scope + business-rules · Status: resolved · Disposition: ai_drafted · Hint: PO confirmou o happy path; passos 1–3 geram ST-001/ST-002`
+
+*Jornada principal (happy path) — Ajuste de assentos pelo próprio admin*
+
+| # | Gatilho / Ação do usuário | Resultado esperado | Touchpoint | Pré-condição |
+|---|---|---|---|---|
+| 1 | Admin abre a tela de faturamento | Vê assentos atuais, em uso e prévia da fatura | Painel de faturamento | Autenticado como `billing_admin` |
+| 2 | Aumenta os assentos em N | Novo assento ativo em ≤ 60 s + prévia da próxima fatura atualizada | Painel de faturamento | Método de pagamento válido |
+| 3 | Consulta o log de alterações | Vê cada evento (quem, de N para M, data/hora) dos últimos 90 dias | Tela de auditoria | — |
+
+*Caminhos alternativos e de saída*
+
+- **Redução abaixo dos usuários ativos:** sistema bloqueia e indica quantos desativar primeiro (liga ao Edge Case de concorrência).
+
+*(Self-service puro — sem service blueprint; o happy path basta para uma melhoria desse porte.)*
+
+`Confidence: 78 · Origin: ai_drafted · Source: drafted from scope + business-rules · Status: resolved · Disposition: ai_drafted · Hint: PO confirmou o happy path; passos 1–3 geram ST-001/ST-002`
+
+---
+
+**User Stories + Critérios de Aceite** — `Confidence: 80 · Origin: ai_drafted · Source: derivado dos passos da Jornada (6.5) + origination personas · Status: resolved · Disposition: ai_drafted · Hint: PO confirmou ST-001 e ST-002; AC verificáveis por QA sem acesso ao código`
 
 **ST-001 — Self-service seat add/remove**
 Como admin enterprise, quero adicionar ou remover assentos no painel de faturamento, para não depender do suporte para gestão de licenças.

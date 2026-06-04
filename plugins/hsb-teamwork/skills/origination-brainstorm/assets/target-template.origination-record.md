@@ -111,6 +111,20 @@ Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 
 ---
 
+## Nature signal — new vs. existing software
+<!-- origination: id=nature-signal; blocks=false; min-confidence=0; kind=capture -->
+
+> A lightweight signal that **seeds** the PO's greenfield/brownfield classification
+> at triage (no certainty required). Does this look like a **new capability**
+> (something that does not exist today) or a change to **something that already
+> works**? The PO firms it into the formal classification in the Intake Record.
+
+**Touches:** New capability / Existing software / Not sure — [optional one-line note]
+
+`Confidence:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
+
+---
+
 ## Triage — routing decision
 <!-- origination: id=triage; blocks=false; min-confidence=0; kind=derived; inputs=problem,reach,impact,urgency,assumptions -->
 

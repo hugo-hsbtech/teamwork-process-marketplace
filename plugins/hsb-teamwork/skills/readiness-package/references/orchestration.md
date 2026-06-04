@@ -171,12 +171,13 @@ before moving to Phase B2.
 
 1. Spawn **`hsb-section-drafter`** **once per product section, all in the same
    turn** (independent → parallel), each injected with a single `SECTION`:
-   `business-rules` ∥ `user-stories` (Given/When/Then ACs) ∥ `nfrs` (ISO/IEC 25010
-   scaffold) ∥ `edge-cases`. Each is a read-only proposer that reads the contract,
-   the inherited entries, and the indexed sources and returns drafts for **its one
-   section** at `Origin: ai_drafted`, partial confidence, with a hint. Running the
-   drafters concurrently — instead of one drafter doing all four serially — is the
-   main lever against slow runs; the single-writer rule keeps it safe.
+   `business-rules` ∥ `user-journey` (end-to-end happy path + alternative paths) ∥
+   `user-stories` (Given/When/Then ACs derived from the journey steps) ∥ `nfrs`
+   (ISO/IEC 25010 scaffold) ∥ `edge-cases`. Each is a read-only proposer that reads
+   the contract, the inherited entries, and the indexed sources and returns drafts
+   for **its one section** at `Origin: ai_drafted`, partial confidence, with a hint.
+   Running the drafters concurrently — instead of one drafter doing all five serially
+   — is the main lever against slow runs; the single-writer rule keeps it safe.
 2. **`hsb-doc-updater`** writes all the `ai_drafted` proposals into
    `readiness-document.md` (serial, single-writer — it drains the fan-out batch in
    one read-modify-write pass keyed by section id).

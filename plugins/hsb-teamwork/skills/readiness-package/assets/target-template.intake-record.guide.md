@@ -28,8 +28,19 @@ these are required fields, never optional prose.
   are reversible lateral doors; Reject closes). Only `Product Ready` opens Act 2;
   the other three short-circuit (finalize, record in `decisions.md`, stop).
 
+- **`demand-nature`** (blocks, min-conf 70) — the greenfield / brownfield / hybrid
+  classification, **born here**. Greenfield *decides* the foundation (stack, ADRs,
+  structure); brownfield *discovers* what already exists (patterns, integrations,
+  debt). Seeded by the origination-record's "Touches / nature-signal" hint; the PO
+  firms it. Also record whether a Knowledge Base (`tech-landscape-[system].md`)
+  exists — `No` routes a documentation Discovery as the first technical task. This
+  classification travels into the RP metadata and determines the Technical
+  Assessment path. "Não sei" is an honest disposition (route to Discovery), but the
+  call should be made — without it the CTO guesses.
+
 - **`cto-escalation`** (derived, non-blocking) — early flag of whether Act 2 will
-  likely need a Technical Assessment. Authoritative `tech-assessment-ref` is decided
+  likely need a Technical Assessment. The `demand-nature` (above) travels with it
+  and determines the assessment path. Authoritative `tech-assessment-ref` is decided
   in the RP by `hsb-escalation-flagger`; this is only a hint carried forward.
 
 - **`validated-assumptions`** (non-blocking) — Submitter assumptions the PO reviewed

@@ -117,13 +117,40 @@ Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 
 ---
 
+## Natureza da demanda e Base de Conhecimento  ·  *(classificação — nasce aqui)*
+<!-- origination: id=demand-nature; blocks=true; min-confidence=70; kind=capture; inputs=demand-summary -->
+
+> **Por que esta seção existe.** Antes de qualquer avaliação técnica, é preciso
+> saber se a demanda constrói **software novo** ou altera **software existente** —
+> greenfield *decide* a fundação (stack, ADRs, estrutura); brownfield *descobre* o
+> que já existe (padrões, integrações, dívida). Sem esta classificação, o CTO
+> adivinha. A camada de IA/engenharia **não tem conhecimento implícito do código** —
+> depende do que está declarado aqui. Semeada pelo sinal "Touches / Toca o quê" do
+> origination-record; é aqui que o PO a firma. Ver [`03-technical-assessment.md`].
+
+| Campo | Valor |
+|---|---|
+| **Natureza** | Greenfield (software/módulo novo) · Brownfield (altera software existente) · Híbrido (módulo novo dentro de sistema existente) |
+| **Sistema(s) afetado(s)** | [Nome do produto/serviço/módulo — ou "novo" se greenfield] |
+| **Base de conhecimento existe?** | Sim (referência abaixo) · Parcial · Não → exige discovery de documentação |
+| **Referência da Base de Conhecimento** | `tech-landscape-[sistema].md` · link · — |
+
+> **Greenfield** → o Technical Assessment vai **definir** a fundação técnica, e os ADRs fundacionais **semeiam** uma nova Base de Conhecimento.
+> **Brownfield/Híbrido** → o Technical Assessment **referencia** a Base de Conhecimento existente; se ela não existe (ou está incompleta), a primeira tarefa técnica é **criá-la** (documentar o sistema atual) — registrar como Discovery.
+
+`Confidence: __ · Origin: ai_drafted · Source: __ · Status: __ · Disposition: __ · Hint: __`
+
+---
+
 ## Escalada arquitetural ao CTO
-<!-- origination: id=cto-escalation; blocks=false; min-confidence=0; kind=derived; inputs=triage-decision -->
+<!-- origination: id=cto-escalation; blocks=false; min-confidence=0; kind=derived; inputs=triage-decision,demand-nature -->
 
 **Necessária:** Sim / Não — [breve justificativa]
 
 > Sinaliza se a racionalização (Ato 2) provavelmente precisará de Technical
-> Assessment. A decisão autoritativa do `tech-assessment-ref` é tomada no RP pelo
+> Assessment. A **Natureza da demanda** (acima) viaja junto e determina o caminho do
+> assessment — greenfield *define* a fundação, brownfield *descobre* o estado atual.
+> A decisão autoritativa do `tech-assessment-ref` é tomada no RP pelo
 > `hsb-escalation-flagger`; aqui é só um early flag herdado adiante.
 
 ---

@@ -21,7 +21,12 @@ upstream artefact already covers, propose an entry that:
 4. carries forward any open disposition (assumption/discovery/deferred) verbatim, so
    the RP's "Prontidão herdada" section can list them.
 
+Also carry forward the **demand nature** (Greenfield / Brownfield / Híbrido) and the
+**Knowledge Base** reference (`tech-landscape-[system].md`) from the **Intake Record**
+into the RP `meta` fields, verbatim — the PO classified them at triage; do not
+re-derive or re-classify.
+
 Do not draft the brand-new sections the upstream artefact never covered
-(in the RP: business-rules, user-stories, NFRs, edge-cases) — that is the Section
-Drafter's job. Return your proposed inherited entries as a
+(in the RP: business-rules, user-journey, user-stories, NFRs, edge-cases) — that is
+the Section Drafter's job. Return your proposed inherited entries as a
 structured list to the orchestrator. Write nothing.

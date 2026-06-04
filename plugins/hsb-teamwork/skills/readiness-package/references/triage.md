@@ -32,8 +32,23 @@ pointed at a different template:
 - `hsb-ledger-writer` — sole writer of `intake/qa-log.md`.
 - `hsb-glossary-keeper` — records the routing decision in the initiative's
   shared `decisions.md` (cross-phase fact).
-- **`hsb-triage-assessor`** (new) — read-only proposer that scores the criteria
-  and proposes the routing decision.
+- **`hsb-triage-assessor`** (new) — read-only proposer that scores the criteria,
+  proposes the routing decision, and classifies the **demand nature**
+  (greenfield / brownfield / hybrid) + Knowledge Base existence.
+
+## The demand nature is born here
+
+Triage also classifies the **demand nature** — Greenfield (new software) /
+Brownfield (changes existing software) / Híbrido — and whether a Knowledge Base
+(`tech-landscape-[system].md`) exists. The assessor seeds it from the
+origination-record's nature-signal ("Touches: new capability / existing software /
+not sure") and the PO firms it. This is a **blocking** `demand-nature` section in the
+intake contract, not an afterthought: greenfield routes the downstream Technical
+Assessment to *define* the foundation (stack, ADRs, structure), brownfield routes it
+to *discover* the existing state (patterns, integrations, debt). When the nature is
+brownfield/hybrid and no Knowledge Base exists, the first technical task is to create
+it — routed as a documentation Discovery. The classification (and KB reference)
+travels forward into the RP metadata.
 
 ## The six criteria and the routing decision
 
@@ -121,8 +136,9 @@ the origination-record **and** the intake-record:
 - `initiative.json`: `readiness.consumes = ["origination-record", "intake-record"]`.
 - The readiness `hsb-source-indexer` indexes the intake-record alongside the
   origination-record, so the Stage Inheritor and Section Drafter see the triage
-  decision, the validated assumptions, and the recognized constraints — and the
-  RP's "Prontidão herdada" section reflects them.
+  decision, the validated assumptions, the recognized constraints, and the
+  **demand nature + Knowledge Base** classification — and the RP's "Prontidão
+  herdada" section and metadata reflect them.
 - A CTO escalation flagged during triage (the intake template's "Escalada
   arquitetural" field) is carried forward as a hint to `hsb-escalation-flagger`,
   which still owns the authoritative `tech-assessment-ref` disposition in Act 2.

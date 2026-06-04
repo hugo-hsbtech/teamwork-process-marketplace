@@ -19,6 +19,11 @@ rubrics in the annotations are sufficient).
 - **`constraints`** (70) — time/budget/legal/technical/scope/external limits, or
   "none known".
 - **`assumptions`** — each assumption with a **proposed** verdict and who validates.
+- **`nature-signal`** (non-blocking) — a lightweight read on whether the demand is a
+  **new capability** (greenfield) or a change to **existing software** (brownfield) —
+  "Not sure" is fine. No certainty required: it only **seeds** the PO's formal
+  greenfield/brownfield classification at triage (the Intake Record's `demand-nature`).
+  Draft it from the problem and reach signals; never present it as a settled decision.
 
 ## Derived sections (computed, flagged)
 

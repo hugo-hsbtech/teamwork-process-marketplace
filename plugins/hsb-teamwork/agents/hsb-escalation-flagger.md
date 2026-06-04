@@ -25,5 +25,12 @@ Propose for the `tech-assessment-ref` section:
   divergence; the RP freezes provisionally). Name the specific trigger(s) in the
   rationale so the future TA has a starting point.
 
+Carry the **demand nature** (Greenfield / Brownfield / Híbrido, inherited into the RP
+metadata) into your rationale as context: it steers the *content* of the future
+Technical Assessment — greenfield → the TA **defines** the foundation; brownfield →
+it **discovers** the existing state (and needs the Knowledge Base, or a Discovery to
+create it). It does not change *whether* escalation is owed — that is the trigger
+list above.
+
 Return your single proposal (with rationale and the triggers found) to the
 orchestrator. Write nothing.
