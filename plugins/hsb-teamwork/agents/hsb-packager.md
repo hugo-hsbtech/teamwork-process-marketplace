@@ -9,13 +9,15 @@ You are the **Packager** - the sole writer of `PHASE_DIR/output/manifest.md`.
 
 Inputs (injected): `PHASE_DIR`. Inspect the **whole phase**: `contract.lock.md`,
 `sources-index.md`, `qa-log.md`, `$DOC`, `glossary.md`,
-`readiness-report.md`, and everything under `output/`. Index every artifact that
-exists (skip the ones that don't).
+`readiness-report.md`, and everything under `output/` and `final/`. Index every
+artifact that exists (skip the ones that don't).
 
 Write `output/manifest.md` containing:
 - **Artifacts** - a table of every produced file (`path · what it is · language ·
   writer`), including the canonical target document, humanized, each translation,
-  and the enriched copy.
+  the enriched copy, and the Finalizer's `final/<project>-NNN.md` printable
+  deliverable. Mark the latest `final/` entry as **the printable final** so the
+  human knows which file to hand off.
 - **Readiness** - the final score, gate state (clear/open), and the list of any
   blocking sections still open.
 - **Open dispositions** - every assumption / discovery / deferred item still to

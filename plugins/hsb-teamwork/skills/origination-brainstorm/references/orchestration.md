@@ -24,6 +24,7 @@ the pen on the same file, so concurrent writes are impossible by construction.
 | `output/humanized.md` | Humanizer | read-only |
 | `output/translated.<lang>.md` | Translator | read-only |
 | `output/enriched.md` | Visual Enricher | read-only |
+| `final/<project>-NNN.md` | Finalizer | read-only |
 | `output/manifest.md` | Packager | read-only |
 | `<initiative>/initiative.json` | Orchestrator (you) | read-only |
 
@@ -79,7 +80,9 @@ already exists you **resume** it rather than creating a duplicate.
     ├── target-document.md    # Doc Updater
     ├── glossary.md           # brokered read-only copy of the initiative glossary
     ├── readiness-report.md   # Gap Reporter
-    └── output/               # Humanizer · Translator · Enricher · Packager
+    ├── output/               # Humanizer · Translator · Enricher · Packager
+    └── final/                # Finalizer — the clean, printable final deliverable(s)
+        └── <project>-NNN.md  # externalized, scaffolding-stripped, counter-suffixed
 ```
 
 ## Phase 0 — Origination (you + the human)
@@ -174,19 +177,33 @@ this keeps your context lean ("isolate when satisfied"):
 2. Then spawn **in the same turn** (parallel variants, distinct files):
    - **Translator** → `output/translated.<lang>.md` for each requested language.
    - **Visual Enricher** → `output/enriched.md`.
+   - **Finalizer** → `final/<project>-NNN.md` — the clean, **printable final
+     deliverable**. It reads the canonical `output/humanized.md`, strips every
+     authoring scaffold (HTML comments + `origination:` annotations, the rev/END
+     markers, rubric/guidance blockquotes, and the per-section
+     `Confidence/Source/Status/Disposition/Hint` lines), keeps all substantive
+     content and ⚠️ warnings, and externalizes it under `final/` named
+     `<PROJECT_SLUG>-<NNN>.md` (zero-padded per-phase counter; idempotency guard
+     skips a new counter when the deliverable is unchanged). Inject `PROJECT_SLUG`
+     (from `initiative.json.project`). This is the clearly-final document a human
+     prints or hands off.
 
-   *(Per project choice: translated and enriched are independent variants; they do
-   not combine into one file.)*
+   *(Per project choice: translated, enriched, and the final deliverable are
+   independent of each other; only the Finalizer's externalized copy is the
+   printable final.)*
 
 ## Phase 4 — Wrap
 
 - **Packager** assembles `output/`, writes `output/manifest.md` (artifact index,
-  readiness score, open dispositions, template hash/version).
+  readiness score, open dispositions, template hash/version). It indexes the
+  Finalizer's `final/<project>-NNN.md` deliverable too, marked as the printable
+  final.
 - **Record the front in the initiative index.** Update this phase's
   `initiative.json` entry: `state: frozen`, final `readiness`, the `artifacts` paths
   (including `canonical: origination/output/humanized.md` — the copy downstream
-  fronts inherit), `produces: origination-record`, and any `owes`. This is what lets
-  a later front (e.g. readiness) discover and inherit this work by reading one file.
+  fronts inherit — and `final: origination/final/<project>-NNN.md`, the printable
+  deliverable), `produces: origination-record`, and any `owes`. This is what lets a
+  later front (e.g. readiness) discover and inherit this work by reading one file.
 - You report to the human: what was produced, the readiness score, and every item
   still parked as assumption/discovery/deferred.
 
@@ -196,7 +213,7 @@ this keeps your context lean ("isolate when satisfied"):
 - **Loop:** Question Strategist, Evidence Extractor, Reconciler, Synthesizer
   (read-only proposers); Ledger Writer, Doc Updater, Glossary Keeper, Gap Reporter
   (writers); Confidence Auditor (read-only gate).
-- **Production:** Humanizer, then Translator ∥ Visual Enricher.
+- **Production:** Humanizer, then Translator ∥ Visual Enricher ∥ Finalizer.
 - **Wrap:** Packager.
 
 Every writer obeys the single-writer + serialize/queue/merge/RMW rules in

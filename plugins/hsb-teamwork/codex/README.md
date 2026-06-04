@@ -11,7 +11,7 @@ This adapter covers **two skills**: `origination-brainstorm` and `readiness-pack
 | `AGENTS.md` | the orchestrator entry — Codex reads it from repo root → cwd, or install it as a prompt; covers both skills |
 | `prompts/hsb-teamwork-origination-brainstorm.md` | custom prompt → `/hsb-teamwork-origination-brainstorm` slash command |
 | `prompts/hsb-teamwork-readiness-package.md` | custom prompt → `/hsb-teamwork-readiness-package` slash command |
-| `agents/hsb-*.toml` | 16 engine subagents (one per role) shared by both skills, mirroring the Claude agents |
+| `agents/hsb-*.toml` | 17 engine subagents (one per role) shared by both skills, mirroring the Claude agents |
 | `agents/hsb-stage-inheritor.toml` | proposes carry-forward entries from an upstream stage (Origin=inherited); role spec at `../agents/hsb-stage-inheritor.md` |
 | `agents/hsb-section-drafter.toml` | proposes first-draft content for the sections a stage introduces (Origin=ai_drafted); role spec at `../agents/hsb-section-drafter.md` |
 | `agents/hsb-escalation-flagger.toml` | decides whether the demand owes a downstream specialist assessment (CTO TA today); role spec at `../agents/hsb-escalation-flagger.md` |

@@ -73,17 +73,20 @@ clobber each other but stay traceably linked:
 │   ├── target-document.md
 │   ├── glossary.md            # read-only copy the orchestrator BROKERS in from the initiative store
 │   ├── readiness-report.md
-│   └── output/
-│       ├── humanized.md
-│       ├── translated.<lang>.md
-│       ├── enriched.md
-│       └── manifest.md
+│   ├── output/
+│   │   ├── humanized.md
+│   │   ├── translated.<lang>.md
+│   │   ├── enriched.md
+│   │   └── manifest.md
+│   └── final/                 # the clean, printable final deliverable(s) — Finalizer
+│       └── <project>-NNN.md   # externalized, scaffolding-stripped, counter-suffixed
 └── readiness/                 # the readiness-package front (inherits origination/output)
     ├── contract.lock.md
     ├── qa-log.md
     ├── readiness-document.md
     ├── glossary.md            # the same brokered copy
-    └── output/…
+    ├── output/…
+    └── final/…                # its own printable final deliverable(s), per-phase counter
 ```
 
 `PHASE_DIR` is what every agent is handed; it is the working root for that front
@@ -129,6 +132,7 @@ and produced, instead of crawling each phase's documents or hard-coding paths.
       "artifacts": {
         "document": "origination/target-document.md",
         "canonical": "origination/output/humanized.md",
+        "final": "origination/final/pokerplan-001.md",
         "manifest": "origination/output/manifest.md"
       },
       "owes": []
@@ -143,6 +147,7 @@ and produced, instead of crawling each phase's documents or hard-coding paths.
       "artifacts": {
         "document": "readiness/readiness-document.md",
         "canonical": "readiness/output/humanized.md",
+        "final": "readiness/final/pokerplan-001.md",
         "manifest": "readiness/output/manifest.md"
       },
       "owes": [
@@ -179,7 +184,9 @@ and produced, instead of crawling each phase's documents or hard-coding paths.
   kind, not by a hard-coded phase name.
 - `artifacts` — the canonical paths (relative to `INITIATIVE_DIR`) of the front's
   works: the working `document`, the `canonical` clean copy (the humanized output —
-  the one downstream fronts inherit), and the `manifest`.
+  the one downstream fronts inherit), the `final` printable deliverable (the
+  Finalizer's externalized, scaffolding-stripped, counter-suffixed copy under
+  `final/` — what a human prints or hands off), and the `manifest`.
 - `owes` — outstanding **cross-phase debts**: handoffs a downstream front must pick
   up. Each is `{ ref, to, status, note }` (e.g. a readiness front owing a
   `TechAssessmentRef` to a future `tech-assessment` front). This is how a debt

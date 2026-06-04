@@ -71,14 +71,17 @@ ownership table is in `orchestration.md`.
 | 3 | `hsb-humanizer` | write `output/humanized.md` |
 | 3 | `hsb-translator` | write `output/translated.<lang>.md` |
 | 3 | `hsb-visual-enricher` | write `output/enriched.md` |
+| 3 | `hsb-finalizer` | externalize the clean, printable final `final/<project>-NNN.md` |
 | 4 | `hsb-packager` | write `output/manifest.md` |
 
 When spawning, inject the paths each agent needs: `SKILL_DIR` (this skill's base
 directory, which you are told at launch), `PHASE_DIR`, `TEMPLATE`, `DOC` (the
 target document's filename — `target-document.md` for this skill), and the
-template's companion guide if one exists. **Run independent agents in the same
-turn** so they execute in parallel (Indexer ∥ Analyst; Strategist ∥ Extraction;
-Translator ∥ Enricher).
+template's companion guide if one exists. The **Finalizer** also needs
+`PROJECT_SLUG` (from `initiative.json.project`) to name the externalized
+deliverable. **Run independent agents in the same turn** so they execute in
+parallel (Indexer ∥ Analyst; Strategist ∥ Extraction; Translator ∥ Enricher ∥
+Finalizer).
 
 **You are the broker for everything above `PHASE_DIR`.** The three initiative-level
 files — `initiative.json` (the works + definitions index), `glossary.md`, and
@@ -132,12 +135,20 @@ any additional requested languages as separate `output/` files. Keep section
    (answers may spawn follow-ups) → Doc Updater fills → Auditor scores. Loop until
    every blocking section is ≥ its `min-confidence` or honestly disposed.
 4. **Phase 3 (isolated, parallel variants):** Humanizer writes the canonical clean
-   copy; then Translator ∥ Enricher each read it and write their own file.
-5. **Phase 4:** Packager writes the manifest; then **you record the front in the
-   initiative index** — set its `initiative.json` entry to `state: frozen` with the
-   final `readiness`, the `artifacts` paths (incl. the canonical humanized copy),
-   `produces: origination-record`, and any `owes`. You report: artifacts produced,
-   readiness score, and every item parked as assumption/discovery/deferred.
+   copy; then Translator ∥ Enricher ∥ Finalizer each read it and write their own
+   file. The **Finalizer** externalizes the **printable final deliverable** under
+   `final/<project>-NNN.md`: it strips every authoring scaffold (HTML comments and
+   `origination:` annotations, the rev/END markers, rubric/guidance blockquotes,
+   and the per-section confidence/disposition lines), keeps all content and ⚠️
+   warnings, and counter-suffixes the name (idempotency guard skips a new counter
+   when unchanged).
+5. **Phase 4:** Packager writes the manifest (indexing the `final/` deliverable
+   too); then **you record the front in the initiative index** — set its
+   `initiative.json` entry to `state: frozen` with the final `readiness`, the
+   `artifacts` paths (incl. the canonical humanized copy and the printable
+   `final` deliverable), `produces: origination-record`, and any `owes`. You
+   report: artifacts produced, readiness score, and every item parked as
+   assumption/discovery/deferred.
 
 ## Installing in other projects
 

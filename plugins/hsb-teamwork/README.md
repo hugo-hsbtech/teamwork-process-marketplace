@@ -94,7 +94,7 @@ cd plugins/hsb-teamwork
 # 1. Slash command  ->  /hsb-teamwork-origination-brainstorm
 cp codex/prompts/hsb-teamwork-origination-brainstorm.md  ~/.codex/prompts/
 
-# 2. The 16 subagents (project-scoped, or ~/.codex/agents for global)
+# 2. The 17 subagents (project-scoped, or ~/.codex/agents for global)
 mkdir -p .codex/agents && cp codex/agents/hsb-*.toml  .codex/agents/
 
 # 3. Orchestrator instructions: either drop codex/AGENTS.md in as AGENTS.md
@@ -124,8 +124,9 @@ Work is organized into **initiatives**. An initiative folder is created at
 your project's git root + `/.teamwork`. Each front of the demand runs as a **phase
 subfolder** of the same initiative — `origination/` (origination-brainstorm) and
 `readiness/` (readiness-package) side by side. Each phase holds the contract, the
-Q&A ledger, the filled document, a readiness report, and an `output/` folder with
-the humanized, translated, and enriched variants plus a manifest.
+Q&A ledger, the filled document, a readiness report, an `output/` folder with the
+humanized, translated, and enriched variants plus a manifest, and a `final/` folder
+holding the clean, printable final deliverable (`<project>-NNN.md`).
 
 Three files live at the **initiative root** and tie the fronts together:
 

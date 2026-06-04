@@ -60,6 +60,7 @@ code changes.
 | `hsb-humanizer` | **writer** (`output/humanized.md`) | Phase 4 — must finish before translator/enricher |
 | `hsb-translator` | **writer** (`output/translated.pt-BR.md`) | Phase 4, parallel with visual-enricher |
 | `hsb-visual-enricher` | **writer** (`output/enriched.md`) | Phase 4, parallel with translator |
+| `hsb-finalizer` | **writer** (`final/<project>-NNN.md`) | Phase 4, parallel with translator/enricher — externalizes the clean, printable final |
 | `hsb-packager` | **writer** (`output/manifest.md`) | Phase 4 (wrap) |
 
 ### Stage-agnostic agents this skill drives
@@ -191,13 +192,22 @@ Once `freezeReady`:
      output language).
    - **`hsb-visual-enricher`** → `output/enriched.md` (scope in/out table,
      persona/JTBD map, business-rule flow, metrics table with guardrails).
+   - **`hsb-finalizer`** → `final/<project>-NNN.md` — the clean, **printable
+     final deliverable**. It reads the canonical `output/humanized.md`, strips
+     every authoring scaffold (HTML comments + `origination:` annotations, the
+     rev/END markers, rubric/guidance blockquotes, and the per-section
+     `Confidence/Source/Status/Disposition/Hint` lines), keeps all content and ⚠️
+     warnings, and externalizes it under `final/` named `<PROJECT_SLUG>-<NNN>.md`
+     (zero-padded per-phase counter; idempotency guard skips a new counter when
+     unchanged). Inject `PROJECT_SLUG` (from `initiative.json.project`).
 3. **`hsb-packager`** writes `output/manifest.md` noting: freeze state,
    the TA-pending flag (if `tech-assessment-ref` disposition is `deferred`),
-   open `discovery` dispositions, template hash/version, and the handoff note
-   to PRD/PM.
+   open `discovery` dispositions, template hash/version, the handoff note
+   to PRD/PM, and an index entry for the Finalizer's `final/` deliverable.
 4. **Record the front in the initiative index.** Update this phase's
    `initiative.json` entry: `state: frozen` (or note a provisional freeze), final
-   `readiness`, the `artifacts` paths (incl. `canonical: readiness/output/humanized.md`),
+   `readiness`, the `artifacts` paths (incl. `canonical: readiness/output/humanized.md`
+   and `final: readiness/final/<project>-NNN.md`),
    `produces: readiness-package`, and — crucially — push the Technical Assessment
    debt into `owes` (e.g. `{ "ref": "TechAssessmentRef", "to": "tech-assessment",
    "status": "deferred" }`). This turns a debt raised inside the RP document into a
@@ -224,9 +234,11 @@ INITIATIVE_DIR/                  # shared by every front
     ├── readiness-document.md   # hsb-doc-updater
     ├── glossary.md             # brokered read-only copy of the initiative glossary
     ├── readiness-report.md     # hsb-gap-reporter (optional)
-    └── output/
-        ├── humanized.md        # hsb-humanizer
-        ├── translated.pt-BR.md # hsb-translator
-        ├── enriched.md         # hsb-visual-enricher
-        └── manifest.md         # hsb-packager
+    ├── output/
+    │   ├── humanized.md        # hsb-humanizer
+    │   ├── translated.pt-BR.md # hsb-translator
+    │   ├── enriched.md         # hsb-visual-enricher
+    │   └── manifest.md         # hsb-packager
+    └── final/                  # hsb-finalizer — clean, printable final deliverable(s)
+        └── <project>-NNN.md    # externalized, scaffolding-stripped, counter-suffixed
 ```

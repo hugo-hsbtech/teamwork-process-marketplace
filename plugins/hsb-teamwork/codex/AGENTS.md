@@ -55,10 +55,20 @@ by performing each role yourself as a step, in this order:
    writing the initiative's shared `glossary.md` + `decisions.md`. Loop until every
    blocking section is at or above its `min-confidence` or has an honest disposition.
 3. **Production:** write `output/humanized.md`, then `output/translated.<lang>.md`
-   and `output/enriched.md`.
-4. **Wrap:** write `output/manifest.md`, then update the front's entry in
-   `initiative.json` (the works + definitions index): `state: frozen`, final
-   `readiness`, `artifacts`, `produces`, and any `owes`.
+   and `output/enriched.md`, then **externalize the printable final** (Finalizer
+   role, `hsb-finalizer`): read `output/humanized.md`, strip every authoring
+   scaffold (HTML comments + `origination:` annotations, the rev/END markers,
+   rubric/guidance blockquotes, and the per-section
+   `Confidence/Source/Status/Disposition/Hint` lines), keep all content and ⚠️
+   warnings, and write `final/<project>-NNN.md` (zero-padded per-phase counter,
+   `<project>` from `initiative.json.project`; reuse the latest file instead of
+   minting a new counter when the cleaned output is unchanged). This file omits the
+   `<!-- END OF DOCUMENT -->` sentinel by design — verify completeness against the
+   source humanized copy instead.
+4. **Wrap:** write `output/manifest.md` (index the `final/` deliverable too), then
+   update the front's entry in `initiative.json` (the works + definitions index):
+   `state: frozen`, final `readiness`, `artifacts` (incl. the `final` deliverable),
+   `produces`, and any `owes`.
 
 ### The initiative-level index and shared definitions (you maintain these)
 
@@ -128,14 +138,17 @@ role yourself as a step, in this order:
 3. **Confirm loop:** present pre-filled RP to the PO section by section; PO judges,
    edits, or accepts; questions are a fallback only. Loop until every blocksFreeze
    section reaches its threshold or has an honest disposition.
-4. **Production:** write the final RP document; Escalation Flagger role
-   (`hsb-escalation-flagger`) records the tech-assessment-ref disposition
-   (deferred when a CTO TA is owed, so the RP freezes provisionally rather than
-   blocking indefinitely).
-5. **Wrap:** write `output/manifest.md`, then update the `readiness/` entry in
-   `initiative.json` — `state: frozen` (or provisional), final `readiness`,
-   `artifacts`, `produces: readiness-package`, and push the owed Technical Assessment
-   into `owes` so the next front reads it.
+4. **Production:** write the humanized RP copy, the translation, and the enriched
+   copy; Escalation Flagger role (`hsb-escalation-flagger`) records the
+   tech-assessment-ref disposition (deferred when a CTO TA is owed, so the RP
+   freezes provisionally rather than blocking indefinitely). Then **externalize the
+   printable final** (Finalizer role, `hsb-finalizer`) to `final/<project>-NNN.md`
+   — same strip-and-count rules as origination (see step 3 there).
+5. **Wrap:** write `output/manifest.md` (index the `final/` deliverable too), then
+   update the `readiness/` entry in `initiative.json` — `state: frozen` (or
+   provisional), final `readiness`, `artifacts` (incl. the `final` deliverable),
+   `produces: readiness-package`, and push the owed Technical Assessment into `owes`
+   so the next front reads it.
 
 ### The three stage-agnostic subagents this skill drives
 
