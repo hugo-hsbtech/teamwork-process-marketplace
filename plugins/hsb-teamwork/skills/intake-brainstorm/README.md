@@ -55,12 +55,13 @@ flowchart TD
 
     subgraph P2["Phase 2 · Capture loop"]
         QS["Question Strategist"]
-        FE["File Extraction"]
+        FE["Evidence Extractor"]
         RC["Reconciler"]
         LW["Ledger Writer"] --> LEDGER[("qa-log.md")]
         DU["Doc Updater"] --> DOC[("target-document.md")]
+        SY["Synthesizer"] -.derived sections.-> DU
         GK["Glossary Keeper"] --> GLOSS[("glossary.md")]
-        RR["Readiness Reporter"] --> REPORT[("readiness-report.md")]
+        RR["Gap Reporter"] --> REPORT[("readiness-report.md")]
         CA["Confidence Auditor"]
     end
 
@@ -103,13 +104,13 @@ flowchart TD
 - **Phase 1 — Setup:** the Validator checks the template; then the Source Indexer
   and Template Analyst run in parallel. The Analyst derives the contract and
   records the template hash (a changed hash restarts the analysis).
-- **Phase 2 — Capture loop:** the Strategist and File Extraction *propose* in
+- **Phase 2 — Capture loop:** the Strategist and Evidence Extractor *propose* in
   parallel; the Ledger Writer commits questions + answers; the Doc Updater fills
   the document; the Auditor re-scores and gates. Each question is tagged `open`
   (free-text prose, for pain/why gaps) or `choice` (interactive `AskUserQuestion`
   with scaffolded hypothesis options + escape hatches, for categorical gaps and
   follow-up rounds) — see `references/questioning-method.md`. Conflicts go to the
-  Reconciler; the Readiness Reporter shows the live gap map; the Glossary Keeper
+  Reconciler; the Gap Reporter shows the live gap map; the Glossary Keeper
   keeps terms consistent. The loop ends when every blocking section is ≥ X or
   honestly disposed.
 - **Phase 3 — Production:** the Humanizer writes the clean canonical copy; then the
@@ -125,7 +126,7 @@ queues them and drains the queue through one writer per file.
 flowchart LR
     subgraph RO["Read-only proposers (parallel)"]
         A["Strategist"]
-        B["File Extraction"]
+        B["Evidence Extractor"]
         C["Reconciler"]
         D["Auditor"]
     end
@@ -139,27 +140,31 @@ Reconciler decides — it never silently overwrites. Every produced document end
 with a `<!-- END OF DOCUMENT -->` sentinel the Auditor checks, so truncation is
 caught. Full rules: [`references/writing-integrity.md`](references/writing-integrity.md).
 
-## The agents (15 + orchestrator)
+## The agents (16 + orchestrator)
+
+Each agent is named for the specialty it performs, not the phase it runs in, so the
+same roster is reused by `readiness-package` and the planned stages.
 
 | Phase | Agent | Reads / proposes or writes |
 |---|---|---|
-| 1 | `intake-template-validator` | validates the template (read-only) |
-| 1 | `intake-source-indexer` | writes `sources/`, `sources-index.md` |
-| 1 | `intake-template-analyst` | writes `contract.lock.md` (+ hash / restart) |
-| 2 | `intake-question-strategist` | proposes next questions (read-only) |
-| 2 | `intake-file-extraction` | proposes answers from files (read-only) |
-| 2 | `intake-reconciler` | resolves evidence conflicts (read-only) |
-| 2 | `intake-ledger-writer` | writes `qa-log.md` |
-| 2 | `intake-doc-updater` | writes `target-document.md` |
-| 2 | `intake-glossary-keeper` | writes `glossary.md` |
-| 2 | `intake-readiness-reporter` | writes `readiness-report.md` |
-| 2 | `intake-confidence-auditor` | re-scores + gate verdict (read-only) |
-| 3 | `intake-humanizer` | writes `output/humanized.md` |
-| 3 | `intake-translator` | writes `output/translated.<lang>.md` |
-| 3 | `intake-visual-enricher` | writes `output/enriched.md` |
-| 4 | `intake-packager` | writes `output/manifest.md` |
+| 1 | `hsb-template-validator` | validates the template (read-only) |
+| 1 | `hsb-source-indexer` | writes `sources/`, `sources-index.md` |
+| 1 | `hsb-template-analyst` | writes `contract.lock.md` (+ hash / restart) |
+| 2 | `hsb-question-strategist` | proposes next questions (read-only) |
+| 2 | `hsb-evidence-extractor` | proposes answers from files (read-only) |
+| 2 | `hsb-reconciler` | resolves evidence conflicts (read-only) |
+| 2 | `hsb-ledger-writer` | writes `qa-log.md` |
+| 2 | `hsb-doc-updater` | writes the target document (`DOC`) |
+| 2 | `hsb-synthesizer` | composes `derived` sections for the writer (read-only) |
+| 2 | `hsb-glossary-keeper` | writes `glossary.md` |
+| 2 | `hsb-gap-reporter` | writes `readiness-report.md` |
+| 2 | `hsb-confidence-auditor` | re-scores + gate verdict (read-only) |
+| 3 | `hsb-humanizer` | writes `output/humanized.md` |
+| 3 | `hsb-translator` | writes `output/translated.<lang>.md` |
+| 3 | `hsb-visual-enricher` | writes `output/enriched.md` |
+| 4 | `hsb-packager` | writes `output/manifest.md` |
 
-Agent definitions live in `.claude/agents/intake-*.md`.
+Agent definitions live in `agents/hsb-*.md`.
 
 ## Session artifacts
 
@@ -216,9 +221,9 @@ The plugin is self-contained (template, companion guide, and exemplar are bundle
 under [`assets/`](assets/)), so no repository content is needed at runtime.
 
 - **Codex**: see [`../../codex/README.md`](../../codex/README.md) — the same method
-  files, an `AGENTS.md` orchestrator, an `/hsb-teamwork-intake-brainstorm` prompt, and the 15
-  roles as Codex subagents (`hsb-intake-*.toml`), run sequentially under Codex's
-  single-agent model.
+  files, an `AGENTS.md` orchestrator, an `/hsb-teamwork-intake-brainstorm` prompt, and the 16
+  roles as Codex subagents (`hsb-*.toml`, same names as the Claude agents), run
+  sequentially under Codex's single-agent model.
 
 To target a different document type, copy
 `assets/target-template.intake-record.md`, re-annotate its sections, and pass it
@@ -244,11 +249,11 @@ plugins/hsb-teamwork/        # the Claude Code plugin (self-contained)
 │       ├── target-template.intake-record.md
 │       ├── target-template.intake-record.guide.md
 │       └── golden-example.md
-├── agents/intake-*.md                 # 15 Claude subagents (plugin-namespaced)
+├── agents/hsb-*.md                    # 16 Claude subagents (phase-agnostic specialists)
 └── codex/                             # Codex adapter (reuses the files above)
     ├── AGENTS.md
     ├── prompts/hsb-teamwork-intake-brainstorm.md
-    └── agents/hsb-intake-*.toml        # 15 Codex subagents (flat namespace -> prefixed)
+    └── agents/hsb-*.toml               # 16 Codex subagents (same names, flat namespace)
 ```
 
 The repo root holds `.claude-plugin/marketplace.json`, and `.claude/skills` +

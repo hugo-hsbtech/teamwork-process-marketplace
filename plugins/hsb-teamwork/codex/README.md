@@ -11,16 +11,17 @@ This adapter covers **two skills**: `intake-brainstorm` and `readiness-package`.
 | `AGENTS.md` | the orchestrator entry — Codex reads it from repo root → cwd, or install it as a prompt; covers both skills |
 | `prompts/hsb-teamwork-intake-brainstorm.md` | custom prompt → `/hsb-teamwork-intake-brainstorm` slash command |
 | `prompts/hsb-teamwork-readiness-package.md` | custom prompt → `/hsb-teamwork-readiness-package` slash command |
-| `agents/hsb-intake-*.toml` | 15 Codex subagents (one per role) for intake-brainstorm, mirroring the Claude agents |
-| `agents/hsb-readiness-drafter.toml` | RP subagent: proposes first-draft content for new RP sections (Origin=ai_drafted); role spec at `../agents/readiness-drafter.md` |
-| `agents/hsb-readiness-inheritor.toml` | RP subagent: carries intake-record sections into the RP (Origin=inherited); role spec at `../agents/readiness-inheritor.md` |
-| `agents/hsb-readiness-escalation-flagger.toml` | RP subagent: decides CTO TA and records tech-assessment-ref; role spec at `../agents/readiness-escalation-flagger.md` |
+| `agents/hsb-*.toml` | 16 engine subagents (one per role) shared by both skills, mirroring the Claude agents |
+| `agents/hsb-stage-inheritor.toml` | proposes carry-forward entries from an upstream stage (Origin=inherited); role spec at `../agents/hsb-stage-inheritor.md` |
+| `agents/hsb-section-drafter.toml` | proposes first-draft content for the sections a stage introduces (Origin=ai_drafted); role spec at `../agents/hsb-section-drafter.md` |
+| `agents/hsb-escalation-flagger.toml` | decides whether the demand owes a downstream specialist assessment (CTO TA today); role spec at `../agents/hsb-escalation-flagger.md` |
 
-> **Naming:** Codex has a **flat** namespace for prompts and subagents, so they are
-> vendor-prefixed `hsb-intake-*` / `hsb-readiness-*` to avoid collisions. Claude
-> namespaces components under the plugin instead, so its skill/agents stay unprefixed
-> (`intake-*`, `readiness-*`). Each Codex subagent reads its shared role spec from the
-> unprefixed `agents/<role>.md` and the shared `skills/<skill>/references/`.
+> **Naming:** every agent is named for the specialty it performs, not the phase it
+> runs in, so one roster serves intake-brainstorm, readiness-package, and the planned
+> stages. The names are identical on Claude and Codex: `hsb-<role>`. Codex needs the
+> `hsb-` vendor prefix because its namespace is **flat**; Claude adopts the same
+> prefix so the two rosters line up one-to-one. Each Codex subagent reads its shared
+> role spec from `../agents/hsb-<role>.md` and the shared `skills/<skill>/references/`.
 
 ## Setup
 
@@ -30,8 +31,7 @@ cp codex/prompts/hsb-teamwork-intake-brainstorm.md   ~/.codex/prompts/
 cp codex/prompts/hsb-teamwork-readiness-package.md   ~/.codex/prompts/
 
 # Subagents (project-scoped or global):
-cp codex/agents/hsb-intake-*.toml      .codex/agents/   # or ~/.codex/agents/
-cp codex/agents/hsb-readiness-*.toml   .codex/agents/   # or ~/.codex/agents/
+cp codex/agents/hsb-*.toml   .codex/agents/   # or ~/.codex/agents/
 
 # Orchestrator entry: keep codex/AGENTS.md reachable, or drop it in as AGENTS.md.
 ```

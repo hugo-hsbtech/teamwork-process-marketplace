@@ -106,29 +106,30 @@ role yourself as a step, in this order:
    revisit / batch) and output language (default pt-BR); resolve-or-resume the
    `<demand-slug>-readiness/` session; validate the RP template and derive
    `contract.lock.md`.
-2. **Draft pass:** Inheritor role (`hsb-readiness-inheritor`) carries graded
+2. **Draft pass:** Inheritor role (`hsb-stage-inheritor`) carries graded
    sections from the intake-record forward (Origin=inherited). Drafter role
-   (`hsb-readiness-drafter`) proposes first-draft content for all new RP sections
+   (`hsb-section-drafter`) proposes first-draft content for all new RP sections
    (Origin=ai_drafted).
 3. **Confirm loop:** present pre-filled RP to the PO section by section; PO judges,
    edits, or accepts; questions are a fallback only. Loop until every blocksFreeze
    section reaches its threshold or has an honest disposition.
 4. **Production:** write the final RP document; Escalation Flagger role
-   (`hsb-readiness-escalation-flagger`) records the tech-assessment-ref disposition
+   (`hsb-escalation-flagger`) records the tech-assessment-ref disposition
    (deferred when a CTO TA is owed, so the RP freezes provisionally rather than
    blocking indefinitely).
 5. **Wrap:** write `output/manifest.md`.
 
-### The three readiness-* subagents
+### The three stage-agnostic subagents this skill drives
 
-| Subagent TOML | Role |
+| Subagent TOML | Role here |
 |---|---|
-| `agents/hsb-readiness-inheritor.toml` | carries intake sections forward (Origin=inherited) |
-| `agents/hsb-readiness-drafter.toml` | proposes new RP sections (Origin=ai_drafted) |
-| `agents/hsb-readiness-escalation-flagger.toml` | decides CTO TA and records tech-assessment-ref |
+| `agents/hsb-stage-inheritor.toml` | carries the upstream intake-record forward (Origin=inherited) |
+| `agents/hsb-section-drafter.toml` | proposes the RP's new sections (Origin=ai_drafted) |
+| `agents/hsb-escalation-flagger.toml` | decides CTO TA and records tech-assessment-ref |
 
-Each reads its full role spec from `../agents/readiness-<role>.md` and the shared
-references. Run them sequentially (Codex is single-agent).
+Each reads its full role spec from `../agents/<role>.md` (e.g.
+`../agents/hsb-stage-inheritor.md`) and the shared references. Run them sequentially
+(Codex is single-agent).
 
 ### Modes
 

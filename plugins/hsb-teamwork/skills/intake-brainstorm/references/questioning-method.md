@@ -9,7 +9,7 @@ exist and what "good enough" means; this file says *how to ask*.
 ## Cardinal rules
 
 1. **Harvest before you ask.** Mine the opening statement and every referenced
-   file first (that is File Extraction's job). Pre-fill everything sourceable as
+   file first (that is Evidence Extractor's job). Pre-fill everything sourceable as
    `inferred` with a precise `source`, then ask only the gaps. The person should
    feel "it read my stuff," never "it ignored what I gave it."
 2. **One theme at a time, ≈1–3 questions.** A wall of questions is a form, not a

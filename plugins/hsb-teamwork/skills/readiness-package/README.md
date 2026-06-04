@@ -26,15 +26,16 @@ justify, and freeze**.
 
 Two principles underpin correctness and parallelism:
 
-1. **Draft-then-confirm.** `readiness-inheritor` carries inheritable sections
-   forward from the intake-record at preserved confidence; `readiness-drafter`
+1. **Draft-then-confirm.** `hsb-stage-inheritor` carries inheritable sections
+   forward from the intake-record at preserved confidence; `hsb-section-drafter`
    proposes first drafts for the new product sections. Every section has an
    entry — `inherited`, `ai_drafted`, or an honest `discovery` — before the PO
    opens the document. Questions are a fallback, not the primary mode.
 2. **One writer per file.** `readiness-document.md` is written exclusively by
-   `intake-doc-updater`; `qa-log.md` is written exclusively by
-   `intake-ledger-writer`. All three `readiness-*` agents are read-only proposers;
-   the orchestrator routes their proposals through the single writers.
+   `hsb-doc-updater`; `qa-log.md` is written exclusively by
+   `hsb-ledger-writer`. The three stage-agnostic proposers this skill drives
+   (`hsb-stage-inheritor`, `hsb-section-drafter`, `hsb-escalation-flagger`) are
+   read-only; the orchestrator routes their proposals through the single writers.
 
 ## How to invoke
 
@@ -84,7 +85,7 @@ All artifacts land in `SESSION_ROOT/<demand-slug>-readiness/`:
 The RP stops at product definition. Technical viability and architectural
 constraints belong to the CTO's **Technical Assessment** — a separate artefact.
 
-`readiness-escalation-flagger` detects architectural triggers (infrastructure
+`hsb-escalation-flagger` detects architectural triggers (infrastructure
 changes, multi-tenancy, AI/runtime behaviour, security/auth, external integrations
 with unknowns) and proposes the compound shape `TechAssessmentRef.status =
 requested` AND `disposition = deferred` — the `deferred` disposition is what the
@@ -138,9 +139,9 @@ plugins/hsb-teamwork/
 │       ├── target-template.readiness-package.md    # default RP template (annotated)
 │       ├── target-template.readiness-package.guide.md  # companion filling guide
 │       └── golden-example.md                       # calibration exemplar
-└── agents/intake-*.md                              # 15 reused intake engine agents
+└── agents/hsb-*.md                                 # 16 shared engine agents
 ```
 
-The three `readiness-*` agents (`readiness-inheritor`, `readiness-drafter`,
-`readiness-escalation-flagger`) are defined in `agents/readiness-*.md` alongside
-the intake agents.
+The three stage-agnostic agents this skill drives (`hsb-stage-inheritor`,
+`hsb-section-drafter`, `hsb-escalation-flagger`) are defined in `agents/hsb-*.md`
+alongside the rest of the shared roster.

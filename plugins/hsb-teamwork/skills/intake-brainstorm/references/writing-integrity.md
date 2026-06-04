@@ -71,7 +71,7 @@ their file without ever re-emitting another agent's untouched content. Reach for
 # Write coordination — queue, merge, conflicts
 
 Truncation loses content from *one* write. Coordination protects content across
-*many* writes. The read-only proposers (Strategist, File Extraction, Reconciler,
+*many* writes. The read-only proposers (Strategist, Evidence Extractor, Reconciler,
 Auditor) run in parallel and produce a *stream of proposed changes*; the single
 writer must absorb all of them without losing or clobbering anything.
 

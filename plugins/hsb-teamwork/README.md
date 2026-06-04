@@ -80,7 +80,8 @@ triggers are flagged automatically.
 ## B. Codex
 
 Codex has no marketplace; you place three kinds of file. Codex uses a **flat
-namespace**, so the Codex artifacts are vendor-prefixed `hsb-intake-*`.
+namespace**, so the Codex artifacts are vendor-prefixed `hsb-*` (the same names the
+Claude agents use).
 
 ### Install
 
@@ -93,8 +94,8 @@ cd plugins/hsb-teamwork
 # 1. Slash command  ->  /hsb-teamwork-intake-brainstorm
 cp codex/prompts/hsb-teamwork-intake-brainstorm.md  ~/.codex/prompts/
 
-# 2. The 15 subagents (project-scoped, or ~/.codex/agents for global)
-mkdir -p .codex/agents && cp codex/agents/hsb-intake-*.toml  .codex/agents/
+# 2. The 16 subagents (project-scoped, or ~/.codex/agents for global)
+mkdir -p .codex/agents && cp codex/agents/hsb-*.toml  .codex/agents/
 
 # 3. Orchestrator instructions: either drop codex/AGENTS.md in as AGENTS.md
 #    at your project root, or rely on the slash command above.
@@ -135,9 +136,9 @@ different document type, copy that file, re-annotate its sections (`id`, `blocks
 
 ## Notes
 
-- **Naming:** Claude namespaces components under the plugin, so its skill/agents
-  stay unprefixed (`intake-*`). Codex is flat, so its prompt and subagents are
-  `hsb-intake-*`.
+- **Naming:** agents are named for the specialty they perform, not the phase they
+  run in (`hsb-<role>`), so one roster serves every skill. The names are identical on
+  Claude and Codex; Codex needs the `hsb-` vendor prefix because its namespace is flat.
 - **"I don't know" never blocks** — it becomes an honest disposition (assumption /
   discovery / deferred).
 - See [`skills/intake-brainstorm/README.md`](skills/intake-brainstorm/README.md)
