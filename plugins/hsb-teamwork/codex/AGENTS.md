@@ -1,12 +1,12 @@
 # hsb-teamwork — Codex entry point (AGENTS.md)
 
-This adapter covers **two skills**: `intake-brainstorm` and `readiness-package`.
+This adapter covers **two skills**: `origination-brainstorm` and `readiness-package`.
 Both reuse identical method files from `../skills/` — no duplicated logic. Claude
 Code and Codex read the same specs; only the harness differs.
 
 This is the **Codex** adapter for the skills described in
-`../skills/intake-brainstorm/SKILL.md` and `../skills/readiness-package/SKILL.md`. It
-reuses the identical method files — `../skills/intake-brainstorm/references/`, `../skills/intake-brainstorm/assets/`, `../skills/readiness-package/references/`, and `../skills/readiness-package/assets/` — so there
+`../skills/origination-brainstorm/SKILL.md` and `../skills/readiness-package/SKILL.md`. It
+reuses the identical method files — `../skills/origination-brainstorm/references/`, `../skills/origination-brainstorm/assets/`, `../skills/readiness-package/references/`, and `../skills/readiness-package/assets/` — so there
 is **no duplicated logic**: Claude Code and Codex read the same specs, they just
 spawn work differently.
 
@@ -14,10 +14,10 @@ spawn work differently.
 
 - Drop this file in a project as `AGENTS.md` (Codex reads it automatically from
   the repo root down to the working directory), **or**
-- Install it as a custom prompt: copy `prompts/hsb-teamwork-intake-brainstorm.md` to
-  `~/.codex/prompts/` to get an `/hsb-teamwork-intake-brainstorm` slash command.
+- Install it as a custom prompt: copy `prompts/hsb-teamwork-origination-brainstorm.md` to
+  `~/.codex/prompts/` to get an `/hsb-teamwork-origination-brainstorm` slash command.
 
-Either way, keep the `intake-brainstorm/` skill folder (its `references/` and
+Either way, keep the `origination-brainstorm/` skill folder (its `references/` and
 `assets/`) reachable from where you run Codex, since this entry points at those
 files by relative path.
 
@@ -28,14 +28,14 @@ a fully-filled target document, then produce humanized / translated / enriched
 variants. You are the only layer that talks to the human.
 
 Read these once, then follow them for the whole run:
-- `../skills/intake-brainstorm/references/orchestration.md` — the phases and the agent roles.
-- `../skills/intake-brainstorm/references/contract-and-template.md` — the template-as-contract + threshold X.
-- `../skills/intake-brainstorm/references/ledger-schema.md` — the Q&A ledger format.
-- `../skills/intake-brainstorm/references/questioning-method.md` — how to ask.
-- `../skills/intake-brainstorm/references/writing-integrity.md` — the no-truncation + merge rules (critical).
-- `../skills/intake-brainstorm/references/grounding.md` + `../skills/intake-brainstorm/assets/golden-example.md` — the quality bar.
+- `../skills/origination-brainstorm/references/orchestration.md` — the phases and the agent roles.
+- `../skills/origination-brainstorm/references/contract-and-template.md` — the template-as-contract + threshold X.
+- `../skills/origination-brainstorm/references/ledger-schema.md` — the Q&A ledger format.
+- `../skills/origination-brainstorm/references/questioning-method.md` — how to ask.
+- `../skills/origination-brainstorm/references/writing-integrity.md` — the no-truncation + merge rules (critical).
+- `../skills/origination-brainstorm/references/grounding.md` + `../skills/origination-brainstorm/assets/golden-example.md` — the quality bar.
 
-Default target template: `../skills/intake-brainstorm/assets/target-template.intake-record.md` (+ its
+Default target template: `../skills/origination-brainstorm/assets/target-template.origination-record.md` (+ its
 `...guide.md`). Swap it by pointing at a different annotated template.
 
 ## Codex execution model (the one real difference from Claude)
@@ -68,7 +68,7 @@ by performing each role yourself as a step, in this order:
   truncation risk, so this matters more in Codex, not less: write full content,
   prefer section-scoped edits over whole-file rewrites, end every produced
   document with `<!-- END OF DOCUMENT -->`, and verify it is present before moving
-  on. Full rules in `../skills/intake-brainstorm/references/writing-integrity.md`.
+  on. Full rules in `../skills/origination-brainstorm/references/writing-integrity.md`.
 
 ## Modes
 
@@ -82,32 +82,32 @@ producing draft-for-review documents). Same as the Claude version.
 
 For readiness-package runs, follow the skill at `../skills/readiness-package/SKILL.md`
 and its references under `../skills/readiness-package/references/`. Start with
-`../skills/readiness-package/references/orchestration.md`. The intake-brainstorm
+`../skills/readiness-package/references/orchestration.md`. The origination-brainstorm
 references (especially `sessions.md` and `writing-integrity.md`) also apply.
 
 ### Your role: readiness-package orchestrator
 
-You turn a Product Ready intake-record into a fully-filled Readiness Package
+You turn a Product Ready origination-record into a fully-filled Readiness Package
 document, drafting all new sections and inheriting the graded sections from the
-linked intake-record. You are the only layer that talks to the human.
+linked origination-record. You are the only layer that talks to the human.
 
 Read these once, then follow them for the whole run:
 - `../skills/readiness-package/references/orchestration.md` — phases, agent roles, phase gates.
 - `../skills/readiness-package/references/escalation.md` — CTO Technical Assessment trigger rules.
-- `../skills/intake-brainstorm/references/sessions.md` — session resolve-or-resume.
-- `../skills/intake-brainstorm/references/writing-integrity.md` — no-truncation + merge rules (critical).
+- `../skills/origination-brainstorm/references/sessions.md` — session resolve-or-resume.
+- `../skills/origination-brainstorm/references/writing-integrity.md` — no-truncation + merge rules (critical).
 
 ### Codex execution model for readiness-package
 
 Run the phases **sequentially** — either as Codex subagents or by performing each
 role yourself as a step, in this order:
 
-1. **Setup:** identify the demand and the linked intake-record; pick mode (fresh /
+1. **Setup:** identify the demand and the linked origination-record; pick mode (fresh /
    revisit / batch) and output language (default pt-BR); resolve-or-resume the
    `<demand-slug>-readiness/` session; validate the RP template and derive
    `contract.lock.md`.
 2. **Draft pass:** Inheritor role (`hsb-readiness-inheritor`) carries graded
-   sections from the intake-record forward (Origin=inherited). Drafter role
+   sections from the origination-record forward (Origin=inherited). Drafter role
    (`hsb-readiness-drafter`) proposes first-draft content for all new RP sections
    (Origin=ai_drafted).
 3. **Confirm loop:** present pre-filled RP to the PO section by section; PO judges,
@@ -123,7 +123,7 @@ role yourself as a step, in this order:
 
 | Subagent TOML | Role |
 |---|---|
-| `agents/hsb-readiness-inheritor.toml` | carries intake sections forward (Origin=inherited) |
+| `agents/hsb-readiness-inheritor.toml` | carries origination sections forward (Origin=inherited) |
 | `agents/hsb-readiness-drafter.toml` | proposes new RP sections (Origin=ai_drafted) |
 | `agents/hsb-readiness-escalation-flagger.toml` | decides CTO TA and records tech-assessment-ref |
 
@@ -132,4 +132,4 @@ references. Run them sequentially (Codex is single-agent).
 
 ### Modes
 
-Same three modes as intake-brainstorm: Fresh (default), Revisit, Batch/headless.
+Same three modes as origination-brainstorm: Fresh (default), Revisit, Batch/headless.

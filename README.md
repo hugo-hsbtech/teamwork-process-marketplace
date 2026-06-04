@@ -33,7 +33,7 @@ grounds every answer in evidence, marks what is still unknown honestly (rather
 than blocking on it), and hands back a document a team can triage and plan
 against — plus humanized, translated, and visually-enriched variants.
 
-It is the intake stage of a larger **demand-to-delivery** model whose lineage
+It is the origination stage of a larger **demand-to-delivery** model whose lineage
 runs through Stage-Gate (Cooper), Dual-Track / Continuous Discovery (Cagan,
 Torres), Theory of Constraints (Goldratt), Lean Software Development
 (Poppendieck), Product Development Flow (Reinertsen), and Team Topologies
@@ -48,7 +48,7 @@ on Claude Code or `/hsb-teamwork-<skill>` on Codex.
 
 | Step            | Skill                   | Status      |
 |-----------------|-------------------------|-------------|
-| Intake          | **`intake-brainstorm`** | ✅ available |
+| Origination          | **`origination-brainstorm`** | ✅ available |
 | Readiness       | `readiness-package`     | 🔜 planned  |
 | Tech assessment | `tech-assessment`       | 🔜 planned  |
 | PRD             | `prd-generation`        | 🔜 planned  |
@@ -58,7 +58,7 @@ carry across the whole toolkit.
 
 ---
 
-## The `intake-brainstorm` skill
+## The `origination-brainstorm` skill
 
 Turns a raw Submitter description — a sentence, a paragraph, and/or referenced
 files — into a fully-filled **target document**, through a confidence-driven
@@ -165,26 +165,26 @@ flowchart TD
 
 | Phase | Agent                        | Role                                         |
 |-------|------------------------------|----------------------------------------------|
-| 1     | `intake-template-validator`  | validates the template (read-only)           |
-| 1     | `intake-source-indexer`      | writes `sources/`, `sources-index.md`        |
-| 1     | `intake-template-analyst`    | writes `contract.lock.md` (+ hash / restart) |
-| 2     | `intake-question-strategist` | proposes next questions (read-only)          |
-| 2     | `intake-file-extraction`     | proposes answers from files (read-only)      |
-| 2     | `intake-reconciler`          | resolves evidence conflicts (read-only)      |
-| 2     | `intake-ledger-writer`       | writes `qa-log.md`                           |
-| 2     | `intake-doc-updater`         | writes `target-document.md`                  |
-| 2     | `intake-glossary-keeper`     | writes `glossary.md`                         |
-| 2     | `intake-readiness-reporter`  | writes `readiness-report.md`                 |
-| 2     | `intake-confidence-auditor`  | re-scores + gate verdict (read-only)         |
-| 3     | `intake-humanizer`           | writes `output/humanized.md`                 |
-| 3     | `intake-translator`          | writes `output/translated.<lang>.md`         |
-| 3     | `intake-visual-enricher`     | writes `output/enriched.md`                  |
-| 4     | `intake-packager`            | writes `output/manifest.md`                  |
+| 1     | `origination-template-validator`  | validates the template (read-only)           |
+| 1     | `origination-source-indexer`      | writes `sources/`, `sources-index.md`        |
+| 1     | `origination-template-analyst`    | writes `contract.lock.md` (+ hash / restart) |
+| 2     | `origination-question-strategist` | proposes next questions (read-only)          |
+| 2     | `origination-file-extraction`     | proposes answers from files (read-only)      |
+| 2     | `origination-reconciler`          | resolves evidence conflicts (read-only)      |
+| 2     | `origination-ledger-writer`       | writes `qa-log.md`                           |
+| 2     | `origination-doc-updater`         | writes `target-document.md`                  |
+| 2     | `origination-glossary-keeper`     | writes `glossary.md`                         |
+| 2     | `origination-readiness-reporter`  | writes `readiness-report.md`                 |
+| 2     | `origination-confidence-auditor`  | re-scores + gate verdict (read-only)         |
+| 3     | `origination-humanizer`           | writes `output/humanized.md`                 |
+| 3     | `origination-translator`          | writes `output/translated.<lang>.md`         |
+| 3     | `origination-visual-enricher`     | writes `output/enriched.md`                  |
+| 4     | `origination-packager`            | writes `output/manifest.md`                  |
 
 ### Session artifacts
 
 A run creates one folder per demand at `<SESSION_ROOT>/<demand-slug>/`, where
-`SESSION_ROOT` is `$INTAKE_HOME` or your project's git root + `/intake`:
+`SESSION_ROOT` is `$ORIGINATION_HOME` or your project's git root + `/origination`:
 
 ```
 <SESSION_ROOT>/<demand-slug>/
@@ -210,9 +210,9 @@ A run creates one folder per demand at `<SESSION_ROOT>/<demand-slug>/`, where
   path (extract → fill → score) produces "draft for review" documents, one session
   per signal, in parallel.
 
-> Deep dives: the skill's [README](plugins/hsb-teamwork/skills/intake-brainstorm/README.md)
-> (architecture + diagrams), its [`SKILL.md`](plugins/hsb-teamwork/skills/intake-brainstorm/SKILL.md)
-> (the orchestrator spec), and [`references/`](plugins/hsb-teamwork/skills/intake-brainstorm/references/)
+> Deep dives: the skill's [README](plugins/hsb-teamwork/skills/origination-brainstorm/README.md)
+> (architecture + diagrams), its [`SKILL.md`](plugins/hsb-teamwork/skills/origination-brainstorm/SKILL.md)
+> (the orchestrator spec), and [`references/`](plugins/hsb-teamwork/skills/origination-brainstorm/references/)
 > (the authoritative method files).
 
 ---
@@ -224,18 +224,18 @@ A run creates one folder per demand at `<SESSION_ROOT>/<demand-slug>/`, where
 ```
 /plugin marketplace add hugo-hsbtech/teamwork-process-marketplace
 /plugin install hsb-teamwork@hsb-tech
-/hsb-teamwork:intake-brainstorm
+/hsb-teamwork:origination-brainstorm
 ```
 
 Then describe your demand in one line, optionally naming files to read. You can
 also just describe a demand in normal chat — the skill triggers on
-intake/capture/triage requests.
+origination/capture/triage requests.
 
 ### Codex
 
 Codex has no marketplace; you place a slash-command prompt, the 15 subagents, and
 an `AGENTS.md` orchestrator. The Codex artifacts are vendor-prefixed
-(`hsb-intake-*`) because Codex uses a flat namespace.
+(`hsb-origination-*`) because Codex uses a flat namespace.
 
 Full install steps for both tools, scopes, updating, and customizing the target
 template: **[`plugins/hsb-teamwork/README.md`](plugins/hsb-teamwork/README.md)**.
@@ -248,15 +248,15 @@ template: **[`plugins/hsb-teamwork/README.md`](plugins/hsb-teamwork/README.md)**
 plugin). It mirrors Claude's `skill-creator` eval loop: run each case headlessly
 **with the skill** and as a **baseline**, then grade.
 
-- **Layer 1 (automated, gating):** [`assertions.py`](evals/intake-brainstorm/assertions.py)
+- **Layer 1 (automated, gating):** [`assertions.py`](evals/origination-brainstorm/assertions.py)
   checks the contract on the produced `target-document.md` — sentinel /
   no-truncation, every blocking section resolved-or-disposed, confidence lines,
   triage flagged draft.
-- **Layer 2 (qualitative):** an LLM grades against [`rubric.md`](evals/intake-brainstorm/rubric.md)
+- **Layer 2 (qualitative):** an LLM grades against [`rubric.md`](evals/origination-brainstorm/rubric.md)
   and the golden output.
 
 ```bash
-cd evals/intake-brainstorm
+cd evals/origination-brainstorm
 ./run.sh        # self-tests the grader; runs live cases if the `claude` CLI is present
 ```
 
@@ -276,11 +276,11 @@ teamwork-process-marketplace/
 │   └── hsb-teamwork/                 # the plugin (self-contained)
 │       ├── .claude-plugin/plugin.json
 │       ├── README.md                 # install & use guide
-│       ├── skills/intake-brainstorm/ # SKILL.md, README, references/, assets/
-│       ├── agents/intake-*.md        # 15 Claude subagents
+│       ├── skills/origination-brainstorm/ # SKILL.md, README, references/, assets/
+│       ├── agents/origination-*.md        # 15 Claude subagents
 │       └── codex/                    # Codex adapter (AGENTS.md, prompt, *.toml agents)
 ├── evals/                            # repo-level eval suite (dev/CI only)
-│   └── intake-brainstorm/            # assertions.py, evals.json, rubric.md, run.sh, fixtures, golden
+│   └── origination-brainstorm/            # assertions.py, evals.json, rubric.md, run.sh, fixtures, golden
 └── .claude/skills/                   # symlink into the plugin for local discoverability
 ```
 
@@ -293,8 +293,8 @@ evals and local use) without a second copy.
 
 ## Roadmap
 
-- [x] `intake-brainstorm` — intake → filled, confidence-graded document + variants
-- [ ] `readiness-package` — turn an intake into a delivery-ready package
+- [x] `origination-brainstorm` — origination → filled, confidence-graded document + variants
+- [ ] `readiness-package` — turn an origination into a delivery-ready package
 - [ ] `tech-assessment` — technical feasibility and approach
 - [ ] `prd-generation` — PRD from the accumulated context
 
