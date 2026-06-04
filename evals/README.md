@@ -6,15 +6,27 @@ the repo root, like Claude's `skill-creator` keeps evals beside the skill.
 
 ```
 evals/
-└── intake-brainstorm/
-    ├── evals.json      # test cases (prompt + files + golden + expected_output)
+├── intake-brainstorm/
+│   ├── evals.json      # test cases (prompt + files + golden + expected_output)
+│   ├── rubric.md       # grading: Layer 1 structural (auto) + Layer 2 qualitative (LLM)
+│   ├── assertions.py   # the deterministic structural grader (no LLM needed)
+│   ├── run.sh          # runner: self-test + (with claude CLI) live cases -> scorecard
+│   ├── golden/         # expected outputs (also grader fixtures)
+│   ├── fixtures/       # seeds (e.g. an under-filled doc for the revisit case)
+│   └── runs/           # per-iteration outputs + scorecard (gitignored)
+└── readiness-package/
+    ├── evals.json      # test cases: intake-record -> RP (fresh) + revisit underfilled RP
     ├── rubric.md       # grading: Layer 1 structural (auto) + Layer 2 qualitative (LLM)
-    ├── assertions.py   # the deterministic structural grader (no LLM needed)
+    ├── assertions.py   # deterministic structural grader for readiness-document.md
     ├── run.sh          # runner: self-test + (with claude CLI) live cases -> scorecard
-    ├── golden/         # expected outputs (also grader fixtures)
-    ├── fixtures/       # seeds (e.g. an under-filled doc for the revisit case)
+    ├── golden/         # seat-management.readiness-document.md (reference output)
+    ├── fixtures/       # intake-record input + underfilled RP seed for revisit case
     └── runs/           # per-iteration outputs + scorecard (gitignored)
 ```
+
+`readiness-package/` grades the `intake-record → RP` pipeline: structural checks
+via `assertions.py` (sentinel, annotations, blocking sections, Origin tags,
+tech-assessment-ref resolution) and qualitative scoring via `rubric.md`.
 
 ## How it works (mirrors skill-creator's loop)
 
