@@ -3,7 +3,7 @@
 The origination-record is not just another source file. It is an **already-graded
 artefact**: its sections have been scored, dispositioned, and (in many cases)
 confirmed by the Submitter. Treating it as a source to re-infer from scratch
-would lose that grading and inflate confidence. Instead, `readiness-inheritor`
+would lose that grading and inflate confidence. Instead, `hsb-stage-inheritor`
 carries it forward — preserving the origination's `confidence`, `source`, and
 `disposition` — so the PO receives a traceable baseline rather than a
 blank form.
@@ -12,12 +12,12 @@ blank form.
 
 ## How the origination-record is indexed
 
-`origination-source-indexer` indexes the initiative's `origination/` phase folder
+`hsb-source-indexer` indexes the initiative's `origination/` phase folder
 (its `output/humanized.md` or `target-document.md`) into `sources/` alongside any
 extra files the PO provides. The origination artefact is flagged as the **primary
 source** in `sources-index.md`.
 
-`readiness-inheritor` reads the indexed origination-record and the RP contract
+`hsb-stage-inheritor` reads the indexed origination-record and the RP contract
 (`contract.lock.md`). It does **not** perform fresh inference — it maps
 origination sections to RP sections, preserving the origination's already-graded values.
 
@@ -34,7 +34,7 @@ origination sections to RP sections, preserving the origination's already-graded
 | `effort-estimate` (if present) | `effort-estimate` (Avaliação Preliminar de Esforço e Custo) | Carry as preliminary; hint that the firm number comes from the CTO's Technical Assessment. |
 | `roadmap` (if present) | `roadmap` (Roadmap Sugerido) | Direct carry. |
 
-Sections with no origination coverage are left for `readiness-drafter` to propose
+Sections with no origination coverage are left for `hsb-section-drafter` to propose
 or for the PO to author. The inheritor never invents content for sections the
 origination did not cover.
 
@@ -73,10 +73,10 @@ inherited open items silently disappear; each carries its original origination r
 ## What the inheritor does not do
 
 - It does not draft the new product sections (`business-rules`, `user-stories`,
-  `nfrs`, `edge-cases`). Those are `readiness-drafter`'s job.
+  `nfrs`, `edge-cases`). Those are `hsb-section-drafter`'s job.
 - It does not re-infer content the origination already graded — it carries forward,
   not re-analyzes.
 - It does not write any shared files. It returns proposals to the orchestrator,
-  which routes them through `origination-ledger-writer` → `origination-doc-updater`
+  which routes them through `hsb-ledger-writer` → `hsb-doc-updater`
   per the single-writer rule
   ([`../../origination-brainstorm/references/writing-integrity.md`](../../origination-brainstorm/references/writing-integrity.md)).

@@ -29,11 +29,11 @@ import sys
 # most of these, not all, so an honest headless run that skips an optional agent
 # (e.g. glossary-keeper) still passes.
 CORE = {
-    "origination-source-indexer",
-    "origination-template-analyst",
-    "readiness-inheritor",
-    "readiness-drafter",
-    "origination-doc-updater",
+    "hsb-source-indexer",
+    "hsb-template-analyst",
+    "hsb-stage-inheritor",
+    "hsb-section-drafter",
+    "hsb-doc-updater",
 }
 
 # Claude Code's subagent-spawn tool is "Task"; accept "Agent" too for forward-compat.

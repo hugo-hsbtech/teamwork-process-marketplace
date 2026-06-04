@@ -51,7 +51,7 @@ audit it directly, and structured enough that any agent can parse it.
 3. **Answers can spawn questions.** When an answer reveals a new gap, the Strategist
    proposes a follow-up; record it as a new `Q###` with `spawned-by: A<n>` and link
    it from the parent's `Follow-ups`.
-4. **One source of provenance per answer.** If File Extraction and a human both
+4. **One source of provenance per answer.** If Evidence Extractor and a human both
    answer, record the higher-confidence one and note the other in `Hint`; flag the
    conflict for the Auditor to reconcile.
 5. **Keep the header summary fresh** (readiness %, gate state, open blocking) on
@@ -65,7 +65,7 @@ audit it directly, and structured enough that any agent can parse it.
 ## How other agents use it (read-only)
 
 - **Question Strategist** reads it to avoid re-asking and to see which gaps remain.
-- **File Extraction** reads open questions and proposes answers it can source.
+- **Evidence Extractor** reads open questions and proposes answers it can source.
 - **Doc Updater** reads `answered`/`parked` entries to fill the target document.
 - **Confidence Auditor** cross-checks the ledger's confidences against the filled
   document and against the contract's thresholds.

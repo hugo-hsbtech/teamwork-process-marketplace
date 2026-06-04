@@ -20,7 +20,7 @@ the pen on the same file, so concurrent writes are impossible by construction.
 | `qa-log.md` | Ledger Writer | read-only |
 | `target-document.md` | Doc Updater | read-only |
 | `glossary.md` | Glossary Keeper | read-only |
-| `readiness-report.md` | Readiness Reporter | read-only |
+| `readiness-report.md` | Gap Reporter | read-only |
 | `output/humanized.md` | Humanizer | read-only |
 | `output/translated.<lang>.md` | Translator | read-only |
 | `output/enriched.md` | Visual Enricher | read-only |
@@ -64,7 +64,7 @@ already exists you **resume** it rather than creating a duplicate.
 ├── qa-log.md                 # Ledger Writer
 ├── target-document.md        # Doc Updater
 ├── glossary.md               # Glossary Keeper
-├── readiness-report.md       # Readiness Reporter
+├── readiness-report.md       # Gap Reporter
 └── output/                   # Humanizer · Translator · Enricher · Packager
 ```
 
@@ -103,7 +103,7 @@ Each iteration:
      section it targets, a **`mode`** (`open` | `choice`), and — for `choice`
      questions — 2–4 hypothesis `options`, aimed at the lowest-confidence
      **blocking** gaps.
-   - **File Extraction** — reads `sources/` + `qa-log.md` + contract, returns
+   - **Evidence Extractor** — reads `sources/` + `qa-log.md` + contract, returns
      *proposed answers* to open questions it can satisfy from the files
      (`inferred`, with `source` + confidence).
 2. **Ledger Writer** (serial) commits: the new questions+rationale, and any
@@ -117,15 +117,20 @@ Each iteration:
    prose reply). Hand them to the **Ledger Writer** to record, including which option
    was picked and the disposition it maps to. An answer may spawn follow-up questions
    → Strategist proposes, Ledger Writer records them with `spawned-by`.
-4. **Doc Updater** (serial) fills/updates `target-document.md` from the committed
-   answers, preserving each section's confidence/disposition line.
+4. **Doc Updater** (serial) fills/updates the `capture` sections of
+   `target-document.md` from the committed answers, preserving each section's
+   confidence/disposition line. For `derived` sections (executive summary, triage
+   draft), spawn the **Synthesizer** (read-only) to compose them from their declared
+   `inputs` at a confidence bounded by those inputs, then route its proposals back to
+   the Doc Updater, which writes them. (Skip it for trivial templates with no derived
+   sections — the Doc Updater can compose inline.)
 5. **Confidence Auditor** (read-only) re-scores every section against its rubric,
    checks the document for truncation, **flags** conflicts (it does not resolve
    them), and returns the **gap verdict** + readiness score.
    - On a flagged conflict, spawn the **Reconciler** (read-only): it recommends
      which value to keep (or a disambiguating question); you route that to the
      Ledger Writer.
-   - To show the human where things stand, spawn the **Readiness Reporter** (writes
+   - To show the human where things stand, spawn the **Gap Reporter** (writes
      `readiness-report.md`) — the live gap map.
    - When domain terms accumulate (typically after the first capture rounds, and
      again before production), spawn the **Glossary Keeper**: it reads `qa-log.md`
@@ -164,9 +169,9 @@ this keeps your context lean ("isolate when satisfied"):
 ## The full roster (each a standalone agent)
 
 - **Setup:** Template Validator, Source Indexer, Template Analyst.
-- **Loop:** Question Strategist, File Extraction, Reconciler (read-only proposers);
-  Ledger Writer, Doc Updater, Glossary Keeper, Readiness Reporter (writers);
-  Confidence Auditor (read-only gate).
+- **Loop:** Question Strategist, Evidence Extractor, Reconciler, Synthesizer
+  (read-only proposers); Ledger Writer, Doc Updater, Glossary Keeper, Gap Reporter
+  (writers); Confidence Auditor (read-only gate).
 - **Production:** Humanizer, then Translator ∥ Visual Enricher.
 - **Wrap:** Packager.
 

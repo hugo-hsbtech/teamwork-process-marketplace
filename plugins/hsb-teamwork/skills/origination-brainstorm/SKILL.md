@@ -56,24 +56,26 @@ ownership table is in `orchestration.md`.
 
 | Phase | `subagent_type` | Role |
 |---|---|---|
-| 1 | `origination-template-validator` | validate the template (read-only); run before the Analyst |
-| 1 | `origination-source-indexer` | normalize referenced files into `sources/` |
-| 1 | `origination-template-analyst` | derive `contract.lock.md`, hash, restart-on-change |
-| 2 | `origination-question-strategist` | propose the next questions (read-only) |
-| 2 | `origination-file-extraction` | propose answers from files (read-only) |
-| 2 | `origination-reconciler` | resolve conflicting evidence (read-only) |
-| 2 | `origination-ledger-writer` | commit questions/answers to `qa-log.md` |
-| 2 | `origination-doc-updater` | fill `target-document.md` |
-| 2 | `origination-glossary-keeper` | maintain canonical terms in `glossary.md` |
-| 2 | `origination-readiness-reporter` | write the live gap map `readiness-report.md` |
-| 2 | `origination-confidence-auditor` | re-score + gate verdict (read-only) |
-| 3 | `origination-humanizer` | write `output/humanized.md` |
-| 3 | `origination-translator` | write `output/translated.<lang>.md` |
-| 3 | `origination-visual-enricher` | write `output/enriched.md` |
-| 4 | `origination-packager` | write `output/manifest.md` |
+| 1 | `hsb-template-validator` | validate the template (read-only); run before the Analyst |
+| 1 | `hsb-source-indexer` | normalize referenced files into `sources/` |
+| 1 | `hsb-template-analyst` | derive `contract.lock.md`, hash, restart-on-change |
+| 2 | `hsb-question-strategist` | propose the next questions (read-only) |
+| 2 | `hsb-evidence-extractor` | propose answers from files (read-only) |
+| 2 | `hsb-reconciler` | resolve conflicting evidence (read-only) |
+| 2 | `hsb-ledger-writer` | commit questions/answers to `qa-log.md` |
+| 2 | `hsb-doc-updater` | fill `target-document.md` (`DOC`) |
+| 2 | `hsb-synthesizer` | compose `derived` sections (exec summary, triage draft) for the Doc Updater (read-only) |
+| 2 | `hsb-glossary-keeper` | maintain canonical terms in `glossary.md` |
+| 2 | `hsb-gap-reporter` | write the live gap map `readiness-report.md` |
+| 2 | `hsb-confidence-auditor` | re-score + gate verdict (read-only) |
+| 3 | `hsb-humanizer` | write `output/humanized.md` |
+| 3 | `hsb-translator` | write `output/translated.<lang>.md` |
+| 3 | `hsb-visual-enricher` | write `output/enriched.md` |
+| 4 | `hsb-packager` | write `output/manifest.md` |
 
 When spawning, inject the paths each agent needs: `SKILL_DIR` (this skill's base
-directory, which you are told at launch), `PHASE_DIR`, `TEMPLATE`, and the
+directory, which you are told at launch), `PHASE_DIR`, `TEMPLATE`, `DOC` (the
+target document's filename — `target-document.md` for this skill), and the
 template's companion guide if one exists. **Run independent agents in the same
 turn** so they execute in parallel (Indexer ∥ Analyst; Strategist ∥ Extraction;
 Translator ∥ Enricher).
@@ -89,7 +91,7 @@ gap map to the human, and re-open questions only on the weak sections. Bump the
 version when you re-write.
 
 **Batch / headless** — a set of raw signals (a folder of briefs/tickets) and no
-live human. For each, run Phase 1 + the *no-question* path: File Extraction
+live human. For each, run Phase 1 + the *no-question* path: Evidence Extractor
 proposes, Ledger Writer commits, Doc Updater fills, Auditor scores. Truly-unknown
 blocking fields land as honest `assumption`/`discovery` dispositions rather than
 real answers, so batch output is always "draft for review," never `gateReady` on

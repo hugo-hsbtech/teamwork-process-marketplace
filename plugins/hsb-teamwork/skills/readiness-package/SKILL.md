@@ -41,7 +41,7 @@ Before doing anything else, bind yourself to these invariants:
    `readiness-document.md`, `qa-log.md`, `contract.lock.md`, `sources/`, or
    anything under `output/`. The *only* way each of those files gets written is
    by spawning its single writer agent (the document is written **exclusively**
-   by `origination-doc-updater`; the ledger **exclusively** by `origination-ledger-writer`).
+   by `hsb-doc-updater`; the ledger **exclusively** by `hsb-ledger-writer`).
    If you are about to type document content yourself, stop — that is the bug.
 2. **Delegation is mandatory, not optional.** "Run the pipeline" means *spawn the
    subagents via the Agent tool*. It never means "read the template and fill it
@@ -49,8 +49,8 @@ Before doing anything else, bind yourself to these invariants:
 3. **Independent agents go out in ONE message.** When two agents have no
    dependency, emit both Agent calls in the **same assistant turn** so they run
    concurrently. Do not spawn one, await it, then spawn the next. The parallel
-   pairs are: Phase 1 `origination-source-indexer` ∥ `origination-template-analyst`;
-   Phase 4 `origination-translator` ∥ `origination-visual-enricher`.
+   pairs are: Phase 1 `hsb-source-indexer` ∥ `hsb-template-analyst`;
+   Phase 4 `hsb-translator` ∥ `hsb-visual-enricher`.
 4. **Track the run with TodoWrite.** Create the checklist below *before* Phase 1.
    Mark each item `in_progress` when you spawn its agent(s) and `completed` when
    their output is routed. This is the mechanism that stops a multi-agent run
@@ -63,15 +63,15 @@ these invariants matter most.
 
 ### The phase checklist (TodoWrite this before Phase 1)
 
-- [ ] Phase 1 · spawn `origination-template-validator`; gate on pass
-- [ ] Phase 1 · **same message:** `origination-source-indexer` ∥ `origination-template-analyst`
-- [ ] Phase 1 · spawn `readiness-inheritor`; route proposals → `origination-ledger-writer` → `origination-doc-updater`
-- [ ] Phase 2 · spawn `readiness-drafter`; route → `origination-doc-updater`
-- [ ] Phase 2 · spawn `readiness-escalation-flagger`; route → `origination-doc-updater`
-- [ ] Phase 3 · loop: `origination-confidence-auditor` → (fallback) `origination-question-strategist` → `origination-ledger-writer` → `origination-doc-updater` until `freezeReady`
-- [ ] Phase 4 · spawn `origination-humanizer` (await — it writes the copy the rest read)
-- [ ] Phase 4 · **same message:** `origination-translator` ∥ `origination-visual-enricher`
-- [ ] Phase 4 · spawn `origination-packager`; report to the PO
+- [ ] Phase 1 · spawn `hsb-template-validator`; gate on pass
+- [ ] Phase 1 · **same message:** `hsb-source-indexer` ∥ `hsb-template-analyst`
+- [ ] Phase 1 · spawn `hsb-stage-inheritor`; route proposals → `hsb-ledger-writer` → `hsb-doc-updater`
+- [ ] Phase 2 · spawn `hsb-section-drafter`; route → `hsb-doc-updater`
+- [ ] Phase 2 · spawn `hsb-escalation-flagger`; route → `hsb-doc-updater`
+- [ ] Phase 3 · loop: `hsb-confidence-auditor` → (fallback) `hsb-question-strategist` → `hsb-ledger-writer` → `hsb-doc-updater` until `freezeReady`
+- [ ] Phase 4 · spawn `hsb-humanizer` (await — it writes the copy the rest read)
+- [ ] Phase 4 · **same message:** `hsb-translator` ∥ `hsb-visual-enricher`
+- [ ] Phase 4 · spawn `hsb-packager`; report to the PO
 
 ## First, read these (once per run)
 
@@ -83,7 +83,7 @@ these invariants matter most.
 - [`references/drafting.md`](references/drafting.md) — the draft-then-confirm
   model: Stage 1 (all sections pre-filled before the PO sees them), Stage 2
   (confirm loop), the Origin lifecycle, and when questions fire (fallback only).
-- [`references/inheritance.md`](references/inheritance.md) — how `readiness-inheritor`
+- [`references/inheritance.md`](references/inheritance.md) — how `hsb-stage-inheritor`
   maps origination sections to RP sections, what it preserves (confidence, source,
   disposition), and what it does not do.
 - [`references/escalation.md`](references/escalation.md) — architectural trigger
@@ -128,11 +128,11 @@ route to the single writer. Concurrent writes are impossible by construction.
 
 The two writers that matter most:
 
-- `readiness-document.md` — sole writer: **`origination-doc-updater`**
-- `qa-log.md` — sole writer: **`origination-ledger-writer`**
+- `readiness-document.md` — sole writer: **`hsb-doc-updater`**
+- `qa-log.md` — sole writer: **`hsb-ledger-writer`**
 
-All three `readiness-*` agents (`readiness-inheritor`, `readiness-drafter`,
-`readiness-escalation-flagger`) are **read-only proposers** that return structured
+All three `readiness-*` agents (`hsb-stage-inheritor`, `hsb-section-drafter`,
+`hsb-escalation-flagger`) are **read-only proposers** that return structured
 proposals to you; they never touch shared files directly.
 
 Every writer re-reads the file before editing (read-modify-write), merges changes
@@ -142,39 +142,45 @@ keyed by stable id, never clobbers, and the document ends with a
 
 ## The agents you spawn (`subagent_type`)
 
-### Reused origination engine agents (15)
+### Reused engine agents (16)
 
 | Phase | `subagent_type` | Role |
 |---|---|---|
-| 1 | `origination-template-validator` | validate the RP template (read-only) |
-| 1 | `origination-source-indexer` | normalize the origination-record folder + extra files into `sources/` |
-| 1 | `origination-template-analyst` | derive `contract.lock.md`, hash, restart-on-change |
-| 2 | `origination-question-strategist` | propose questions targeting low-confidence gaps (fallback only) |
-| 2 | `origination-file-extraction` | propose answers from indexed sources (read-only) |
-| 2 | `origination-reconciler` | resolve conflicts (origination-said-X / PO-says-Y) (read-only) |
-| 2 | `origination-ledger-writer` | commit questions/answers/proposals to `qa-log.md` |
-| 2 | `origination-doc-updater` | write and update `readiness-document.md` |
-| 2 | `origination-glossary-keeper` | maintain canonical terms in `glossary.md` (optional) |
-| 2 | `origination-readiness-reporter` | write the live gap map `readiness-report.md` (optional) |
-| 2 | `origination-confidence-auditor` | re-score sections + gate verdict (read-only) |
-| 4 | `origination-humanizer` | write `output/humanized.md` |
-| 4 | `origination-translator` | write `output/translated.pt-BR.md` |
-| 4 | `origination-visual-enricher` | write `output/enriched.md` |
-| 4 | `origination-packager` | write `output/manifest.md` |
+| 1 | `hsb-template-validator` | validate the RP template (read-only) |
+| 1 | `hsb-source-indexer` | normalize the origination-record folder + extra files into `sources/` |
+| 1 | `hsb-template-analyst` | derive `contract.lock.md`, hash, restart-on-change |
+| 2 | `hsb-question-strategist` | propose questions targeting low-confidence gaps (fallback only) |
+| 2 | `hsb-evidence-extractor` | propose answers from indexed sources (read-only) |
+| 2 | `hsb-reconciler` | resolve conflicts (origination-said-X / PO-says-Y) (read-only) |
+| 2 | `hsb-ledger-writer` | commit questions/answers/proposals to `qa-log.md` |
+| 2 | `hsb-doc-updater` | write and update `readiness-document.md` (`DOC`) |
+| 2 | `hsb-synthesizer` | compose generic `derived` sections for the Doc Updater (read-only, optional — in the RP the `inherited-readiness` and `tech-assessment-ref` derived sections are composed by the Stage Inheritor and Escalation Flagger instead) |
+| 2 | `hsb-glossary-keeper` | maintain canonical terms in `glossary.md` (optional) |
+| 2 | `hsb-gap-reporter` | write the live gap map `readiness-report.md` (optional) |
+| 2 | `hsb-confidence-auditor` | re-score sections + gate verdict (read-only) |
+| 4 | `hsb-humanizer` | write `output/humanized.md` |
+| 4 | `hsb-translator` | write `output/translated.pt-BR.md` |
+| 4 | `hsb-visual-enricher` | write `output/enriched.md` |
+| 4 | `hsb-packager` | write `output/manifest.md` |
 
-### New readiness agents (3)
+### Stage-agnostic agents this skill drives (3)
 
-| Phase | `subagent_type` | Role |
+These are named for their function, not for this phase, so later stages
+(`tech-assessment`, `prd-generation`) can reuse them. The readiness-package skill is
+their first consumer.
+
+| Phase | `subagent_type` | Role here |
 |---|---|---|
-| 1 | `readiness-inheritor` | read-only proposer — maps origination sections to RP sections, preserving confidence/source/disposition |
-| 2 | `readiness-drafter` | read-only proposer — proposes `ai_drafted` entries for the new product sections (`business-rules`, `user-stories`, `nfrs`, `edge-cases`) |
-| 2 | `readiness-escalation-flagger` | read-only proposer — scans for architectural triggers and proposes the `tech-assessment-ref` disposition |
+| 1 | `hsb-stage-inheritor` | read-only proposer — carries the upstream origination-record forward into the RP's inheritable sections, preserving confidence/source/disposition |
+| 2 | `hsb-section-drafter` | read-only proposer — proposes `ai_drafted` entries for the RP's new product sections (`business-rules`, `user-stories`, `nfrs`, `edge-cases`) |
+| 2 | `hsb-escalation-flagger` | read-only proposer — scans for architectural triggers and proposes the `tech-assessment-ref` disposition |
 
 Full roster with writer-ownership table and phase assignments:
 [`references/orchestration.md`](references/orchestration.md).
 
 When spawning, inject the paths each agent needs: `SKILL_DIR` (this skill's base
-directory), `PHASE_DIR`, `TEMPLATE`, and the companion guide. **Run independent
+directory), `PHASE_DIR`, `TEMPLATE`, `DOC` (the target document's filename —
+`readiness-document.md` for this skill), and the companion guide. **Run independent
 agents in the same turn** so they execute in parallel (Indexer ∥ Analyst in Phase 1;
 Translator ∥ Visual Enricher in Phase 4).
 
@@ -184,11 +190,11 @@ The screen "should not look like a form filled by hand — it should look like t
 system already rationalized the demand and is asking for the PO's judgment." The
 pipeline pre-fills **every section** before the PO sees the document:
 
-- **`readiness-inheritor`** carries forward inheritable sections (`exec-summary`
+- **`hsb-stage-inheritor`** carries forward inheritable sections (`exec-summary`
   (synthesized from problem, objectives, and scope), `context-problem`,
   `objectives`, `personas`, `scope`, `metrics`, `release-criteria`, `risks`)
   from the origination-record at preserved confidence, tagged `Origin: inherited`.
-- **`readiness-drafter`** proposes first drafts for the new product sections
+- **`hsb-section-drafter`** proposes first drafts for the new product sections
   (`business-rules`, `user-stories` with Given/When/Then ACs, `nfrs`, `edge-cases`),
   tagged `Origin: ai_drafted` at partial confidence with an explicit hint naming
   what the PO must confirm.
@@ -196,7 +202,7 @@ pipeline pre-fills **every section** before the PO sees the document:
   `Disposition: discovery` — honesty over invented coverage.
 
 The PO then reviews, edits, justifies, and freezes. **Questions are a fallback**:
-the `origination-question-strategist` fires only when the engine could not draft a
+the `hsb-question-strategist` fires only when the engine could not draft a
 section confidently, or when the PO explicitly asks to deepen it. In all other
 cases the PO judges the draft directly.
 
@@ -232,7 +238,7 @@ these runs are embarrassingly parallel.
 ## Language
 
 Default **pt-BR** for the conversation and the captured document. Detect the
-language of the PO's opening statement and mirror it. The `origination-translator`
+language of the PO's opening statement and mirror it. The `hsb-translator`
 produces any additional requested languages as separate `output/` files. Keep
 section structure identical across languages. Machine-readable field labels,
 enum values (`Origin`, `disposition`, `TechAssessmentRef.status`), and `origination:`
@@ -247,17 +253,17 @@ annotation markers stay in the engine's canonical form regardless of output lang
    is needed at this stage — do not ask a wall of questions.
 2. **Phase 1 — Setup (parallel, gate):** spawn Validator; then Indexer ∥ Analyst in
    parallel (Indexer ingests the origination-record folder; Analyst derives
-   `contract.lock.md`). Once both complete, spawn `readiness-inheritor` (read-only);
-   route its proposals through `origination-ledger-writer` → `origination-doc-updater`
+   `contract.lock.md`). Once both complete, spawn `hsb-stage-inheritor` (read-only);
+   route its proposals through `hsb-ledger-writer` → `hsb-doc-updater`
    (serial). Gate: `contract.lock.md` must exist and inherited sections must be
    written before Phase 2.
-3. **Phase 2 — Draft pass:** spawn `readiness-drafter` (reads contract + inherited
-   entries + sources; proposes `ai_drafted` sections); `origination-doc-updater` writes
-   them. Then spawn `readiness-escalation-flagger` (reads scope + business-rules;
-   proposes `tech-assessment-ref`); `origination-doc-updater` records. At end of Phase 2
+3. **Phase 2 — Draft pass:** spawn `hsb-section-drafter` (reads contract + inherited
+   entries + sources; proposes `ai_drafted` sections); `hsb-doc-updater` writes
+   them. Then spawn `hsb-escalation-flagger` (reads scope + business-rules;
+   proposes `tech-assessment-ref`); `hsb-doc-updater` records. At end of Phase 2
    every section has an entry — `inherited`, `ai_drafted`, or `discovery`.
 4. **Phase 3 — Confirm loop (until `freezeReady`):** Auditor re-scores → (optional)
-   Readiness Reporter writes gap map → (fallback) Strategist proposes questions →
+   Gap Reporter writes gap map → (fallback) Strategist proposes questions →
    PO reviews/edits document → Ledger Writer records confirmations → Doc Updater
    promotes origins to `po_authored`. Loop until every `blocksFreeze` section is
    resolved or honestly disposed, and `TechAssessmentRef.status ∈ {signed,
@@ -273,7 +279,7 @@ The RP stops at product definition. Technical viability, architectural constrain
 and technical risk belong to the CTO's **Technical Assessment** — a separate
 artefact. The RP references it via `TechAssessmentRef`; it does not absorb it.
 
-`readiness-escalation-flagger` detects architectural triggers (infrastructure
+`hsb-escalation-flagger` detects architectural triggers (infrastructure
 changes, multi-tenancy / data-isolation, AI / runtime behaviour, security /
 auth / authorization, external integrations with unknowns) and proposes the
 `tech-assessment-ref` disposition. See [`references/escalation.md`](references/escalation.md)
@@ -318,7 +324,7 @@ The template is swappable — pass a custom RP template path as `TEMPLATE`.
 |---|---|
 | `references/orchestration.md` | Phase flow, full agent roster + phase assignments, single-writer ownership table |
 | `references/drafting.md` | Draft-then-confirm model, Origin lifecycle, when questions fire |
-| `references/inheritance.md` | Origination-to-RP section mapping, what `readiness-inheritor` preserves and does not do |
+| `references/inheritance.md` | Origination-to-RP section mapping, what `hsb-stage-inheritor` preserves and does not do |
 | `references/escalation.md` | Architectural trigger list, `TechAssessmentRef` shape, freeze gate, provisional-freeze path |
 | `assets/target-template.readiness-package.md` | Default RP template (annotated) |
 | `assets/target-template.readiness-package.guide.md` | Companion filling guide |

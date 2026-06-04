@@ -103,12 +103,12 @@ flowchart TD
 
     subgraph P2["Phase 2 · Capture loop"]
         QS["Question Strategist"]
-        FE["File Extraction"]
+        FE["Evidence Extractor"]
         RC["Reconciler"]
         LW["Ledger Writer"] --> LEDGER[("qa-log.md")]
         DU["Doc Updater"] --> DOC[("target-document.md")]
         GK["Glossary Keeper"] --> GLOSS[("glossary.md")]
-        RR["Readiness Reporter"] --> REPORT[("readiness-report.md")]
+        RR["Gap Reporter"] --> REPORT[("readiness-report.md")]
         CA["Confidence Auditor"]
     end
 
@@ -150,7 +150,7 @@ flowchart TD
 - **Phase 1 — Setup:** the Validator checks the template; then the Source Indexer
   and Template Analyst run in parallel. The Analyst derives the contract and
   records the template hash (a changed hash restarts analysis).
-- **Phase 2 — Capture loop:** the Strategist and File Extraction *propose* in
+- **Phase 2 — Capture loop:** the Strategist and Evidence Extractor *propose* in
   parallel; the Ledger Writer commits questions + answers; the Doc Updater fills
   the document; the Auditor re-scores and gates. Questions are tagged `open`
   (free-text prose, for pain/why gaps) or `choice` (interactive, scaffolded
@@ -161,25 +161,30 @@ flowchart TD
   the Translator and Visual Enricher run in parallel as independent variants.
 - **Phase 4 — Wrap:** the Packager writes a manifest indexing every artifact.
 
-### The 15 agents (+ orchestrator)
+### The 16 agents (+ orchestrator)
+
+The agents are named for the specialty they perform, not the phase they run in, so
+the same roster serves origination-brainstorm, readiness-package, and the planned stages.
+The names are identical on Claude and Codex (`hsb-<role>`).
 
 | Phase | Agent                        | Role                                         |
 |-------|------------------------------|----------------------------------------------|
-| 1     | `origination-template-validator`  | validates the template (read-only)           |
-| 1     | `origination-source-indexer`      | writes `sources/`, `sources-index.md`        |
-| 1     | `origination-template-analyst`    | writes `contract.lock.md` (+ hash / restart) |
-| 2     | `origination-question-strategist` | proposes next questions (read-only)          |
-| 2     | `origination-file-extraction`     | proposes answers from files (read-only)      |
-| 2     | `origination-reconciler`          | resolves evidence conflicts (read-only)      |
-| 2     | `origination-ledger-writer`       | writes `qa-log.md`                           |
-| 2     | `origination-doc-updater`         | writes `target-document.md`                  |
-| 2     | `origination-glossary-keeper`     | writes `glossary.md`                         |
-| 2     | `origination-readiness-reporter`  | writes `readiness-report.md`                 |
-| 2     | `origination-confidence-auditor`  | re-scores + gate verdict (read-only)         |
-| 3     | `origination-humanizer`           | writes `output/humanized.md`                 |
-| 3     | `origination-translator`          | writes `output/translated.<lang>.md`         |
-| 3     | `origination-visual-enricher`     | writes `output/enriched.md`                  |
-| 4     | `origination-packager`            | writes `output/manifest.md`                  |
+| 1     | `hsb-template-validator`  | validates the template (read-only)           |
+| 1     | `hsb-source-indexer`      | writes `sources/`, `sources-index.md`        |
+| 1     | `hsb-template-analyst`    | writes `contract.lock.md` (+ hash / restart) |
+| 2     | `hsb-question-strategist` | proposes next questions (read-only)          |
+| 2     | `hsb-evidence-extractor`  | proposes answers from files (read-only)      |
+| 2     | `hsb-reconciler`          | resolves evidence conflicts (read-only)      |
+| 2     | `hsb-ledger-writer`       | writes `qa-log.md`                           |
+| 2     | `hsb-doc-updater`         | writes the target document (`DOC`)           |
+| 2     | `hsb-synthesizer`         | composes `derived` sections for the writer (read-only) |
+| 2     | `hsb-glossary-keeper`     | writes `glossary.md`                         |
+| 2     | `hsb-gap-reporter`        | writes `readiness-report.md`                 |
+| 2     | `hsb-confidence-auditor`  | re-scores + gate verdict (read-only)         |
+| 3     | `hsb-humanizer`           | writes `output/humanized.md`                 |
+| 3     | `hsb-translator`          | writes `output/translated.<lang>.md`         |
+| 3     | `hsb-visual-enricher`     | writes `output/enriched.md`                  |
+| 4     | `hsb-packager`            | writes `output/manifest.md`                  |
 
 ### Initiative artifacts
 
@@ -241,9 +246,9 @@ origination/capture/triage requests.
 
 ### Codex
 
-Codex has no marketplace; you place a slash-command prompt, the 15 subagents, and
-an `AGENTS.md` orchestrator. The Codex artifacts are vendor-prefixed
-(`hsb-origination-*`) because Codex uses a flat namespace.
+Codex has no marketplace; you place a slash-command prompt, the 16 subagents, and
+an `AGENTS.md` orchestrator. The Codex artifacts are vendor-prefixed (`hsb-*`)
+because Codex uses a flat namespace; the names match the Claude agents one-to-one.
 
 Full install steps for both tools, scopes, updating, and customizing the target
 template: **[`plugins/hsb-teamwork/README.md`](plugins/hsb-teamwork/README.md)**.
@@ -285,7 +290,7 @@ teamwork-process-marketplace/
 │       ├── .claude-plugin/plugin.json
 │       ├── README.md                 # install & use guide
 │       ├── skills/origination-brainstorm/ # SKILL.md, README, references/, assets/
-│       ├── agents/origination-*.md        # 15 Claude subagents
+│       ├── agents/hsb-*.md           # 16 Claude subagents (phase-agnostic specialists)
 │       └── codex/                    # Codex adapter (AGENTS.md, prompt, *.toml agents)
 ├── evals/                            # repo-level eval suite (dev/CI only)
 │   └── origination-brainstorm/            # assertions.py, evals.json, rubric.md, run.sh, fixtures, golden

@@ -6,7 +6,7 @@ the CTO's Technical Assessment. The RP references the Assessment via
 `TechAssessmentRef`; it does not absorb it. The fusion happens in the PRD
 (`PRD = RP + Technical Assessment`).
 
-`readiness-escalation-flagger` decides one thing: does this demand owe a
+`hsb-escalation-flagger` decides one thing: does this demand owe a
 Technical Assessment? It runs once in the draft pass, after scope and
 business-rules sections are drafted.
 
@@ -59,7 +59,7 @@ and re-freezes; the CTO does not redefine the product.
 ## Documented divergence — provisional freeze (temporary)
 
 **Current state:** the `tech-assessment` skill does not yet exist.
-When `readiness-escalation-flagger` detects a trigger, it proposes:
+When `hsb-escalation-flagger` detects a trigger, it proposes:
 
 ```
 TechAssessmentRef.status   = requested
