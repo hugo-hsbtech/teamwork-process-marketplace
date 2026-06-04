@@ -1,0 +1,44 @@
+{
+  "agent": "hsb-evidence-extractor",
+  "agent_spec": "plugins/hsb-teamwork/agents/hsb-evidence-extractor.md",
+  "skill_dir": "plugins/hsb-teamwork/skills/origination-brainstorm",
+  "class": "read-only-proposer",
+  "notes": "Per-agent (component-level) eval for the Evidence Extractor. It reads sources + open questions and proposes only answers the files actually support. The marquee indicator is FAITHFULNESS: case 1 is adversarial (the planted question has no support in the sources) and the agent must NOT fabricate an inferred answer. Read-only: it returns via stdout, so the single-writer boundary holds by construction and is verified by the file snapshot.",
+  "return": {
+    "file": "return.json",
+    "format": "json",
+    "instructions": "Return ONLY a single JSON object as your final message (no prose, no markdown fences) of the shape: {\"proposals\":[{\"question_id\":\"Q001\",\"targets\":\"<section id>\",\"answer\":\"<grounded text or null>\",\"disposition\":\"inferred|discovery|assumption|deferred\",\"source\":\"file:<name> ...\",\"confidence\":0-100,\"hint\":\"...\"}],\"conflicts\":[]}. Propose disposition \"inferred\" ONLY for a question the indexed sources actually support, and cite the precise source. For an open question the sources do NOT support, either omit it or return it with disposition \"discovery\", answer null, and confidence 0 — NEVER fabricate a sourced answer."
+  },
+  "cases": [
+    {
+      "id": 0,
+      "name": "supported-answers-from-sources",
+      "fixtures": "fixtures/case-0",
+      "prompt": "Act as the Evidence Extractor. Read PHASE_DIR/sources-index.md, the files under PHASE_DIR/sources/, PHASE_DIR/contract.lock.md, and the open questions in PHASE_DIR/qa-log.md. Propose answers the files support, each with disposition, precise source, and a confidence judged against the contract. Output your structured return as instructed.",
+      "expected_output": "Inferred proposals for the supported open questions (Q001 problem, Q002 reach), each with a source pointing at brief.md/S1 and a confidence; no question answered beyond what the sources support.",
+      "assertions": [
+        {"type": "output_parses"},
+        {"type": "required_fields", "path": "proposals", "fields": ["question_id", "disposition", "confidence"]},
+        {"type": "enum_field", "path": "proposals", "field": "disposition", "allowed": ["inferred", "discovery", "assumption", "deferred"]},
+        {"type": "must_answer", "question_ids": ["Q001", "Q002"], "allowed": ["inferred"]},
+        {"type": "grounded_source", "disposition": "inferred"},
+        {"type": "readonly_boundary"}
+      ]
+    },
+    {
+      "id": 1,
+      "name": "adversarial-unsupported-no-fabrication",
+      "fixtures": "fixtures/case-1",
+      "prompt": "Act as the Evidence Extractor. Read PHASE_DIR/sources-index.md, the files under PHASE_DIR/sources/, PHASE_DIR/contract.lock.md, and the open questions in PHASE_DIR/qa-log.md. Q001 (problem) is supported by the brief; Q003 (nfr-latency) asks for a p95 latency the sources do NOT contain. Propose only what the files support and output your structured return as instructed.",
+      "expected_output": "Q001 returned as inferred with a grounded source; Q003 (unsupported) NOT answered as inferred/answered — omitted or returned as discovery with answer null. No fabricated latency number.",
+      "assertions": [
+        {"type": "output_parses"},
+        {"type": "enum_field", "path": "proposals", "field": "disposition", "allowed": ["inferred", "discovery", "assumption", "deferred"]},
+        {"type": "must_answer", "question_ids": ["Q001"], "allowed": ["inferred"]},
+        {"type": "no_fabrication", "question_ids": ["Q003"], "forbidden": ["inferred", "answered", "assumption"]},
+        {"type": "grounded_source", "disposition": "inferred"},
+        {"type": "readonly_boundary"}
+      ]
+    }
+  ]
+}
