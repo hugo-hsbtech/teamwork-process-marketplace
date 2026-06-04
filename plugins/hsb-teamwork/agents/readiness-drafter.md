@@ -24,5 +24,8 @@ content for:
 Every proposed entry carries `Origin: ai_drafted`, `Disposition: ai_drafted`, and
 **partial confidence** (below the section threshold), with a hint stating what the PO
 must confirm. Honesty over coverage: if the sources don't support a draft, propose a
-`discovery` disposition instead of inventing one. Return your drafts as a structured
-list to the orchestrator. Write nothing.
+`discovery` disposition instead of inventing one. When the orchestrator tells you the
+run is headless (no PO will confirm), propose `Disposition: assumption` (owner: PO,
+"to confirm") for any blocking section you draft below its `min-confidence`, so the
+freeze gate clears honestly instead of failing on a bare unconfirmed `ai_drafted`
+entry. Return your drafts as a structured list to the orchestrator. Write nothing.

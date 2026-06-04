@@ -167,10 +167,17 @@ the document version when re-writing.
 
 **Batch / headless** — a set of `Product Ready` intake-records and no live PO. For
 each, run Phase 1 + the no-question draft path: Inheritor proposes, Drafter
-proposes, Doc Updater writes, Auditor scores. Sections the drafter cannot fill
-confidently land as honest `discovery` dispositions. Output is always "draft for
-review," never `freezeReady` on its own. Produce one `-readiness/` session folder
-per demand; these runs are embarrassingly parallel.
+proposes, Doc Updater writes, Auditor scores. With no PO to confirm, an honest
+disposition is what clears the freeze gate, so resolve every blocking section that
+way before freezing:
+- a section the drafter **cannot fill at all** → `discovery` (owner named, time-boxed);
+- a section it **drafted but cannot raise to its `min-confidence`** (Origin
+  `ai_drafted`, unconfirmed) → `assumption` (owner: PO, "to confirm").
+
+Never leave a bare `ai_drafted` entry sitting below its threshold — that fails the
+gate for the wrong reason. Output is always "draft for review," never a real
+`freezeReady` on its own. Produce one `-readiness/` session folder per demand;
+these runs are embarrassingly parallel.
 
 ## Language
 
