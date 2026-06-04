@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Deterministic structural grader for an intake-brainstorm target document.
+"""Deterministic structural grader for an origination-brainstorm target document.
 
 Validates a produced target-document.md against the contract encoded in its own
-section annotations (<!-- intake: id=...; blocks=...; min-confidence=...; kind=... -->).
+section annotations (<!-- origination: id=...; blocks=...; min-confidence=...; kind=... -->).
 No LLM required. Pairs with rubric.md (the qualitative LLM-graded layer).
 
 Usage:  python3 assertions.py <path/to/target-document.md>
@@ -11,7 +11,7 @@ Exits 0 if all hard checks pass, 1 otherwise. Prints a JSON report.
 import re, sys, json
 
 SENTINEL = "<!-- END OF DOCUMENT -->"
-ANNOT = re.compile(r"<!--\s*intake:\s*(.*?)\s*-->")
+ANNOT = re.compile(r"<!--\s*origination:\s*(.*?)\s*-->")
 # Evals are en-US only (the eval prompts force en-US output regardless of source
 # language), so the grader matches the canonical English field labels and the
 # contract's English disposition enum. Honest dispositions clear the blocking gate

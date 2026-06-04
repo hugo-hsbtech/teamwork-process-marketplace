@@ -2,7 +2,7 @@
 """Deterministic structural grader for a Readiness Package document.
 
 Validates a produced readiness-document.md against the contract encoded in its own
-section annotations (<!-- intake: id=...; blocks=...; min-confidence=...; kind=... -->).
+section annotations (<!-- origination: id=...; blocks=...; min-confidence=...; kind=... -->).
 No LLM required. Pairs with rubric.md (the qualitative LLM-graded layer).
 
 Usage:  python3 assertions.py <path/to/readiness-document.md>
@@ -11,7 +11,7 @@ Exits 0 if all hard checks pass, 1 otherwise. Prints a JSON report.
 import re, sys, json
 
 SENTINEL = "<!-- END OF DOCUMENT -->"
-ANNOT = re.compile(r"<!--\s*intake:\s*(.*?)\s*-->")
+ANNOT = re.compile(r"<!--\s*origination:\s*(.*?)\s*-->")
 HONEST = {"assumption", "discovery", "deferred"}
 ORIGINS = {"inherited", "ai_drafted", "po_authored", "reused_from_kb"}
 TRUNC = ["(unchanged)", "[continues]", "remaining sections omitted",

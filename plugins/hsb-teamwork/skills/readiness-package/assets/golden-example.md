@@ -8,19 +8,19 @@ Assessment reference. Do not copy its content — copy its *bar*.
 
 ---
 
-**Demand:** Self-service seat management for enterprise admins (intake INT-2026-014).
+**Demand:** Self-service seat management for enterprise admins (origination INT-2026-014).
 
 ---
 
-**Contexto e Problema** — `Confidence: 86 · Origin: inherited · Source: intake INT-2026-014 §problem + support export Q1 · Status: resolved · Disposition: inherited · Hint: herdado do intake a 88; levemente rebaixado por falta de breakdown por conta — CS pode detalhar para ~93`
+**Contexto e Problema** — `Confidence: 86 · Origin: inherited · Source: origination INT-2026-014 §problem + support export Q1 · Status: resolved · Disposition: inherited · Hint: herdado do origination a 88; levemente rebaixado por falta de breakdown por conta — CS pode detalhar para ~93`
 
 Enterprise admins não conseguem adicionar ou remover assentos sem abrir ticket de suporte; o lead time é de 1–3 dias úteis. Em ondas de onboarding, um único admin chega a abrir 5–10 tickets. No Q1, 240 tickets foram desse tipo (18% do volume enterprise). A dor é a dependência e a espera — não a ausência de um botão.
 
-`Confidence: 86 · Origin: inherited · Source: intake INT-2026-014 §problem + support export Q1 · Status: resolved · Disposition: inherited · Hint: herdado do intake a 88; levemente rebaixado por falta de breakdown por conta — CS pode detalhar para ~93`
+`Confidence: 86 · Origin: inherited · Source: origination INT-2026-014 §problem + support export Q1 · Status: resolved · Disposition: inherited · Hint: herdado do origination a 88; levemente rebaixado por falta de breakdown por conta — CS pode detalhar para ~93`
 
 ---
 
-**User Stories + Critérios de Aceite** — `Confidence: 80 · Origin: ai_drafted · Source: drafted from scope + intake personas · Status: resolved · Disposition: ai_drafted · Hint: PO confirmou ST-001 e ST-002; AC verificáveis por QA sem acesso ao código`
+**User Stories + Critérios de Aceite** — `Confidence: 80 · Origin: ai_drafted · Source: drafted from scope + origination personas · Status: resolved · Disposition: ai_drafted · Hint: PO confirmou ST-001 e ST-002; AC verificáveis por QA sem acesso ao código`
 
 **ST-001 — Self-service seat add/remove**
 Como admin enterprise, quero adicionar ou remover assentos no painel de faturamento, para não depender do suporte para gestão de licenças.
@@ -34,7 +34,7 @@ Como admin enterprise, quero ver um log das alterações de assentos dos último
 
 *Given* um admin na tela de auditoria *when* ele abre o log de assentos *then* vê cada evento (quem alterou, de N para M, data/hora) em ordem cronológica reversa.
 
-`Confidence: 80 · Origin: ai_drafted · Source: drafted from scope + intake personas · Status: resolved · Disposition: ai_drafted · Hint: PO confirmou ST-001 e ST-002; AC verificáveis por QA sem acesso ao código`
+`Confidence: 80 · Origin: ai_drafted · Source: drafted from scope + origination personas · Status: resolved · Disposition: ai_drafted · Hint: PO confirmou ST-001 e ST-002; AC verificáveis por QA sem acesso ao código`
 
 ---
 
@@ -77,6 +77,6 @@ O PO define o *requisito de qualidade*. Se os targets são atingíveis com a arq
 
 ---
 
-*Textura: herdado onde o intake resolveu (Origin: inherited); rascunhado pela IA onde foi necessário derivar (Origin: ai_drafted); confiança alta só onde há evidência, honestamente rebaixada nas projeções; NFRs descrevem o requisito de qualidade — não afirmam viabilidade; TA referenciado com Disposition=deferred e motivo explícito.*
+*Textura: herdado onde o origination resolveu (Origin: inherited); rascunhado pela IA onde foi necessário derivar (Origin: ai_drafted); confiança alta só onde há evidência, honestamente rebaixada nas projeções; NFRs descrevem o requisito de qualidade — não afirmam viabilidade; TA referenciado com Disposition=deferred e motivo explícito.*
 
 <!-- END OF DOCUMENT -->

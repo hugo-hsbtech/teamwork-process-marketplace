@@ -1,4 +1,4 @@
-# Grading rubric — intake-brainstorm
+# Grading rubric — origination-brainstorm
 
 Two layers. **Structural** is automated (`assertions.py`, deterministic, gates the
 run). **Qualitative** is LLM-graded against the golden bar (judgment, scored 1-5).

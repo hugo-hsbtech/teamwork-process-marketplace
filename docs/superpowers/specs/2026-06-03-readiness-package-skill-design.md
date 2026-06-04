@@ -10,12 +10,12 @@
 ## 1. Purpose
 
 Add a sibling skill `/hsb-teamwork:readiness-package` that automates the Product
-Owner's **Act 2 — Racionalização**: transforming a `Product Ready` **intake-record**
-(produced by the existing `intake-brainstorm` skill) into a frozen **Readiness
+Owner's **Act 2 — Racionalização**: transforming a `Product Ready` **origination-record**
+(produced by the existing `origination-brainstorm` skill) into a frozen **Readiness
 Package (RP)** as defined by `hsb-teamwork-process/templates/02-readiness-package.md`
 and `personas/02-po.md`.
 
-The skill reuses the intake engine's architecture (template-as-contract,
+The skill reuses the origination engine's architecture (template-as-contract,
 single-writer rule, read-modify-write, confidence gate, portable session folder,
 Codex mirror) and adds an RP-specific template, three RP-specific agents, and a
 **draft-then-confirm** authoring model.
@@ -27,7 +27,7 @@ Assessment is owed.
 ### Why this stage
 
 `plugin.json` already lists `readiness-package` as the next planned skill. In the
-business process, the intake plugin covers `00-submitter-brief → 01-intake-record`
+business process, the origination plugin covers `00-submitter-brief → 01-origination-record`
 (the PO's Triagem). The PO's very next act is Racionalização, which produces the
 RP — the "definição de pronto de produto" that, once fused with the CTO's Technical
 Assessment, becomes the PRD that opens the downstream (`personas/02-po.md:311-316`).
@@ -36,7 +36,7 @@ Assessment, becomes the PRD that opens the downstream (`personas/02-po.md:311-31
 
 ## 2. Scope
 
-**In scope:** `intake-record → readiness-package (RP)`, frozen, with humanized /
+**In scope:** `origination-record → readiness-package (RP)`, frozen, with humanized /
 translated / enriched variants and a manifest — as its own sibling skill.
 
 **Out of scope (later cycles):**
@@ -51,15 +51,15 @@ translated / enriched variants and a manifest — as its own sibling skill.
 
 | # | Decision | Choice |
 |---|----------|--------|
-| 1 | Scope | Just the Readiness Package (`intake-record → RP`), as its own skill |
+| 1 | Scope | Just the Readiness Package (`origination-record → RP`), as its own skill |
 | 2 | Agent strategy | Reuse the engine; add only the RP-specific agents the roster genuinely lacks |
-| 3 | Session model | Separate **linked** RP session folder; intake-record pulled in as an inherited source |
+| 3 | Session model | Separate **linked** RP session folder; origination-record pulled in as an inherited source |
 | 4 | Authoring model | **Draft-then-confirm** (engine pre-fills, PO judges); questions are a low-confidence fallback |
 | 5 | Escalation / TA | Detect + flag; record `TechAssessmentRef` as `deferred`; TA itself out of scope |
 | 6 | KB reuse | Deferred to a later iteration |
-| — | Output language | pt-BR mirroring intake (default) |
-| — | References | Shared-by-reference with intake's engine-level method docs; no duplication |
-| — | Naming | New agents `readiness-*`; reused engine agents keep their legacy `intake-*` names |
+| — | Output language | pt-BR mirroring origination (default) |
+| — | References | Shared-by-reference with origination's engine-level method docs; no duplication |
+| — | Naming | New agents `readiness-*`; reused engine agents keep their legacy `origination-*` names |
 
 ---
 
@@ -74,7 +74,7 @@ Every RP entry carries an `origin` (`personas/02-po.md:149`):
 
 | `origin` | Meaning | Confidence |
 |----------|---------|------------|
-| `inherited` | Carried from the intake-record, with `source` | Partial, traceable |
+| `inherited` | Carried from the origination-record, with `source` | Partial, traceable |
 | `ai_drafted` | Engine pre-filled; PO reviews and confirms | Partial until confirmed |
 | `po_authored` | PO decided directly | Full |
 | `reused_from_KB` | Reused from a prior RP/ADR | *(deferred — out of scope)* |
@@ -102,14 +102,14 @@ temporary divergence on the TA condition.
 ## 5. Session & inheritance model
 
 - New **linked** session folder: `SESSION_ROOT/<demand-slug>-readiness/`
-  (`SESSION_ROOT` resolved exactly as in intake: `$INTAKE_HOME` → `<git-root>/intake`
-  → `<cwd>/intake`).
-- The intake stage's `output/humanized.md` (or `target-document.md`) is indexed as
+  (`SESSION_ROOT` resolved exactly as in origination: `$ORIGINATION_HOME` → `<git-root>/origination`
+  → `<cwd>/origination`).
+- The origination stage's `output/humanized.md` (or `target-document.md`) is indexed as
   the **primary source** and treated specially: its already-graded sections
   (problem, personas, scope, metrics) are **carried forward with their
   `confidence / source / disposition` intact** by `readiness-inheritor`, not
   re-inferred from scratch.
-- Resume-by-slug behaves as in intake: re-running continues the same `-readiness`
+- Resume-by-slug behaves as in origination: re-running continues the same `-readiness`
   folder; nothing duplicates (read-modify-write + stable-id keying).
 
 **Folder contents:**
@@ -117,7 +117,7 @@ temporary divergence on the TA condition.
 <SESSION_ROOT>/<demand-slug>-readiness/
 ├── contract.lock.md            # template-analyst (RP contract, hash-locked)
 ├── sources-index.md            # source-indexer
-├── sources/                    # source-indexer (incl. the inherited intake-record)
+├── sources/                    # source-indexer (incl. the inherited origination-record)
 ├── qa-log.md                   # ledger-writer (the ledger)
 ├── readiness-document.md       # doc-updater (the RP being filled)
 ├── glossary.md                 # glossary-keeper (optional)
@@ -169,7 +169,7 @@ with `id / blocks / min-confidence / kind` plus a self-sufficient rubric
   NFRs). The contract is a ceiling, not a mandatory floor (`:224`).
 
 The template is hash-locked into `contract.lock.md` by the reused `template-analyst`;
-changing the template restarts analysis exactly as in intake.
+changing the template restarts analysis exactly as in origination.
 
 ---
 
@@ -178,21 +178,21 @@ changing the template restarts analysis exactly as in intake.
 ### 7.1 Reused engine agents (no code change)
 
 These are template-driven and specialize purely through the new RP template + guide.
-The `intake-` prefix is legacy naming; they are the shared engine.
+The `origination-` prefix is legacy naming; they are the shared engine.
 
-`intake-template-validator`, `intake-source-indexer`, `intake-template-analyst`,
-`intake-question-strategist`, `intake-file-extraction`, `intake-reconciler`,
-`intake-ledger-writer`, `intake-doc-updater`, `intake-glossary-keeper`,
-`intake-readiness-reporter`, `intake-confidence-auditor`, `intake-humanizer`,
-`intake-translator`, `intake-visual-enricher`, `intake-packager`.
+`origination-template-validator`, `origination-source-indexer`, `origination-template-analyst`,
+`origination-question-strategist`, `origination-file-extraction`, `origination-reconciler`,
+`origination-ledger-writer`, `origination-doc-updater`, `origination-glossary-keeper`,
+`origination-readiness-reporter`, `origination-confidence-auditor`, `origination-humanizer`,
+`origination-translator`, `origination-visual-enricher`, `origination-packager`.
 
 ### 7.2 New `readiness-*` agents
 
 | Agent | Origin it serves | Role | Read/write |
 |-------|------------------|------|------------|
-| `readiness-inheritor` | `inherited` | Carry the intake-record's already-graded sections into RP capture sections, preserving `confidence/source/disposition`; mark what the PO must deepen. Semantically distinct from `file-extraction` (fresh inference), so it earns its own agent. | Read-only proposer |
+| `readiness-inheritor` | `inherited` | Carry the origination-record's already-graded sections into RP capture sections, preserving `confidence/source/disposition`; mark what the PO must deepen. Semantically distinct from `file-extraction` (fresh inference), so it earns its own agent. | Read-only proposer |
 | `readiness-drafter` | `ai_drafted` | Propose the new product sections (business rules, user stories + Given/When/Then AC, NFRs/ISO-25010, edge cases) at partial confidence for PO judgment. | Read-only proposer; `doc-updater` remains the single writer |
-| `readiness-escalation-flagger` | — | Scan the emerging RP for architectural triggers (infra, multi-tenancy, IA/runtime, security, integrations), ask the PO to confirm, set `escalation_required`, record `TechAssessmentRef` as `deferred`. No intake equivalent (intake does triage, not CTO-escalation). | Read-only proposer |
+| `readiness-escalation-flagger` | — | Scan the emerging RP for architectural triggers (infra, multi-tenancy, IA/runtime, security, integrations), ask the PO to confirm, set `escalation_required`, record `TechAssessmentRef` as `deferred`. No origination equivalent (origination does triage, not CTO-escalation). | Read-only proposer |
 
 **Single-writer discipline preserved:** all three new agents are read-only proposers.
 The existing `doc-updater` is still the sole writer of `readiness-document.md` and
@@ -205,15 +205,15 @@ PO confirmation flows through ledger-writer → doc-updater promotes to `po_auth
 ## 8. Orchestration — phases
 
 1. **Setup** — `template-validator` → `template-analyst` (RP `contract.lock.md`);
-   `source-indexer` in parallel (indexes the linked intake folder + any extra files);
-   then `readiness-inheritor` pre-fills inheritable sections from the intake-record.
+   `source-indexer` in parallel (indexes the linked origination folder + any extra files);
+   then `readiness-inheritor` pre-fills inheritable sections from the origination-record.
 2. **Draft pass** — `readiness-drafter` proposes the `ai_drafted` sections;
    `doc-updater` writes them at partial confidence; `readiness-escalation-flagger`
    runs once scope/rules are known.
 3. **Confirm loop** — `confidence-auditor` re-scores independently → `question-strategist`
    targets the lowest-confidence / unconfirmed blocking sections (fallback only) →
    PO reviews/edits/confirms → `ledger-writer` records → `doc-updater` promotes
-   origins and raises confidence; `reconciler` on conflicts (e.g. intake said X, PO
+   origins and raises confidence; `reconciler` on conflicts (e.g. origination said X, PO
    now says Y); optional `glossary-keeper` / `readiness-reporter`. Loops until
    `freezeReady`.
 4. **Production** — `humanizer` → `translator` (pt-BR) ∥ `visual-enricher`
@@ -246,7 +246,7 @@ called out in the skill's README and manifest output.
   Claude parallelizes the read-only proposers. No duplicated logic.
 - **Shared method, no duplication:** the RP `references/` adds only RP-specific docs
   (inheritance, draft-then-confirm, escalation, the freeze gate, questioning RP
-  sections) and **cites** intake's engine-level references (single-writer, RMW,
+  sections) and **cites** origination's engine-level references (single-writer, RMW,
   sessions, ledger-schema, grounding) rather than copying them.
 - **`plugin.json`:** move `readiness-package` from "Planned" to implemented; bump
   version.
@@ -260,7 +260,7 @@ plugins/hsb-teamwork/
 ├── skills/readiness-package/
 │   ├── SKILL.md
 │   ├── README.md
-│   ├── references/            # RP-specific docs; cite intake's shared method
+│   ├── references/            # RP-specific docs; cite origination's shared method
 │   └── assets/
 │       ├── target-template.readiness-package.md
 │       ├── target-template.readiness-package.guide.md
@@ -278,7 +278,7 @@ plugins/hsb-teamwork/
 └── .claude-plugin/plugin.json # updated
 ```
 
-Plus an eval suite mirroring `evals/intake-brainstorm/` (fixtures: an intake-record
+Plus an eval suite mirroring `evals/origination-brainstorm/` (fixtures: an origination-record
 golden as input; rubric scoring the frozen RP).
 
 ---
@@ -290,8 +290,8 @@ golden as input; rubric scoring the frozen RP).
 - Whether `readiness-reporter` output should surface the `origin` mix
   (inherited / ai_drafted / po_authored) as a "how much did the PO actually decide"
   signal, echoing the prototype's AI-impact metric (`personas/02-po.md:289`).
-- The eval's reference dataset: reuse the intake golden's downstream, or author a
-  dedicated intake-record → RP golden pair.
+- The eval's reference dataset: reuse the origination golden's downstream, or author a
+  dedicated origination-record → RP golden pair.
 
 ---
 
@@ -303,5 +303,5 @@ golden as input; rubric scoring the frozen RP).
 - `hsb-teamwork-process/02-happy-path.md:174` — RP freezes, then RP + TA fuse into PRD.
 - `hsb-teamwork-process/interactions/05-po-to-cto.md`, `07-po-to-pm.md` — escalation
   and PRD handoff.
-- `plugins/hsb-teamwork/skills/intake-brainstorm/` — the engine being reused.
+- `plugins/hsb-teamwork/skills/origination-brainstorm/` — the engine being reused.
 ```

@@ -1,6 +1,6 @@
 # Orchestration — RP phases, agents, and what is reused
 
-This skill is a **multi-agent pipeline** that extends the intake engine. The
+This skill is a **multi-agent pipeline** that extends the origination engine. The
 conversation you (the orchestrator) run is Layer 0 — the only layer that talks
 to the PO. Everything else is a specialized subagent you spawn with a focused
 prompt and tear down. This file is the authoritative spec for *who runs when,
@@ -13,12 +13,12 @@ Do not copy their rules here; cite and apply them:
 
 | Reference | What it governs |
 |---|---|
-| [`../../intake-brainstorm/references/contract-and-template.md`](../../intake-brainstorm/references/contract-and-template.md) | Template annotation format (`intake:` markers), `contract.lock.md` derivation, template-hash restart policy |
-| [`../../intake-brainstorm/references/ledger-schema.md`](../../intake-brainstorm/references/ledger-schema.md) | `qa-log.md` schema — `Q###` blocks, header summary, rationale/spawned-by fields |
-| [`../../intake-brainstorm/references/sessions.md`](../../intake-brainstorm/references/sessions.md) | Session root resolution (`$INTAKE_HOME` → git-root → cwd), resolve-or-resume, slug derivation |
-| [`../../intake-brainstorm/references/writing-integrity.md`](../../intake-brainstorm/references/writing-integrity.md) | Single-writer rule, read-modify-write, queue/drain, `rev` marker, no-truncation sentinel |
-| [`../../intake-brainstorm/references/grounding.md`](../../intake-brainstorm/references/grounding.md) | Quality calibration against the golden exemplar |
-| [`../../intake-brainstorm/references/questioning-method.md`](../../intake-brainstorm/references/questioning-method.md) | Question rendering (`open` / `choice`), disposition routes, the `AskUserQuestion` protocol |
+| [`../../origination-brainstorm/references/contract-and-template.md`](../../origination-brainstorm/references/contract-and-template.md) | Template annotation format (`origination:` markers), `contract.lock.md` derivation, template-hash restart policy |
+| [`../../origination-brainstorm/references/ledger-schema.md`](../../origination-brainstorm/references/ledger-schema.md) | `qa-log.md` schema — `Q###` blocks, header summary, rationale/spawned-by fields |
+| [`../../origination-brainstorm/references/sessions.md`](../../origination-brainstorm/references/sessions.md) | Session root resolution (`$ORIGINATION_HOME` → git-root → cwd), resolve-or-resume, slug derivation |
+| [`../../origination-brainstorm/references/writing-integrity.md`](../../origination-brainstorm/references/writing-integrity.md) | Single-writer rule, read-modify-write, queue/drain, `rev` marker, no-truncation sentinel |
+| [`../../origination-brainstorm/references/grounding.md`](../../origination-brainstorm/references/grounding.md) | Quality calibration against the golden exemplar |
+| [`../../origination-brainstorm/references/questioning-method.md`](../../origination-brainstorm/references/questioning-method.md) | Question rendering (`open` / `choice`), disposition routes, the `AskUserQuestion` protocol |
 
 **Carry-forwards that apply unchanged:**
 - **Single-writer rule** — every mutable file has exactly one writer agent; all
@@ -26,19 +26,19 @@ Do not copy their rules here; cite and apply them:
 - **Read-modify-write** — every writer re-reads the file before editing and
   merges changes keyed by stable id; it never clobbers.
 - **Session resolve-or-resume** — the `-readiness` session folder is resolved
-  per [`../../intake-brainstorm/references/sessions.md`](../../intake-brainstorm/references/sessions.md);
+  per [`../../origination-brainstorm/references/sessions.md`](../../origination-brainstorm/references/sessions.md);
   re-running resumes the same folder, nothing duplicates.
 - **Ledger schema** — `qa-log.md` uses the same `Q###` block structure; the
   ledger-writer is the sole editor.
-- **Annotation marker** — the RP template uses the same `<!-- intake: id=...; blocks=...; ... -->`
-  grammar. The `intake:` prefix is the engine's contract grammar and stays
+- **Annotation marker** — the RP template uses the same `<!-- origination: id=...; blocks=...; ... -->`
+  grammar. The `origination:` prefix is the engine's contract grammar and stays
   unchanged even in RP templates.
 
 ## The agents you spawn (subagent_type)
 
 ### Reused engine agents
 
-These are phase-agnostic specialists (`hsb-*`), shared with intake-brainstorm and
+These are phase-agnostic specialists (`hsb-*`), shared with origination-brainstorm and
 any future stage. They specialize through the RP template and guide, not through
 code changes.
 
@@ -49,7 +49,7 @@ code changes.
 | `hsb-template-analyst` | **writer** (`contract.lock.md`) | Phase 1, parallel after validator passes |
 | `hsb-question-strategist` | read-only | Confirm loop — targets low-confidence/unconfirmed blocking sections (fallback only) |
 | `hsb-evidence-extractor` | read-only | Confirm loop — satisfies open questions from indexed sources |
-| `hsb-reconciler` | read-only | Confirm loop — on conflicts (e.g. intake said X, PO now says Y) |
+| `hsb-reconciler` | read-only | Confirm loop — on conflicts (e.g. origination said X, PO now says Y) |
 | `hsb-ledger-writer` | **writer** (`qa-log.md`) | Confirm loop — records questions, answers, proposed entries |
 | `hsb-doc-updater` | **writer** (`readiness-document.md`) | Draft pass + confirm loop — the sole writer of the RP document |
 | `hsb-glossary-keeper` | **writer** (`glossary.md`) | Optional, when domain terms accumulate |
@@ -68,7 +68,7 @@ readiness-package skill is their first consumer.
 
 | Agent | Writer? | When spawned |
 |---|---|---|
-| `hsb-stage-inheritor` | read-only proposer | Phase 1, after source-indexer completes — pre-fills inheritable sections from the upstream intake-record |
+| `hsb-stage-inheritor` | read-only proposer | Phase 1, after source-indexer completes — pre-fills inheritable sections from the upstream origination-record |
 | `hsb-section-drafter` | read-only proposer | Phase 2 (draft pass) — proposes `ai_drafted` sections |
 | `hsb-escalation-flagger` | read-only proposer | Phase 2, once scope and business-rules are drafted |
 
@@ -79,36 +79,36 @@ to the orchestrator, who routes them through the single writers.
 
 ## Phase 0 — Identify the demand (you + the PO)
 
-1. **Resolve the linked intake-record path.** Confirm which `Product Ready`
-   demand's intake session folder to inherit from (`SESSION_ROOT/<demand-slug>/`).
+1. **Resolve the linked origination-record path.** Confirm which `Product Ready`
+   demand's origination session folder to inherit from (`SESSION_ROOT/<demand-slug>/`).
 2. **Resolve-or-resume the `-readiness` session** per
-   [`../../intake-brainstorm/references/sessions.md`](../../intake-brainstorm/references/sessions.md):
+   [`../../origination-brainstorm/references/sessions.md`](../../origination-brainstorm/references/sessions.md):
    session folder is `SESSION_ROOT/<demand-slug>-readiness/`. If it already
    exists, resume it; if ambiguous, list candidates and ask.
-3. **Confirm output language.** Default is `pt-BR` (mirrors the intake default).
+3. **Confirm output language.** Default is `pt-BR` (mirrors the origination default).
    Record in session context; the translator will target this language in Phase 4.
 
-Do not ask a wall of questions at this stage — just collect the intake-record
+Do not ask a wall of questions at this stage — just collect the origination-record
 path and confirm language.
 
 ## Phase 1 — Setup
 
 1. **`hsb-template-validator`** audits the RP template. Proceed only once it
    passes; fix the template if it fails the audit checklist
-   ([`../../intake-brainstorm/references/contract-and-template.md`](../../intake-brainstorm/references/contract-and-template.md) § audit checklist).
+   ([`../../origination-brainstorm/references/contract-and-template.md`](../../origination-brainstorm/references/contract-and-template.md) § audit checklist).
 2. Then spawn **in the same turn** (independent → parallel):
-   - **`hsb-source-indexer`** indexes the linked intake-record folder (its
+   - **`hsb-source-indexer`** indexes the linked origination-record folder (its
      `output/humanized.md` or `target-document.md` as the primary source) plus
      any extra files the PO provides. Writes `sources/` and `sources-index.md`.
    - **`hsb-template-analyst`** derives `contract.lock.md` from the RP
      template (hash-locked). If a prior `contract.lock.md` exists with a
      different hash, it restarts analysis and supersedes stale ledger entries.
 3. Once both complete: spawn **`hsb-stage-inheritor`** (read-only). It reads the
-   indexed intake-record and proposes carry-forward entries for all inheritable
+   indexed origination-record and proposes carry-forward entries for all inheritable
    RP sections (`exec-summary`, `context-problem`, `objectives`, `personas`,
    `scope`, `metrics`, `release-criteria`, `risks`), each tagged
-   `Origin: inherited` at the intake's preserved confidence (plus the
-   non-blocking `effort-estimate` and `roadmap` when the intake-record informs
+   `Origin: inherited` at the origination's preserved confidence (plus the
+   non-blocking `effort-estimate` and `roadmap` when the origination-record informs
    them). Route proposals to `hsb-ledger-writer` then `hsb-doc-updater`
    (serial).
 
@@ -140,7 +140,7 @@ Repeats until the freeze gate clears:
 
 1. **`hsb-confidence-auditor`** (read-only) re-scores every section against
    its rubric, flags conflicts, returns the gap verdict.
-   - On a flagged conflict (e.g. intake said X, PO now says Y): spawn
+   - On a flagged conflict (e.g. origination said X, PO now says Y): spawn
      **`hsb-reconciler`** (read-only) to recommend resolution; route to
      `hsb-ledger-writer`.
    - Optional: spawn **`hsb-gap-reporter`** to write a live gap map.
@@ -186,7 +186,7 @@ Once `freezeReady`:
 SESSION_ROOT/<demand-slug>-readiness/
 ├── contract.lock.md            # hsb-template-analyst
 ├── sources-index.md            # hsb-source-indexer
-├── sources/                    # hsb-source-indexer (incl. inherited intake-record)
+├── sources/                    # hsb-source-indexer (incl. inherited origination-record)
 ├── qa-log.md                   # hsb-ledger-writer
 ├── readiness-document.md       # hsb-doc-updater
 ├── glossary.md                 # hsb-glossary-keeper (optional)

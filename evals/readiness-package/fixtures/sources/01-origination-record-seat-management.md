@@ -1,12 +1,12 @@
-# Intake Record — Enterprise Seat Management Self-Service
+# Origination Record — Enterprise Seat Management Self-Service
 <!-- rev: 1 · updated: 2026-06-03 -->
 
-> The formal intake artifact. Input for the readiness-package eval: a Product Ready
-> intake record for INT-2026-014, seat management self-service for enterprise admins.
+> The formal origination artifact. Input for the readiness-package eval: a Product Ready
+> origination record for INT-2026-014, seat management self-service for enterprise admins.
 > Fictional, self-contained; consistent with the golden RP (RP-2026-014).
 
 ## Metadata
-<!-- intake: id=meta; blocks=false; min-confidence=0; kind=meta -->
+<!-- origination: id=meta; blocks=false; min-confidence=0; kind=meta -->
 
 | Field | Value |
 |---|---|
@@ -20,17 +20,17 @@
 | **Output language** | pt-BR |
 
 ## Revision history
-<!-- intake: id=revisions; blocks=false; min-confidence=0; kind=meta -->
+<!-- origination: id=revisions; blocks=false; min-confidence=0; kind=meta -->
 
 | Version | Date | Event | Summary |
 |---|---|---|---|
-| v1 | 2026-03-18 | Intake drafted | Filled from CS brief + support export; triage drafted. |
+| v1 | 2026-03-18 | Origination drafted | Filled from CS brief + support export; triage drafted. |
 | v1.1 | 2026-03-21 | Triage confirmed | PO Ana Ribeiro confirmed Product Ready; CTO escalation flagged. |
 
 ---
 
 ## Readiness received
-<!-- intake: id=readiness; blocks=false; min-confidence=0; kind=derived; inputs=problem,reach,impact,originator,urgency -->
+<!-- origination: id=readiness; blocks=false; min-confidence=0; kind=derived; inputs=problem,reach,impact,originator,urgency -->
 
 | Field | Value |
 |---|---|
@@ -45,7 +45,7 @@
 > One-screen read of the demand, each dimension carrying its inherited confidence.
 
 ### Problem (the pain, not the solution)
-<!-- intake: id=problem; blocks=true; min-confidence=80; kind=capture -->
+<!-- origination: id=problem; blocks=true; min-confidence=80; kind=capture -->
 > Rubric: describe the existing pain with observable symptoms — what hurts, for
 > whom, how it shows up today. If it names a solution ("build X"), it is NOT
 > satisfied: reframe to the pain underneath.
@@ -55,7 +55,7 @@ Enterprise admins have no direct access to seat management in the product. Every
 `Confidence:` 88 · `Source:` Submitter direct (CS brief) + support export Q1 2026 + CS interview notes Q4 2025 · `Status:` resolved · `Disposition:` answered · `Hint:` breakdown of 240 tickets by account not available yet; CS can extract in ~1 week — would raise to ~93
 
 ### Originator & context
-<!-- intake: id=originator; blocks=true; min-confidence=70; kind=capture -->
+<!-- origination: id=originator; blocks=true; min-confidence=70; kind=capture -->
 > Rubric: who raised it and in what situation (e.g. "COO, Q2 planning"), and the
 > channel it came through.
 
@@ -64,7 +64,7 @@ Raised by Carla Mendes (Customer Success) on the Q1 2026 product-review call, ci
 `Confidence:` 95 · `Source:` Submitter direct · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ### Who is impacted (reach)
-<!-- intake: id=reach; blocks=true; min-confidence=70; kind=capture -->
+<!-- origination: id=reach; blocks=true; min-confidence=70; kind=capture -->
 > Rubric: the personas / segments / teams who feel the pain, each with *how* they
 > are affected.
 
@@ -79,7 +79,7 @@ Raised by Carla Mendes (Customer Success) on the Q1 2026 product-review call, ci
 `Confidence:` 82 · `Source:` Submitter direct + support export Q1 2026 + CS interview notes Q4 2025 · `Status:` resolved · `Disposition:` answered · `Hint:` admin headcount (80–120) is an estimate from account records; exact count per account not pulled
 
 ### Business impact
-<!-- intake: id=impact; blocks=true; min-confidence=70; kind=capture -->
+<!-- origination: id=impact; blocks=true; min-confidence=70; kind=capture -->
 > Rubric: value across the applicable dimensions (revenue, retention, operational,
 > competitive, compliance) — quantified when possible. Estimates are fine if
 > marked low-confidence with a hint on what would firm them up.
@@ -95,7 +95,7 @@ Raised by Carla Mendes (Customer Success) on the Q1 2026 product-review call, ci
 `Confidence:` 78 · `Source:` Support export Q1 2026 + CS interview notes Q4 2025 + PM market scan · `Status:` resolved · `Disposition:` answered · `Hint:` cost-per-ticket is CS estimate; ARR at risk not quantified (Finance to confirm); competitive comparison based on PM research, not customer statement
 
 ### Urgency — why now
-<!-- intake: id=urgency; blocks=false; min-confidence=70; kind=capture -->
+<!-- origination: id=urgency; blocks=false; min-confidence=70; kind=capture -->
 > Rubric: why now and the cost of waiting — a window, a deadline, a compounding
 > cost.
 
@@ -104,14 +104,14 @@ Q2 2026 has two renewal cohorts covering accounts that flagged this issue. The d
 `Confidence:` 80 · `Source:` Submitter direct + support trend data · `Status:` resolved · `Disposition:` answered · `Hint:` renewal-cohort count confirmed with CS; projected ticket volume growth is linear assumption, not a modeled forecast
 
 ### Declared priority
-<!-- intake: id=priority; blocks=false; min-confidence=0; kind=capture -->
+<!-- origination: id=priority; blocks=false; min-confidence=0; kind=capture -->
 
 **Level:** High — **Reason:** compounding operational cost + active renewal risk + competitive gap; the combination clears the bar for immediate roadmap entry.
 
 ---
 
 ## Triage — routing decision
-<!-- intake: id=triage; blocks=false; min-confidence=0; kind=derived; inputs=problem,reach,impact,urgency,assumptions -->
+<!-- origination: id=triage; blocks=false; min-confidence=0; kind=derived; inputs=problem,reach,impact,urgency,assumptions -->
 
 > ⚠️ **TRIAGE DRAFT — AI-generated from the capture, pending owner confirmation.**
 > The verdicts and routing below are a *proposal* grounded in captured evidence,
@@ -140,14 +140,14 @@ Q2 2026 has two renewal cohorts covering accounts that flagged this issue. The d
 ---
 
 ## Architectural escalation
-<!-- intake: id=cto_escalation; blocks=false; min-confidence=0; kind=derived; inputs=impact,constraints,assumptions -->
+<!-- origination: id=cto_escalation; blocks=false; min-confidence=0; kind=derived; inputs=impact,constraints,assumptions -->
 
 **Needed:** Yes — seat management touches billing and provisioning; consistency guarantees (no cobrança sem provisionamento e vice-versa), idempotency, and potential sync/async architecture require CTO review before scope freezes. Draft signal, pending owner confirmation.
 
 ---
 
 ## Assumptions
-<!-- intake: id=assumptions; blocks=false; min-confidence=0; kind=capture -->
+<!-- origination: id=assumptions; blocks=false; min-confidence=0; kind=capture -->
 
 | Assumption | Verdict (draft) | Validate with |
 |---|---|---|
@@ -158,7 +158,7 @@ Q2 2026 has two renewal cohorts covering accounts that flagged this issue. The d
 ---
 
 ## Constraints
-<!-- intake: id=constraints; blocks=false; min-confidence=70; kind=capture -->
+<!-- origination: id=constraints; blocks=false; min-confidence=70; kind=capture -->
 
 | Constraint | Type | Note |
 |---|---|---|
@@ -171,7 +171,7 @@ Q2 2026 has two renewal cohorts covering accounts that flagged this issue. The d
 ---
 
 ## Handoff
-<!-- intake: id=handoff; blocks=false; min-confidence=0; kind=derived -->
+<!-- origination: id=handoff; blocks=false; min-confidence=0; kind=derived -->
 
 - **Product Ready:** proceed to Readiness Package (RP-2026-014, assignee Ana Ribeiro).
 - CTO escalation flagged: Technical Assessment TA-2026-014 to be opened in parallel.

@@ -12,13 +12,13 @@ starting a parallel one. This file defines how.
 Resolve the **session root** in this order, so it is the same no matter which
 subdirectory you invoke from:
 
-1. `$INTAKE_HOME` if set (use it verbatim — lets you point at shared storage);
+1. `$ORIGINATION_HOME` if set (use it verbatim — lets you point at shared storage);
 2. else the **project root** — the nearest enclosing git top-level
-   (`git rev-parse --show-toplevel`) — plus `/intake`;
-3. else, only if neither exists, the current directory plus `/intake`.
+   (`git rev-parse --show-toplevel`) — plus `/origination`;
+3. else, only if neither exists, the current directory plus `/origination`.
 
 ```
-SESSION_ROOT = $INTAKE_HOME | <git-root>/intake | <cwd>/intake
+SESSION_ROOT = $ORIGINATION_HOME | <git-root>/origination | <cwd>/origination
 SESSION_DIR  = SESSION_ROOT/<demand-slug>
 ```
 
@@ -73,7 +73,7 @@ collide because their slugs differ.
 ## Carrying a session across machines / checkouts
 
 The session folder is plain files. To preserve context beyond one machine, either
-commit the `intake/` folder to the repo, or set `$INTAKE_HOME` to shared storage.
+commit the `origination/` folder to the repo, or set `$ORIGINATION_HOME` to shared storage.
 Because the plugin is stateless, any machine with the plugin installed will resume
 the same session folder identically.
 

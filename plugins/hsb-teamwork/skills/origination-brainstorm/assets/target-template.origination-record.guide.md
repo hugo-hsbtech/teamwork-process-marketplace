@@ -1,6 +1,6 @@
-# Companion guide — filling the Intake Record template
+# Companion guide — filling the Origination Record template
 
-Section-specific guidance for the default Intake Record template, keyed by
+Section-specific guidance for the default Origination Record template, keyed by
 annotation `id`. The Doc Updater and Question Strategist read this; the Auditor
 grades against it. A different template ships its own guide (or none, if the
 rubrics in the annotations are sufficient).
@@ -71,7 +71,7 @@ Calibrate by risk, don't default everything to "To validate":
 
 ## The bar
 
-A good intake reads like a demand *understood*: the problem is pain not solution,
+A good origination reads like a demand *understood*: the problem is pain not solution,
 confidences are honest and hinted, assumptions/discovery are explicit with owners,
 and every derived section is a defensible, flagged draft that never pretends to be
 a human decision.

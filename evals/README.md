@@ -12,7 +12,7 @@ evals/
 │   ├── make_benchmark.py   #   aggregate per-run grading.json -> benchmark.json
 │   ├── LICENSE.txt
 │   └── README.md
-├── intake-brainstorm/
+├── origination-brainstorm/
 │   ├── evals.json      # test cases (prompt + files + golden + expected_output)
 │   ├── rubric.md       # grading: Layer 1 structural (auto) + Layer 2 qualitative (LLM)
 │   ├── assertions.py   # the deterministic structural grader (--grading-json for the viewer)
@@ -22,18 +22,18 @@ evals/
 │   ├── fixtures/       # seeds (e.g. an under-filled doc for the revisit case)
 │   └── runs/           # per-iteration outputs + scorecard + viewer layout (gitignored)
 └── readiness-package/
-    ├── evals.json      # test cases: intake-record -> RP (fresh) + revisit underfilled RP
+    ├── evals.json      # test cases: origination-record -> RP (fresh) + revisit underfilled RP
     ├── rubric.md       # grading: Layer 1 structural (auto) + Layer 2 qualitative (LLM)
     ├── assertions.py   # deterministic structural grader (--grading-json for the viewer)
     ├── fanout.py       # fan-out detector: did the skill actually orchestrate subagents?
     ├── run.sh          # runner: self-test + (with claude CLI) live cases -> scorecard + viewer layout
     ├── view.sh         # launch the eval-viewer on an iteration's runs
     ├── golden/         # seat-management.readiness-document.md (reference output)
-    ├── fixtures/       # intake-record input + underfilled RP seed for revisit case
+    ├── fixtures/       # origination-record input + underfilled RP seed for revisit case
     └── runs/           # per-iteration outputs + scorecard (gitignored)
 ```
 
-`readiness-package/` grades the `intake-record → RP` pipeline: structural checks
+`readiness-package/` grades the `origination-record → RP` pipeline: structural checks
 via `assertions.py` (sentinel, annotations, blocking sections, Origin tags,
 tech-assessment-ref resolution), a fan-out check via `fanout.py` (the orchestrator
 actually spawned its subagents, in parallel), and qualitative scoring via `rubric.md`.
@@ -55,7 +55,7 @@ actually spawned its subagents, in parallel), and qualitative scoring via `rubri
 ## Run it
 
 ```bash
-cd evals/intake-brainstorm
+cd evals/origination-brainstorm
 ./run.sh            # self-tests the grader; runs live cases if the `claude` CLI is present
 ```
 
@@ -73,7 +73,7 @@ the layout the viewer reads (`runs/iteration-N/.../outputs/` + `eval_metadata.js
 `eval-viewer/make_benchmark.py`). Launch the UI from either skill dir:
 
 ```bash
-cd evals/intake-brainstorm   # or: cd evals/readiness-package
+cd evals/origination-brainstorm   # or: cd evals/readiness-package
 ./view.sh 1                       # serve at http://localhost:3117 (opens a browser)
 ./view.sh 1 --static review.html  # headless/remote: write a standalone HTML file
 ```

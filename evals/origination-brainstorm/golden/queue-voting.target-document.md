@@ -1,11 +1,11 @@
-# Intake Record — Queue Voting
+# Origination Record — Queue Voting
 <!-- rev: 1 · updated: 2026-06-03 -->
 
-> The formal intake artifact. Golden reference output for the file-grounded eval
+> The formal origination artifact. Golden reference output for the file-grounded eval
 > case (source: a planning-poker queue-voting demand). Fictional, self-contained.
 
 ## Metadata
-<!-- intake: id=meta; blocks=false; min-confidence=0; kind=meta -->
+<!-- origination: id=meta; blocks=false; min-confidence=0; kind=meta -->
 
 | Field | Value |
 |---|---|
@@ -19,16 +19,16 @@
 | **Output language** | en-US |
 
 ## Revision history
-<!-- intake: id=revisions; blocks=false; min-confidence=0; kind=meta -->
+<!-- origination: id=revisions; blocks=false; min-confidence=0; kind=meta -->
 
 | Version | Date | Event | Summary |
 |---|---|---|---|
-| v1 | 2026-06-03 | Intake drafted | Filled from the Submitter brief; triage drafted, pending PO sign-off. |
+| v1 | 2026-06-03 | Origination drafted | Filled from the Submitter brief; triage drafted, pending PO sign-off. |
 
 ---
 
 ## Readiness received
-<!-- intake: id=readiness; blocks=false; min-confidence=0; kind=derived; inputs=problem,reach,impact,originator,urgency -->
+<!-- origination: id=readiness; blocks=false; min-confidence=0; kind=derived; inputs=problem,reach,impact,originator,urgency -->
 
 | Field | Value |
 |---|---|
@@ -41,7 +41,7 @@
 ## Consolidated demand
 
 ### Problem (the pain, not the solution)
-<!-- intake: id=problem; blocks=true; min-confidence=80; kind=capture -->
+<!-- origination: id=problem; blocks=true; min-confidence=80; kind=capture -->
 > Rubric: describe the existing pain with observable symptoms, without prescribing a solution.
 
 During sprint-planning estimation, the facilitator cannot control which stories are shown or in what order, and votes appear in real time. Participants read ahead and copy early votes (anchoring bias), the ceremony loses cadence, and facilitators fall back to a manual workaround (sharing one story at a time in chat) that adds 15-20 minutes per session.
@@ -49,7 +49,7 @@ During sprint-planning estimation, the facilitator cannot control which stories 
 `Confidence:` 92 · `Source:` Submitter direct (Scrum Masters on the QBR call) · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ### Originator & context
-<!-- intake: id=originator; blocks=true; min-confidence=70; kind=capture -->
+<!-- origination: id=originator; blocks=true; min-confidence=70; kind=capture -->
 > Rubric: who raised it and in what situation, plus the channel.
 
 Raised by Ana Costa (Customer Success) on the Banco Meridional quarterly review call, where the facilitators named it as a renewal blocker for the squads not yet on the platform.
@@ -57,7 +57,7 @@ Raised by Ana Costa (Customer Success) on the Banco Meridional quarterly review 
 `Confidence:` 95 · `Source:` Submitter direct · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ### Who is impacted (reach)
-<!-- intake: id=reach; blocks=true; min-confidence=70; kind=capture -->
+<!-- origination: id=reach; blocks=true; min-confidence=70; kind=capture -->
 > Rubric: personas / segments / teams + how each is affected.
 
 Scrum Masters/facilitators (lose flow control), developers/voters (anchoring, longer ceremonies), 3 squads blocked from adopting, and CS (carries renewal risk on the largest enterprise account).
@@ -65,7 +65,7 @@ Scrum Masters/facilitators (lose flow control), developers/voters (anchoring, lo
 `Confidence:` 88 · `Source:` Submitter direct + account data · `Status:` resolved · `Disposition:` answered · `Hint:` exact users per squad not pulled; would raise to ~95.
 
 ### Business impact
-<!-- intake: id=impact; blocks=true; min-confidence=70; kind=capture -->
+<!-- origination: id=impact; blocks=true; min-confidence=70; kind=capture -->
 > Rubric: value across applicable dimensions, quantified when possible.
 
 Retention: R$ 84k ARR at renewal risk (4 active squads). Revenue: +R$ 28k expansion blocked (3 squads). Competitive: two rivals already ship sequential control + hidden votes.
@@ -73,7 +73,7 @@ Retention: R$ 84k ARR at renewal risk (4 active squads). Revenue: +R$ 28k expans
 `Confidence:` 80 · `Source:` Submitter direct + inferred from account data · `Status:` resolved · `Disposition:` answered · `Hint:` expansion ARR assumes equal ticket per squad; confirm with Finance.
 
 ### Urgency — why now
-<!-- intake: id=urgency; blocks=false; min-confidence=70; kind=capture -->
+<!-- origination: id=urgency; blocks=false; min-confidence=70; kind=capture -->
 > Rubric: why now and the cost of waiting.
 
 Contract renewal in ~90 days; the feature must be live before the renewal conversation, which already has the gap on the agenda.
@@ -81,14 +81,14 @@ Contract renewal in ~90 days; the feature must be live before the renewal conver
 `Confidence:` 90 · `Source:` Submitter direct · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ### Declared priority
-<!-- intake: id=priority; blocks=false; min-confidence=0; kind=capture -->
+<!-- origination: id=priority; blocks=false; min-confidence=0; kind=capture -->
 
 **Level:** High — **Reason:** renewal window + competitive gap on the largest enterprise account.
 
 ---
 
 ## Triage — routing decision
-<!-- intake: id=triage; blocks=false; min-confidence=0; kind=derived; inputs=problem,reach,impact,urgency,assumptions -->
+<!-- origination: id=triage; blocks=false; min-confidence=0; kind=derived; inputs=problem,reach,impact,urgency,assumptions -->
 
 > ⚠️ **TRIAGE DRAFT — AI-generated from the capture, pending owner confirmation.**
 > The verdicts and routing below are a proposal grounded in captured evidence, not
@@ -117,14 +117,14 @@ Contract renewal in ~90 days; the feature must be live before the renewal conver
 ---
 
 ## Architectural escalation
-<!-- intake: id=cto_escalation; blocks=false; min-confidence=0; kind=derived; inputs=impact,constraints,assumptions -->
+<!-- origination: id=cto_escalation; blocks=false; min-confidence=0; kind=derived; inputs=impact,constraints,assumptions -->
 
 **Needed:** No — extension of existing UI and session state on current infrastructure; no architectural change. Draft signal, pending owner confirmation.
 
 ---
 
 ## Assumptions
-<!-- intake: id=assumptions; blocks=false; min-confidence=0; kind=capture -->
+<!-- origination: id=assumptions; blocks=false; min-confidence=0; kind=capture -->
 
 | Assumption | Verdict (draft) | Validate with |
 |---|---|---|
@@ -135,7 +135,7 @@ Contract renewal in ~90 days; the feature must be live before the renewal conver
 ---
 
 ## Constraints
-<!-- intake: id=constraints; blocks=false; min-confidence=70; kind=capture -->
+<!-- origination: id=constraints; blocks=false; min-confidence=70; kind=capture -->
 
 | Constraint | Type | Note |
 |---|---|---|
@@ -147,7 +147,7 @@ Contract renewal in ~90 days; the feature must be live before the renewal conver
 ---
 
 ## Handoff
-<!-- intake: id=handoff; blocks=false; min-confidence=0; kind=derived -->
+<!-- origination: id=handoff; blocks=false; min-confidence=0; kind=derived -->
 
 - **If Product Ready:** proceed to rationalization (readiness-package).
 - Originator (Ana Costa) to be notified of the triage result — human action pending.

@@ -1,13 +1,13 @@
 ---
-name: intake-brainstorm
+name: origination-brainstorm
 description: >-
   Orchestrate a multi-agent pipeline that turns a raw Submitter description (a
   sentence, a paragraph, and/or referenced files) into a fully-filled target
   document, by running a confidence-driven brainstorming loop and then producing
   humanized, translated, and visually-enriched variants. Use this skill WHENEVER
-  someone wants to capture, intake, triage, formalize, or "write up" a new demand
+  someone wants to capture, originate, triage, formalize, or "write up" a new demand
   / request / feature idea / pain / opportunity into a structured document - even
-  if they don't say "intake" by name. Also use it to REVISIT an existing filled
+  if they don't say "origination" by name. Also use it to REVISIT an existing filled
   document (re-score sections, find gaps, re-open questions) or to BATCH-process a
   pile of raw signals into draft documents without a live interview. The target
   document is defined by a bundled, swappable template; the skill is portable and
@@ -16,7 +16,7 @@ description: >-
 user-invocable: true
 ---
 
-# Intake Brainstorm (orchestrator)
+# Origination Brainstorm (orchestrator)
 
 You are **Layer 0 — the orchestrator**, and the *only* layer that talks to the
 human. You do not fill the document yourself; you **collect information, spawn
@@ -125,7 +125,7 @@ any additional requested languages as separate `output/` files. Keep section
 ## Installing in other projects
 
 This skill ships as the **`hsb-teamwork` Claude Code plugin** (this folder
-is `plugins/hsb-teamwork/skills/intake-brainstorm/` inside it). Install it
+is `plugins/hsb-teamwork/skills/origination-brainstorm/` inside it). Install it
 from the `hsb-tech` marketplace — no copying, versioned, namespaced:
 
 ```
@@ -133,7 +133,7 @@ from the `hsb-tech` marketplace — no copying, versioned, namespaced:
 /plugin install hsb-teamwork@hsb-tech
 ```
 
-Invoke it as `/hsb-teamwork:intake-brainstorm`.
+Invoke it as `/hsb-teamwork:origination-brainstorm`.
 
 The plugin is self-contained (template, companion guide, and exemplar bundled
 under `assets/`), so no repository content is required at runtime. A Codex adapter
@@ -151,6 +151,6 @@ lives alongside at the plugin's `codex/` (see its README). See the plugin
 | `references/grounding.md` | quality bar + pointer to the exemplar |
 | `references/writing-integrity.md` | no-truncation + queue/merge/conflict rules for writers |
 | `references/sessions.md` | session location, resolve-or-resume, cross-run idempotency |
-| `assets/target-template.intake-record.md` | default target template (annotated) |
-| `assets/target-template.intake-record.guide.md` | companion filling guide (incl. triage drafting) |
+| `assets/target-template.origination-record.md` | default target template (annotated) |
+| `assets/target-template.origination-record.guide.md` | companion filling guide (incl. triage drafting) |
 | `assets/golden-example.md` | self-contained calibration exemplar |

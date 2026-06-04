@@ -45,12 +45,12 @@ an agent assume a location:
 
 - `SKILL_DIR` — this skill's base directory (you are told it at launch).
 - `SESSION_DIR` — `<SESSION_ROOT>/<demand-slug>/`, resolved per [`sessions.md`](sessions.md) (resume if it exists).
-- `TEMPLATE` — the target template file (default: `SKILL_DIR/assets/target-template.intake-record.md`, or a user-supplied template).
+- `TEMPLATE` — the target template file (default: `SKILL_DIR/assets/target-template.origination-record.md`, or a user-supplied template).
 
 ## The session folder
 
 Resolve-or-resume at the start of every run (see [`sessions.md`](sessions.md)):
-`SESSION_ROOT` anchors at `$INTAKE_HOME` or the project (git) root, **not** the
+`SESSION_ROOT` anchors at `$ORIGINATION_HOME` or the project (git) root, **not** the
 cwd, and if the demand's folder already exists you **resume** it rather than
 creating a duplicate.
 
@@ -66,7 +66,7 @@ creating a duplicate.
 └── output/                   # Humanizer · Translator · Enricher · Packager
 ```
 
-## Phase 0 — Intake (you + the human)
+## Phase 0 — Origination (you + the human)
 
 Collect, in the human's language: the opening statement, any **file references**,
 the **desired output language(s)**, and (optional) a custom `TEMPLATE`. Decide the

@@ -21,8 +21,8 @@ every section:
 - **`hsb-stage-inheritor`** proposes carry-forward entries for inheritable
   sections (`exec-summary`, `context-problem`, `objectives`, `personas`,
   `scope`, `metrics`, `release-criteria`, `risks`; plus the non-blocking
-  `effort-estimate` and `roadmap` when the intake-record informs them). Each
-  entry is tagged `Origin: inherited` with the intake-record's preserved
+  `effort-estimate` and `roadmap` when the origination-record informs them). Each
+  entry is tagged `Origin: inherited` with the origination-record's preserved
   confidence.
 - **`hsb-section-drafter`** proposes first-draft entries for the new product
   sections (`business-rules`, `user-stories`, `nfrs`, `edge-cases`). Each
@@ -60,7 +60,7 @@ whether it has been validated by the PO (`personas/02-po.md:149`):
 
 | `origin` | Meaning | Confidence state |
 |---|---|---|
-| `inherited` | Carried from the intake-record with its graded source | Partial, traceable — may rise on PO confirmation |
+| `inherited` | Carried from the origination-record with its graded source | Partial, traceable — may rise on PO confirmation |
 | `ai_drafted` | Engine pre-filled; awaiting PO review | Partial until confirmed |
 | `po_authored` | PO decided directly or explicitly confirmed a draft | Full confidence |
 | `reused_from_KB` | Reused from a prior RP/ADR *(deferred — out of scope)* | Full, if confirmed |
@@ -73,7 +73,7 @@ PO's judgment; it is never inflated before that.
 ## Why questions are a fallback, not the primary mode
 
 The question-first machinery (`hsb-question-strategist` → human →
-`hsb-ledger-writer`) is the engine's default loop for the intake skill,
+`hsb-ledger-writer`) is the engine's default loop for the origination skill,
 where the Submitter fills a blank document. For the RP, that model is inverted:
 the system pre-rationalizes; the PO judges.
 
@@ -97,8 +97,8 @@ The orchestrator routes:
 1. Proposals → **`hsb-ledger-writer`** (records in `qa-log.md`).
 2. Ledger entries → **`hsb-doc-updater`** (writes to `readiness-document.md`).
 
-This preserves the single-writer guarantee from the intake engine
-([`../../intake-brainstorm/references/writing-integrity.md`](../../intake-brainstorm/references/writing-integrity.md)):
+This preserves the single-writer guarantee from the origination engine
+([`../../origination-brainstorm/references/writing-integrity.md`](../../origination-brainstorm/references/writing-integrity.md)):
 `readiness-document.md` has exactly one writer (`hsb-doc-updater`), and
 `qa-log.md` has exactly one writer (`hsb-ledger-writer`). The drafters never
 hold the pen on shared files.

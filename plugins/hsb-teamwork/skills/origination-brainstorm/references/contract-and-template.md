@@ -13,7 +13,7 @@ its heading. It is invisible in rendered Markdown and survives editing:
 
 ```markdown
 ## Problem statement
-<!-- intake: id=problem; blocks=true; min-confidence=80; kind=capture -->
+<!-- origination: id=problem; blocks=true; min-confidence=80; kind=capture -->
 > Rubric: describe the existing pain with observable symptoms, without
 > prescribing a solution. A confident answer names what hurts, for whom, and how
 > it shows up today.
@@ -44,7 +44,7 @@ The Analyst parses the template into a contract snapshot:
 
 ```markdown
 ---
-template: target-template.intake-record.md
+template: target-template.origination-record.md
 template_hash: <sha256 of the template file>
 template_version: v1
 default_min_confidence: 70

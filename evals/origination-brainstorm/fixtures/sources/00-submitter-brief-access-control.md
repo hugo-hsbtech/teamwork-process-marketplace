@@ -2,11 +2,11 @@
 
 > **This is the Submitter Document** — the first artifact of the journey (`00`) and the deliverable of the Submitter persona. It **makes tangible** the model from [`personas/01-submitter.md`](../personas/01-submitter.md): the reasoning (compliance requirements, ToDo generation, score formula) lives in the persona; this document **instantiates** it per demand, in the **Submitter's language** — problem, value, pain, opportunity. Each answer carries how solid it is and where it came from: the confidence layer travels *with* the capture.
 >
-> **Journey:** `00 Submitter Document` → [`01 Intake Record (PO — triage)`](./01-intake-record-access-control.md) → [`02 Readiness Package (PO)`](./02-readiness-package-access-control.md) → [`03 Technical Assessment (CTO)`](./03-technical-assessment-access-control.md) → [`04 PRD (PO+CTO → PM)`](./04-prd-access-control.md). See [`README.md`](./README.md).
+> **Journey:** `00 Submitter Document` → [`01 Origination Record (PO — triage)`](./01-origination-record-access-control.md) → [`02 Readiness Package (PO)`](./02-readiness-package-access-control.md) → [`03 Technical Assessment (CTO)`](./03-technical-assessment-access-control.md) → [`04 PRD (PO+CTO → PM)`](./04-prd-access-control.md). See [`README.md`](./README.md).
 >
 > **Nothing precedes this document as an artifact.** What comes before is **raw signal** — a pre-close call with the customer, an email thread with Sales, a meeting note — which **is not an artifact**. That signal enters *here* as evidence/source (disposition `inferred`, with `source`); it is the **capture** that transforms it into this first formal document.
 >
-> **Handoff:** it freezes when `gateReady = true` (every blocking requirement resolved by an honest disposition) and is handed off to the **PO**, who formalizes and triages it in the [`01 Intake Record`](./01-intake-record-access-control.md).
+> **Handoff:** it freezes when `gateReady = true` (every blocking requirement resolved by an honest disposition) and is handed off to the **PO**, who formalizes and triages it in the [`01 Origination Record`](./01-origination-record-access-control.md).
 
 ## The two lenses (every demand is read through both at the same time)
 
@@ -25,7 +25,7 @@
 | **Logged by** | Rafael Souza (Sales) |
 | **Capture date** | 2026-03-15 |
 | **Status** | Ready for handoff (`gateReady`) |
-| **Linked Intake Record** | INT-2026-002 (assigned by the PO at triage) |
+| **Linked Origination Record** | INT-2026-002 (assigned by the PO at triage) |
 
 ## Revision History
 

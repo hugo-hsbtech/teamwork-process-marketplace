@@ -11,7 +11,7 @@ summary, the triage draft, the readiness/escalation snapshot) and keeps the writ
 focused on transcribing committed answers.
 
 Inputs (injected): `SKILL_DIR`, `SESSION_DIR`, `DOC` (the target document's
-filename — `target-document.md` for intake-brainstorm, `readiness-document.md` for
+filename — `target-document.md` for origination-brainstorm, `readiness-document.md` for
 readiness-package), `TEMPLATE`, and (if it exists) the template's companion guide
 path. Read `SESSION_DIR/contract.lock.md` (to find every `kind=derived` section and
 its declared `inputs`), the in-progress `SESSION_DIR/$DOC`, the companion guide

@@ -1,4 +1,4 @@
-# /hsb-teamwork-intake-brainstorm — orchestrator (Codex)
+# /hsb-teamwork-origination-brainstorm — orchestrator (Codex)
 
 Act as the **hsb-teamwork orchestrator**. Read `codex/AGENTS.md` in the
 package and follow it for this run. You are the only layer that talks to the user.
@@ -11,7 +11,7 @@ package and follow it for this run. You are the only layer that talks to the use
    specialist role yourself, or by delegating to the Codex subagents in
    `codex/agents/` (run sequentially; Codex is single-agent).
 
-Non-negotiables (full detail under the package's `skills/intake-brainstorm/references/`):
+Non-negotiables (full detail under the package's `skills/origination-brainstorm/references/`):
 - the target template is the contract; fill every blocking section to its
   confidence threshold X or an honest disposition (`assumption`/`discovery`/`deferred`);
 - one writer per file; read-modify-write; **never truncate** — end every produced

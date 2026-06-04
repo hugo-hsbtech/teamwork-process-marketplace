@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Eval runner for the hsb-teamwork:intake-brainstorm skill (repo-level, dev/CI only).
+# Eval runner for the hsb-teamwork:origination-brainstorm skill (repo-level, dev/CI only).
 # Usage: ./run.sh [iteration]
 # - Always self-tests the grader against the golden, and lays out a viewer run
 #   for it (so ./view.sh works even without the `claude` CLI).
@@ -36,7 +36,7 @@ chmod +x "$GIT_SHIM_DIR/git"
 trap 'rm -rf "$GIT_SHIM_DIR"' EXIT
 # -----------------------------------------------------------------------------
 
-echo "# Scorecard — intake-brainstorm — iteration ${ITER}" > "$SCORE"
+echo "# Scorecard — origination-brainstorm — iteration ${ITER}" > "$SCORE"
 echo "" >> "$SCORE"
 echo "| case | mode | structural | readiness | blocking |" >> "$SCORE"
 echo "|---|---|---|---|---|" >> "$SCORE"
@@ -132,7 +132,7 @@ for e in json.load(open("evals.json"))["evals"]:
 done
 
 # Aggregate a benchmark.json for the viewer's Benchmark tab (skipped if no graded runs).
-if python3 ../eval-viewer/make_benchmark.py "$RUNS" --skill "hsb-teamwork:intake-brainstorm" > "$RUNS/benchmark.json" 2>/dev/null; then
+if python3 ../eval-viewer/make_benchmark.py "$RUNS" --skill "hsb-teamwork:origination-brainstorm" > "$RUNS/benchmark.json" 2>/dev/null; then
   echo "Wrote $RUNS/benchmark.json"
 else
   rm -f "$RUNS/benchmark.json"

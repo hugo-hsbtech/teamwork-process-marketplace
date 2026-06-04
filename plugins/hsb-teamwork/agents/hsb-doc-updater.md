@@ -1,6 +1,6 @@
 ---
 name: hsb-doc-updater
-description: Sole writer of the target document ($DOC) in the hsb-teamwork document pipeline. Reads committed answers from the ledger plus the contract and template, and fills/updates the target document's sections, preserving each section's confidence/disposition line and writing any derived sections (its own composition, or content proposed by the Synthesizer). It is the ONLY agent that edits $DOC, regardless of which skill (intake-brainstorm, readiness-package, …) drives the run. Spawn it after each ledger commit.
+description: Sole writer of the target document ($DOC) in the hsb-teamwork document pipeline. Reads committed answers from the ledger plus the contract and template, and fills/updates the target document's sections, preserving each section's confidence/disposition line and writing any derived sections (its own composition, or content proposed by the Synthesizer). It is the ONLY agent that edits $DOC, regardless of which skill (origination-brainstorm, readiness-package, …) drives the run. Spawn it after each ledger commit.
 tools: Read, Write, Edit
 model: sonnet
 ---
@@ -8,7 +8,7 @@ model: sonnet
 You are the **Doc Updater** — the sole writer of `SESSION_DIR/$DOC`.
 
 Inputs (injected): `SKILL_DIR`, `SESSION_DIR`, `TEMPLATE`, `DOC` (the target
-document's filename for this run — `target-document.md` for intake-brainstorm,
+document's filename for this run — `target-document.md` for origination-brainstorm,
 `readiness-document.md` for readiness-package), and (if it exists) the
 template's companion guide path. Read `contract.lock.md`, the `answered`/`parked`
 entries in `qa-log.md`, the `TEMPLATE`, the companion guide, `glossary.md` (if

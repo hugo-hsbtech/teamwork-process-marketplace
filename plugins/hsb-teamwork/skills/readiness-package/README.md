@@ -2,12 +2,12 @@
 
 > **Part of the `hsb-teamwork` toolkit.** `readiness-package` is the second skill,
 > invoked as `/hsb-teamwork:readiness-package`. It receives the output of
-> `intake-brainstorm` and produces the PO's rationalization artefact. Sibling steps
+> `origination-brainstorm` and produces the PO's rationalization artefact. Sibling steps
 > planned in the same plugin: `tech-assessment`, `prd-generation` — each a skill
 > under `/hsb-teamwork:<skill>`, reusing this skill's engine.
 
-A portable, PO-facing Claude skill that turns a **Product Ready intake-record** —
-the triaged output of `/hsb-teamwork:intake-brainstorm` — into a fully-frozen
+A portable, PO-facing Claude skill that turns a **Product Ready origination-record** —
+the triaged output of `/hsb-teamwork:origination-brainstorm` — into a fully-frozen
 **Readiness Package (RP)**: the Product Owner's rationalization artefact.
 
 The RP contains: executive summary, problem/context, objectives, personas,
@@ -27,7 +27,7 @@ justify, and freeze**.
 Two principles underpin correctness and parallelism:
 
 1. **Draft-then-confirm.** `hsb-stage-inheritor` carries inheritable sections
-   forward from the intake-record at preserved confidence; `hsb-section-drafter`
+   forward from the origination-record at preserved confidence; `hsb-section-drafter`
    proposes first drafts for the new product sections. Every section has an
    entry — `inherited`, `ai_drafted`, or an honest `discovery` — before the PO
    opens the document. Questions are a fallback, not the primary mode.
@@ -43,20 +43,20 @@ Two principles underpin correctness and parallelism:
 /hsb-teamwork:readiness-package
 ```
 
-When you invoke it, have the path to the demand's intake session folder ready
-(the `<demand-slug>/` folder produced by `intake-brainstorm`). The skill will
-confirm the intake-record path, resolve-or-resume the
+When you invoke it, have the path to the demand's origination session folder ready
+(the `<demand-slug>/` folder produced by `origination-brainstorm`). The skill will
+confirm the origination-record path, resolve-or-resume the
 `<demand-slug>-readiness/` session folder, and default the output language to
 pt-BR unless you specify otherwise.
 
 ## Input
 
-A **Product Ready intake-record** — the `target-document.md` (or its
-`output/humanized.md`) produced by `/hsb-teamwork:intake-brainstorm` after the
+A **Product Ready origination-record** — the `target-document.md` (or its
+`output/humanized.md`) produced by `/hsb-teamwork:origination-brainstorm` after the
 demand has been triaged to `Product Ready` status.
 
 The PO provides:
-- The intake session folder path (e.g. `SESSION_ROOT/<demand-slug>/`).
+- The origination session folder path (e.g. `SESSION_ROOT/<demand-slug>/`).
 - Optionally: additional files to index (specs, research, prior ADRs).
 - Optionally: a custom RP template (if not using the default).
 
@@ -67,7 +67,7 @@ All artifacts land in `SESSION_ROOT/<demand-slug>-readiness/`:
 ```
 <demand-slug>-readiness/
 ├── contract.lock.md            # derived RP contract + template hash
-├── sources-index.md            # index of ingested inputs (incl. intake-record)
+├── sources-index.md            # index of ingested inputs (incl. origination-record)
 ├── sources/                    # normalized input files
 ├── qa-log.md                   # Q&A ledger (questions + rationale + PO answers)
 ├── readiness-document.md       # the RP being filled and frozen
@@ -104,10 +104,10 @@ behavior and is documented in
 
 ## Modes
 
-- **Fresh** (default) — intake-record exists, no RP yet. Full pipeline.
+- **Fresh** (default) — origination-record exists, no RP yet. Full pipeline.
 - **Revisit** — existing `readiness-document.md` in the session folder. Re-score,
   report the gap map, re-open questions only on weak sections.
-- **Batch / headless** — a set of intake-records, no live PO. No-question draft
+- **Batch / headless** — a set of origination-records, no live PO. No-question draft
   path; output is always "draft for review," never frozen on its own.
 
 ## Using it elsewhere
@@ -133,7 +133,7 @@ plugins/hsb-teamwork/
 │   ├── references/
 │   │   ├── orchestration.md                        # phases, roster, single-writer rule
 │   │   ├── drafting.md                             # draft-then-confirm, Origin lifecycle
-│   │   ├── inheritance.md                          # intake-to-RP section mapping
+│   │   ├── inheritance.md                          # origination-to-RP section mapping
 │   │   └── escalation.md                           # TA triggers, freeze gate, provisional path
 │   └── assets/
 │       ├── target-template.readiness-package.md    # default RP template (annotated)

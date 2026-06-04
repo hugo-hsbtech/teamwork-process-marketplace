@@ -5,17 +5,17 @@
 > Ele é auto-suficiente: visão, problema, escopo, regras, user stories, NFRs, edge
 > cases, critérios e métricas. O RP **não** contém seções de autoria do CTO; a
 > avaliação técnica vive no Technical Assessment (referenciado abaixo). O RP herda
-> a camada de confiança do Intake vinculado; o que entrou como premissa ou incógnita
+> a camada de confiança do Origination vinculado; o que entrou como premissa ou incógnita
 > é resolvido ou carregado explicitamente na seção "Prontidão herdada".
 
 ## Metadados
-<!-- intake: id=meta; blocks=false; min-confidence=0; kind=meta -->
+<!-- origination: id=meta; blocks=false; min-confidence=0; kind=meta -->
 
 | Campo | Valor |
 |---|---|
 | **ID do Pacote** | RP-2026-014 |
 | **Versão** | v1 |
-| **Intake vinculado** | INT-2026-014 |
+| **Origination vinculado** | INT-2026-014 |
 | **Responsável** | Ana Ribeiro (PO) |
 | **Escalada ao CTO** | Sim — Technical Assessment TA-2026-014 (pendente) |
 | **Status** | Rascunho |
@@ -23,26 +23,26 @@
 | **Output language** | pt-BR |
 
 ## Histórico de Revisão
-<!-- intake: id=revisions; blocks=false; min-confidence=0; kind=meta -->
+<!-- origination: id=revisions; blocks=false; min-confidence=0; kind=meta -->
 
 | Versão | Data | Autor | Status | Resumo |
 |---|---|---|---|---|
-| v1 | 2026-06-03 | Ana Ribeiro (PO) | Rascunho | Submissão inicial com base no intake INT-2026-014. |
+| v1 | 2026-06-03 | Ana Ribeiro (PO) | Rascunho | Submissão inicial com base no origination INT-2026-014. |
 
 ---
 
 ## Prontidão herdada e dispositions em aberto
-<!-- intake: id=inherited-readiness; blocks=false; min-confidence=0; kind=derived; inputs=exec-summary,context-problem,objectives,personas,scope,metrics,release-criteria,risks -->
+<!-- origination: id=inherited-readiness; blocks=false; min-confidence=0; kind=derived; inputs=exec-summary,context-problem,objectives,personas,scope,metrics,release-criteria,risks -->
 
-> Resumo do que o Intake entregou e do que continua *soft* na entrada da execução.
+> Resumo do que o Origination entregou e do que continua *soft* na entrada da execução.
 > Premissas, incógnitas de Discovery e respostas delegadas que sobreviveram à
 > racionalização precisam estar visíveis — não enterradas nas seções. Se uma
 > premissa carregada aqui se provar falsa durante a execução, a demanda deve ser
-> reavaliada (o mesmo gatilho de retriagem do intake se aplica downstream).
+> reavaliada (o mesmo gatilho de retriagem do origination se aplica downstream).
 
 | Campo | Valor |
 |---|---|
-| **Readiness Score no handoff do Intake** | 82 % |
+| **Readiness Score no handoff do Origination** | 82 % |
 | **Premissas ainda a validar** | Volume de 240 tickets/trimestre é representativo do custo total; impacto no CS confirmado mas breakdown por conta não disponível |
 | **Incógnitas de Discovery** | Breakdown de tickets por conta (abertas — CS pode extrair em ~1 semana) |
 | **Requisitos delegados (com dono)** | Arquitetura de provisionamento sync/async (CTO — Technical Assessment TA-2026-014) |
@@ -50,10 +50,10 @@
 ---
 
 ## Seção 1 — Resumo Executivo
-<!-- intake: id=exec-summary; blocks=true; min-confidence=70; kind=capture -->
+<!-- origination: id=exec-summary; blocks=true; min-confidence=70; kind=capture -->
 > Rubric: 2–4 parágrafos curtos. Qual é o problema, o que será construído e qual é
 > o resultado esperado de negócio. Deve ser legível por qualquer stakeholder sem
-> contexto adicional. Herdado e expandido do intake quando possível.
+> contexto adicional. Herdado e expandido do origination quando possível.
 
 Admins enterprise não conseguem adicionar ou remover assentos sem abrir um ticket de suporte. O lead time de 1–3 dias úteis cria dependência operacional que gera fricção em ondas de onboarding e em ciclos de renovação de contrato. Em Q1 2026, 240 tickets (18% do volume enterprise) foram desse tipo.
 
@@ -61,15 +61,15 @@ Esta entrega cria um painel de gestão de assentos self-service no produto, perm
 
 O resultado esperado é a eliminação de pelo menos 75% dos tickets de seat management em 90 dias pós-rollout, reduzindo o volume trimestral de 240 para ≤ 60 tickets, e liberando a equipe de CS para demandas de maior complexidade.
 
-`Confidence: 82 · Origin: inherited · Source: intake INT-2026-014 §problem + support export Q1 2026 · Status: resolved · Disposition: inherited · Hint: herdado do intake a 88; rebaixado levemente por ausência de breakdown por conta — CS pode refinar para ~90`
+`Confidence: 82 · Origin: inherited · Source: origination INT-2026-014 §problem + support export Q1 2026 · Status: resolved · Disposition: inherited · Hint: herdado do origination a 88; rebaixado levemente por ausência de breakdown por conta — CS pode refinar para ~90`
 
 ---
 
 ## Seção 2 — Contexto e Problema (a dor, não a solução)
-<!-- intake: id=context-problem; blocks=true; min-confidence=80; kind=capture -->
+<!-- origination: id=context-problem; blocks=true; min-confidence=80; kind=capture -->
 > Rubric: cenário atual, limitações, dor do cliente e impacto de negócio — o
 > problema, nunca a solução. Se descreve uma solução ("construir X"), NÃO está
-> satisfeita: reformule para a dor subjacente. Herdada do intake quando possível.
+> satisfeita: reformule para a dor subjacente. Herdada do origination quando possível.
 
 ### Cenário Atual
 
@@ -93,12 +93,12 @@ Admins enterprise vivem uma dependência operacional: qualquer mudança de time 
 - Risco de churn: 3 contas enterprise sinalizaram insatisfação com o processo em entrevistas de renovação Q4 2025.
 - Bloqueio de expansão: admins que não conseguem adicionar assentos rapidamente adiaram contratações — receita de expansão potencialmente represada.
 
-`Confidence: 86 · Origin: inherited · Source: intake INT-2026-014 §problem + support export Q1 2026 + entrevistas CS Q4 2025 · Status: resolved · Disposition: inherited · Hint: baseline de 240 tickets/trimestre é firme; estimativa de custo por ticket é aproximada — CS pode refinar`
+`Confidence: 86 · Origin: inherited · Source: origination INT-2026-014 §problem + support export Q1 2026 + entrevistas CS Q4 2025 · Status: resolved · Disposition: inherited · Hint: baseline de 240 tickets/trimestre é firme; estimativa de custo por ticket é aproximada — CS pode refinar`
 
 ---
 
 ## Seção 3 — Objetivos e Resultado Esperado
-<!-- intake: id=objectives; blocks=true; min-confidence=70; kind=capture -->
+<!-- origination: id=objectives; blocks=true; min-confidence=70; kind=capture -->
 > Rubric: objetivos numerados e observáveis que esta entrega deve alcançar após o
 > release. Cada objetivo deve ser verificável: se não pode ser medido ou observado,
 > não está satisfeito. Mínimo dois objetivos.
@@ -108,15 +108,15 @@ Admins enterprise vivem uma dependência operacional: qualquer mudança de time 
 3. **Não piorar a confiabilidade de faturamento**: taxa de erro de cobrança (cobrança sem provisionamento ou vice-versa) deve permanecer < 0,1% após o rollout.
 4. **Fornecer rastreabilidade de auditoria**: 100% das alterações de assento realizadas pelo painel devem aparecer no log de auditoria com atribuição de usuário, timestamp e delta (N→M).
 
-`Confidence: 80 · Origin: inherited · Source: intake INT-2026-014 §objectives + suporte export Q1 2026 · Status: resolved · Disposition: inherited · Hint: targets de redução baseados em intake; confirmar com CS 30 dias pós-rollout`
+`Confidence: 80 · Origin: inherited · Source: origination INT-2026-014 §objectives + suporte export Q1 2026 · Status: resolved · Disposition: inherited · Hint: targets de redução baseados em origination; confirmar com CS 30 dias pós-rollout`
 
 ---
 
 ## Seção 4 — Personas Impactadas / Jobs-to-be-done
-<!-- intake: id=personas; blocks=true; min-confidence=70; kind=capture -->
+<!-- origination: id=personas; blocks=true; min-confidence=70; kind=capture -->
 > Rubric: para cada persona, o job-to-be-done (o que está tentando realizar) e como
 > é impactada por esta entrega. Sem persona definida, scope e critérios de aceite
-> não têm âncora. Herdado do intake (campo reach) quando possível.
+> não têm âncora. Herdado do origination (campo reach) quando possível.
 
 | Persona | Job-to-be-done | Impacto desta entrega |
 |---|---|---|
@@ -124,12 +124,12 @@ Admins enterprise vivem uma dependência operacional: qualquer mudança de time 
 | **Analista de CS** | Resolver solicitações de suporte de alta complexidade; não querer desperdício em operações triviais. | Fica liberado de ~240 tickets/trimestre repetitivos; atua como escalonamento de exceção. |
 | **Contador / Responsável Financeiro** (viewer, sem ação) | Entender o custo de licenças e reconciliar cobranças. | Ganha visibilidade no log de auditoria e preview de fatura; sem necessidade de solicitar extratos ao CS. |
 
-`Confidence: 75 · Origin: inherited · Source: intake INT-2026-014 §reach + entrevistas CS Q4 2025 · Status: resolved · Disposition: inherited · Hint: persona financeiro inferida; validar se role viewer está no escopo deste release ou é fase 2`
+`Confidence: 75 · Origin: inherited · Source: origination INT-2026-014 §reach + entrevistas CS Q4 2025 · Status: resolved · Disposition: inherited · Hint: persona financeiro inferida; validar se role viewer está no escopo deste release ou é fase 2`
 
 ---
 
 ## Seção 5 — Escopo Incluído e Excluído
-<!-- intake: id=scope; blocks=true; min-confidence=75; kind=capture -->
+<!-- origination: id=scope; blocks=true; min-confidence=75; kind=capture -->
 > Rubric: protege o downstream de scope creep. Deve listar explicitamente o que
 > está FORA, não apenas o que está dentro. Itens adiados alimentam o Roadmap
 > (Seção 14). Sem "excluído" preenchido, a seção NÃO está satisfeita.
@@ -158,12 +158,12 @@ Admins enterprise vivem uma dependência operacional: qualquer mudança de time 
 - Notificações e-mail/Slack ao alterar assentos (fase 2) — melhora rastreabilidade para gestores.
 - Sincronização com sistemas de HR para seat management automatizado (fase 3).
 
-`Confidence: 80 · Origin: inherited · Source: intake INT-2026-014 §scope + alinhamento PO/CS · Status: resolved · Disposition: inherited · Hint: exclusões validadas com CS; API pública é pedido recorrente mas fora do MVPs`
+`Confidence: 80 · Origin: inherited · Source: origination INT-2026-014 §scope + alinhamento PO/CS · Status: resolved · Disposition: inherited · Hint: exclusões validadas com CS; API pública é pedido recorrente mas fora do MVPs`
 
 ---
 
 ## Seção 6 — Regras de Negócio e Fluxos
-<!-- intake: id=business-rules; blocks=true; min-confidence=80; kind=capture -->
+<!-- origination: id=business-rules; blocks=true; min-confidence=80; kind=capture -->
 > Rubric: regras, validações e transições de estado que governam a funcionalidade.
 > Cada regra deve ser verificável e atômica. Fluxos de transição de estado devem
 > cobrir caminhos de erro, não apenas o caminho feliz.
@@ -208,7 +208,7 @@ Admins enterprise vivem uma dependência operacional: qualquer mudança de time 
 ---
 
 ## Seção 7 — User Stories + Critérios de Aceite
-<!-- intake: id=user-stories; blocks=true; min-confidence=80; kind=capture -->
+<!-- origination: id=user-stories; blocks=true; min-confidence=80; kind=capture -->
 > Rubric: uma história por bloco de valor, "Como [persona], quero [ação], para
 > [benefício]"; critérios de aceite em Given/When/Then, verificáveis por não-dev,
 > com limites específicos. origin=ai_drafted no draft pass; o PO confirma.
@@ -253,7 +253,7 @@ Admins enterprise vivem uma dependência operacional: qualquer mudança de time 
 ---
 
 ## Seção 8 — Requisitos Não-Funcionais (NFRs)
-<!-- intake: id=nfrs; blocks=true; min-confidence=70; kind=capture -->
+<!-- origination: id=nfrs; blocks=true; min-confidence=70; kind=capture -->
 > Rubric: preencher apenas as dimensões aplicáveis (checklist ISO/IEC 25010 — não
 > forçar as irrelevantes). O PO descreve o requisito de qualidade; viabilidade e
 > *como* são do Technical Assessment. Sem ao menos uma dimensão preenchida,
@@ -275,7 +275,7 @@ O PO descreve o *requisito de qualidade*. Se os targets são atingíveis com a a
 ---
 
 ## Seção 9 — Edge Cases e Modos de Falha
-<!-- intake: id=edge-cases; blocks=true; min-confidence=70; kind=capture -->
+<!-- origination: id=edge-cases; blocks=true; min-confidence=70; kind=capture -->
 > Rubric: estados de erro, timeouts, permissões, concorrência. Para features de IA:
 > comportamento do modelo e baixa-confiança. Primeira classe — não rodapé. Cada
 > item descreve o comportamento esperado do sistema (não apenas o que pode dar errado).
@@ -294,7 +294,7 @@ O PO descreve o *requisito de qualidade*. Se os targets são atingíveis com a a
 ---
 
 ## Seção 10 — Métricas de Sucesso (primária · secundária · guardrail)
-<!-- intake: id=metrics; blocks=true; min-confidence=70; kind=capture -->
+<!-- origination: id=metrics; blocks=true; min-confidence=70; kind=capture -->
 > Rubric: valores projetados — o baseline que metrics.md confronta com o medido
 > pós-rollout. Inclua indicadores leading e lagging e ao menos um guardrail (a
 > métrica que não pode piorar). Cada meta carrega a confiança da projeção.
@@ -307,12 +307,12 @@ O PO descreve o *requisito de qualidade*. Se os targets são atingíveis com a a
 | **Guardrail** | Taxa de erro de faturamento (cobrança sem provisionamento ou vice-versa) | < 0,1% | não piorar (< 0,1%) | 80% |
 | **Guardrail** | CSAT de CS (tickets enterprise) | 4,2/5 | não piorar (≥ 4,0/5) | 55% |
 
-`Confidence: 70 · Origin: inherited · Source: support export Q1 2026 + intake INT-2026-014 §metrics · Status: low_confidence · Disposition: inherited · Hint: baseline de 240 tickets/trimestre é firme; projeção de −75% é estimativa — confrontar com dado real 60 e 90 dias pós-rollout; CSAT baseline precisa de confirmação com CS`
+`Confidence: 70 · Origin: inherited · Source: support export Q1 2026 + origination INT-2026-014 §metrics · Status: low_confidence · Disposition: inherited · Hint: baseline de 240 tickets/trimestre é firme; projeção de −75% é estimativa — confrontar com dado real 60 e 90 dias pós-rollout; CSAT baseline precisa de confirmação com CS`
 
 ---
 
 ## Seção 11 — Critérios de Sucesso e Aceite (do release)
-<!-- intake: id=release-criteria; blocks=true; min-confidence=70; kind=capture -->
+<!-- origination: id=release-criteria; blocks=true; min-confidence=70; kind=capture -->
 > Rubric: indicadores de alto nível que definem "concluído e valioso" para este
 > release — distintos das métricas contínuas da Seção 10. Deve cobrir ao menos
 > as dimensões Negócio, Qualidade e UX. Critérios genéricos ("funciona bem") NÃO
@@ -326,12 +326,12 @@ O PO descreve o *requisito de qualidade*. Se os targets são atingíveis com a a
 | Fluxo é concluído sem suporte | UX | Taxa de admins que completam adição/remoção sem abrir ticket de suporte dentro de 7 dias | ≥ 90% |
 | Performance dentro do SLA | Qualidade | p95 de tempo de confirmação de adição de assento | ≤ 60 segundos |
 
-`Confidence: 75 · Origin: inherited · Source: intake INT-2026-014 §success-criteria + alinhamento PO · Status: resolved · Disposition: inherited · Hint: critério de faturamento é não-negociável; critério de UX requer monitoramento ativo nas 2 primeiras semanas`
+`Confidence: 75 · Origin: inherited · Source: origination INT-2026-014 §success-criteria + alinhamento PO · Status: resolved · Disposition: inherited · Hint: critério de faturamento é não-negociável; critério de UX requer monitoramento ativo nas 2 primeiras semanas`
 
 ---
 
 ## Seção 12 — Riscos e Dependências (de produto e negócio)
-<!-- intake: id=risks; blocks=true; min-confidence=70; kind=capture -->
+<!-- origination: id=risks; blocks=true; min-confidence=70; kind=capture -->
 > Rubric: riscos de produto, negócio, adoção, externos e compliance. Riscos
 > técnicos migram para o Technical Assessment. Cada risco tem probabilidade,
 > impacto e mitigação. Dependências de produto/negócio listadas separadamente.
@@ -349,12 +349,12 @@ O PO descreve o *requisito de qualidade*. Se os targets são atingíveis com a a
 - Alinhamento com DPO sobre retenção de dados no log de auditoria (LGPD).
 - Mapeamento de contas com billing especial (CS/Finance) — necessário antes do rollout para definir tratamento de edge cases de proporcionalidade.
 
-`Confidence: 72 · Origin: inherited · Source: intake INT-2026-014 §risks + alinhamento PO/CS · Status: draft · Disposition: inherited · Hint: risco de compliance (LGPD) requer ação pré-rollout; risco técnico de idempotência migra para o TA`
+`Confidence: 72 · Origin: inherited · Source: origination INT-2026-014 §risks + alinhamento PO/CS · Status: draft · Disposition: inherited · Hint: risco de compliance (LGPD) requer ação pré-rollout; risco técnico de idempotência migra para o TA`
 
 ---
 
 ## Seção 13 — Avaliação Preliminar de Esforço e Custo
-<!-- intake: id=effort-estimate; blocks=false; min-confidence=0; kind=capture -->
+<!-- origination: id=effort-estimate; blocks=false; min-confidence=0; kind=capture -->
 > Rubric: somente uso interno — o chute do PO para sustentar sequenciamento. O
 > número firme vem do CTO no Technical Assessment. Não é compromisso contratual
 > nem material para cliente. Confiança esperada: baixa (ai_drafted ou po_authored
@@ -374,7 +374,7 @@ O PO descreve o *requisito de qualidade*. Se os targets são atingíveis com a a
 ---
 
 ## Seção 14 — Roadmap Sugerido
-<!-- intake: id=roadmap; blocks=false; min-confidence=0; kind=capture -->
+<!-- origination: id=roadmap; blocks=false; min-confidence=0; kind=capture -->
 > Rubric: visão de sequenciamento de valor além deste release. Items adiados da
 > Seção 5 alimentam fases futuras. MVP é este release; Fase 2 e Fase 3 são
 > backlog futuro. Não é compromisso de entrega.
@@ -403,7 +403,7 @@ O PO descreve o *requisito de qualidade*. Se os targets são atingíveis com a a
 ---
 
 ## Referência ao Technical Assessment
-<!-- intake: id=tech-assessment-ref; blocks=false; min-confidence=0; kind=derived; inputs=scope,business-rules,nfrs,risks -->
+<!-- origination: id=tech-assessment-ref; blocks=false; min-confidence=0; kind=derived; inputs=scope,business-rules,nfrs,risks -->
 > Rubric: ponte para o artefato do CTO — status + veredito + link, NÃO conteúdo.
 > Se a escalada for requisitada, congela só com Disposition=deferred (TA pendente,
 > fora do escopo desta ferramenta) ou Status=Assinado quando o TA existir.

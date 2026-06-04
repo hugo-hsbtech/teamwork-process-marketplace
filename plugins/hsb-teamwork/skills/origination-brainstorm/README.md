@@ -1,7 +1,7 @@
-# intake-brainstorm
+# origination-brainstorm
 
-> **Part of the `hsb-teamwork` toolkit.** `intake-brainstorm` is the first skill,
-> invoked as `/hsb-teamwork:intake-brainstorm`. Sibling steps are planned in the
+> **Part of the `hsb-teamwork` toolkit.** `origination-brainstorm` is the first skill,
+> invoked as `/hsb-teamwork:origination-brainstorm`. Sibling steps are planned in the
 > same plugin: `readiness-package`, `tech-assessment`, `prd-generation` — each a
 > skill under `/hsb-teamwork:<skill>`, reusing this skill's agents and references.
 
@@ -171,7 +171,7 @@ Agent definitions live in `agents/hsb-*.md`.
 A run creates one folder per demand:
 
 ```
-<SESSION_ROOT>/<demand-slug>/      # SESSION_ROOT = $INTAKE_HOME or the project (git) root + /intake
+<SESSION_ROOT>/<demand-slug>/      # SESSION_ROOT = $ORIGINATION_HOME or the project (git) root + /origination
 ├── contract.lock.md        # derived contract + template hash
 ├── sources-index.md        # index of ingested inputs
 ├── sources/                # normalized input files
@@ -214,19 +214,19 @@ this repo's marketplace — versioned, namespaced, no copying:
 (The plugin is published from its own repo; while still in the monorepo you can
 add `hugo-hsbtech/teamwork-process` instead — same marketplace.json.)
 
-Then invoke it as `/hsb-teamwork:intake-brainstorm` (plugin skills are
+Then invoke it as `/hsb-teamwork:origination-brainstorm` (plugin skills are
 namespaced `<plugin>:<skill>`).
 
 The plugin is self-contained (template, companion guide, and exemplar are bundled
 under [`assets/`](assets/)), so no repository content is needed at runtime.
 
 - **Codex**: see [`../../codex/README.md`](../../codex/README.md) — the same method
-  files, an `AGENTS.md` orchestrator, an `/hsb-teamwork-intake-brainstorm` prompt, and the 16
+  files, an `AGENTS.md` orchestrator, an `/hsb-teamwork-origination-brainstorm` prompt, and the 16
   roles as Codex subagents (`hsb-*.toml`, same names as the Claude agents), run
   sequentially under Codex's single-agent model.
 
 To target a different document type, copy
-`assets/target-template.intake-record.md`, re-annotate its sections, and pass it
+`assets/target-template.origination-record.md`, re-annotate its sections, and pass it
 as the template.
 
 ## Layout (the plugin)
@@ -234,7 +234,7 @@ as the template.
 ```
 plugins/hsb-teamwork/        # the Claude Code plugin (self-contained)
 ├── .claude-plugin/plugin.json
-├── skills/intake-brainstorm/
+├── skills/origination-brainstorm/
 │   ├── SKILL.md                       # orchestrator spec
 │   ├── README.md                      # this file
 │   ├── references/
@@ -246,13 +246,13 @@ plugins/hsb-teamwork/        # the Claude Code plugin (self-contained)
 │   │   ├── sessions.md                # resolve-or-resume, cross-run idempotency
 │   │   └── grounding.md
 │   └── assets/
-│       ├── target-template.intake-record.md
-│       ├── target-template.intake-record.guide.md
+│       ├── target-template.origination-record.md
+│       ├── target-template.origination-record.guide.md
 │       └── golden-example.md
 ├── agents/hsb-*.md                    # 16 Claude subagents (phase-agnostic specialists)
 └── codex/                             # Codex adapter (reuses the files above)
     ├── AGENTS.md
-    ├── prompts/hsb-teamwork-intake-brainstorm.md
+    ├── prompts/hsb-teamwork-origination-brainstorm.md
     └── agents/hsb-*.toml               # 16 Codex subagents (same names, flat namespace)
 ```
 

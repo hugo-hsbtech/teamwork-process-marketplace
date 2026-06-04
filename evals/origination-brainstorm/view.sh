@@ -11,4 +11,4 @@ WS="runs/iteration-${ITER}"
 BENCH=()
 [ -f "$WS/benchmark.json" ] && BENCH=(--benchmark "$WS/benchmark.json")
 exec python3 ../eval-viewer/generate_review.py "$WS" \
-  --skill-name "hsb-teamwork:intake-brainstorm" "${BENCH[@]}" "$@"
+  --skill-name "hsb-teamwork:origination-brainstorm" "${BENCH[@]}" "$@"

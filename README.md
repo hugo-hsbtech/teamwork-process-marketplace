@@ -33,7 +33,7 @@ grounds every answer in evidence, marks what is still unknown honestly (rather
 than blocking on it), and hands back a document a team can triage and plan
 against — plus humanized, translated, and visually-enriched variants.
 
-It is the intake stage of a larger **demand-to-delivery** model whose lineage
+It is the origination stage of a larger **demand-to-delivery** model whose lineage
 runs through Stage-Gate (Cooper), Dual-Track / Continuous Discovery (Cagan,
 Torres), Theory of Constraints (Goldratt), Lean Software Development
 (Poppendieck), Product Development Flow (Reinertsen), and Team Topologies
@@ -48,7 +48,7 @@ on Claude Code or `/hsb-teamwork-<skill>` on Codex.
 
 | Step            | Skill                   | Status      |
 |-----------------|-------------------------|-------------|
-| Intake          | **`intake-brainstorm`** | ✅ available |
+| Origination          | **`origination-brainstorm`** | ✅ available |
 | Readiness       | `readiness-package`     | 🔜 planned  |
 | Tech assessment | `tech-assessment`       | 🔜 planned  |
 | PRD             | `prd-generation`        | 🔜 planned  |
@@ -58,7 +58,7 @@ carry across the whole toolkit.
 
 ---
 
-## The `intake-brainstorm` skill
+## The `origination-brainstorm` skill
 
 Turns a raw Submitter description — a sentence, a paragraph, and/or referenced
 files — into a fully-filled **target document**, through a confidence-driven
@@ -164,7 +164,7 @@ flowchart TD
 ### The 16 agents (+ orchestrator)
 
 The agents are named for the specialty they perform, not the phase they run in, so
-the same roster serves intake-brainstorm, readiness-package, and the planned stages.
+the same roster serves origination-brainstorm, readiness-package, and the planned stages.
 The names are identical on Claude and Codex (`hsb-<role>`).
 
 | Phase | Agent                        | Role                                         |
@@ -189,7 +189,7 @@ The names are identical on Claude and Codex (`hsb-<role>`).
 ### Session artifacts
 
 A run creates one folder per demand at `<SESSION_ROOT>/<demand-slug>/`, where
-`SESSION_ROOT` is `$INTAKE_HOME` or your project's git root + `/intake`:
+`SESSION_ROOT` is `$ORIGINATION_HOME` or your project's git root + `/origination`:
 
 ```
 <SESSION_ROOT>/<demand-slug>/
@@ -215,9 +215,9 @@ A run creates one folder per demand at `<SESSION_ROOT>/<demand-slug>/`, where
   path (extract → fill → score) produces "draft for review" documents, one session
   per signal, in parallel.
 
-> Deep dives: the skill's [README](plugins/hsb-teamwork/skills/intake-brainstorm/README.md)
-> (architecture + diagrams), its [`SKILL.md`](plugins/hsb-teamwork/skills/intake-brainstorm/SKILL.md)
-> (the orchestrator spec), and [`references/`](plugins/hsb-teamwork/skills/intake-brainstorm/references/)
+> Deep dives: the skill's [README](plugins/hsb-teamwork/skills/origination-brainstorm/README.md)
+> (architecture + diagrams), its [`SKILL.md`](plugins/hsb-teamwork/skills/origination-brainstorm/SKILL.md)
+> (the orchestrator spec), and [`references/`](plugins/hsb-teamwork/skills/origination-brainstorm/references/)
 > (the authoritative method files).
 
 ---
@@ -229,12 +229,12 @@ A run creates one folder per demand at `<SESSION_ROOT>/<demand-slug>/`, where
 ```
 /plugin marketplace add hugo-hsbtech/teamwork-process-marketplace
 /plugin install hsb-teamwork@hsb-tech
-/hsb-teamwork:intake-brainstorm
+/hsb-teamwork:origination-brainstorm
 ```
 
 Then describe your demand in one line, optionally naming files to read. You can
 also just describe a demand in normal chat — the skill triggers on
-intake/capture/triage requests.
+origination/capture/triage requests.
 
 ### Codex
 
@@ -253,15 +253,15 @@ template: **[`plugins/hsb-teamwork/README.md`](plugins/hsb-teamwork/README.md)**
 plugin). It mirrors Claude's `skill-creator` eval loop: run each case headlessly
 **with the skill** and as a **baseline**, then grade.
 
-- **Layer 1 (automated, gating):** [`assertions.py`](evals/intake-brainstorm/assertions.py)
+- **Layer 1 (automated, gating):** [`assertions.py`](evals/origination-brainstorm/assertions.py)
   checks the contract on the produced `target-document.md` — sentinel /
   no-truncation, every blocking section resolved-or-disposed, confidence lines,
   triage flagged draft.
-- **Layer 2 (qualitative):** an LLM grades against [`rubric.md`](evals/intake-brainstorm/rubric.md)
+- **Layer 2 (qualitative):** an LLM grades against [`rubric.md`](evals/origination-brainstorm/rubric.md)
   and the golden output.
 
 ```bash
-cd evals/intake-brainstorm
+cd evals/origination-brainstorm
 ./run.sh        # self-tests the grader; runs live cases if the `claude` CLI is present
 ```
 
@@ -281,11 +281,11 @@ teamwork-process-marketplace/
 │   └── hsb-teamwork/                 # the plugin (self-contained)
 │       ├── .claude-plugin/plugin.json
 │       ├── README.md                 # install & use guide
-│       ├── skills/intake-brainstorm/ # SKILL.md, README, references/, assets/
+│       ├── skills/origination-brainstorm/ # SKILL.md, README, references/, assets/
 │       ├── agents/hsb-*.md           # 16 Claude subagents (phase-agnostic specialists)
 │       └── codex/                    # Codex adapter (AGENTS.md, prompt, *.toml agents)
 ├── evals/                            # repo-level eval suite (dev/CI only)
-│   └── intake-brainstorm/            # assertions.py, evals.json, rubric.md, run.sh, fixtures, golden
+│   └── origination-brainstorm/            # assertions.py, evals.json, rubric.md, run.sh, fixtures, golden
 └── .claude/skills/                   # symlink into the plugin for local discoverability
 ```
 
@@ -298,8 +298,8 @@ evals and local use) without a second copy.
 
 ## Roadmap
 
-- [x] `intake-brainstorm` — intake → filled, confidence-graded document + variants
-- [ ] `readiness-package` — turn an intake into a delivery-ready package
+- [x] `origination-brainstorm` — origination → filled, confidence-graded document + variants
+- [ ] `readiness-package` — turn an origination into a delivery-ready package
 - [ ] `tech-assessment` — technical feasibility and approach
 - [ ] `prd-generation` — PRD from the accumulated context
 
