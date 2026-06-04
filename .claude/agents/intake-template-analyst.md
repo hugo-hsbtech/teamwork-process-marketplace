@@ -1,0 +1,1 @@
+../../plugins/hsb-teamwork/agents/intake-template-analyst.md
