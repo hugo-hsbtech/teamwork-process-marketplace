@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 # Eval runner for the hsb-teamwork:readiness-package skill (repo-level, dev/CI only).
 # Usage: ./run.sh [iteration]
-# - Always self-tests the grader against the golden.
+# - Always self-tests the grader against the golden, and lays out a viewer run
+#   for it (so ./view.sh works even without the `claude` CLI).
 # - If the `claude` CLI is available, runs each eval case headlessly (with-skill,
 #   and a no-skill baseline) and grades the outputs into a scorecard.
-# - If not, explains how to run the cases and still reports the self-test.
+# - Emits the eval-viewer layout per run (outputs/ + eval_metadata.json +
+#   grading.json) and a workspace benchmark.json. View with ./view.sh [iteration].
 set -uo pipefail
 cd "$(dirname "$0")"
 ITER="${1:-1}"
@@ -62,12 +64,37 @@ grade() { # <doc> -> echoes "PASS|FAIL\treadiness\tblocking" (exit 0 even when t
     | python3 -c "import json,sys;r=json.load(sys.stdin);print(('PASS' if r['pass'] else 'FAIL')+'\t'+str(r['readiness_pct'])+'%\t'+r['blocking_satisfied'])"
 }
 
+# write_meta <run_dir> <eval_id> <prompt> -> eval_metadata.json (read by the viewer)
+write_meta() {
+  python3 -c '
+import json,sys
+run_dir,eid,prompt=sys.argv[1],sys.argv[2],sys.argv[3]
+try: eid=int(eid)
+except ValueError: pass
+json.dump({"eval_id":eid,"prompt":prompt},open(run_dir+"/eval_metadata.json","w"),indent=2)
+' "$1" "$2" "$3"
+}
+
+# assemble_run <run_dir> <doc> -> outputs/readiness-document.md + grading.json
+assemble_run() {
+  mkdir -p "$1/outputs"
+  cp "$2" "$1/outputs/readiness-document.md"
+  python3 assertions.py "$1/outputs/readiness-document.md" --grading-json "$1/grading.json" >/dev/null 2>&1 || true
+}
+
 echo "== Self-test: grading the golden =="
 if g=$(grade golden/seat-management.readiness-document.md); then
   IFS=$'\t' read -r st rd bl <<<"$g"
   echo "golden: $st readiness=$rd blocking=$bl"
   echo "| golden (self-test) | fixture | $st | $rd | $bl | — |" >> "$SCORE"
 fi
+# Always lay out a viewer run for the golden so ./view.sh is demonstrable
+# without the claude CLI (it appears under the Outputs tab). eval_id -1 keeps it
+# an integer (the viewer sorts runs by eval_id and cannot compare a string id
+# against the integer ids of the live cases); -1 sorts first.
+GRUN="$RUNS/golden-selftest"; mkdir -p "$GRUN"
+write_meta "$GRUN" -1 "Self-test: grade the committed golden readiness document (golden/seat-management.readiness-document.md). No agent run — this populates the eval-viewer so it can be demonstrated without the claude CLI."
+assemble_run "$GRUN" golden/seat-management.readiness-document.md
 
 if ! command -v claude >/dev/null 2>&1; then
   echo ""
@@ -76,7 +103,9 @@ if ! command -v claude >/dev/null 2>&1; then
   echo "available (this repo symlinks it into .claude/), then re-run ./run.sh."
   echo "" >> "$SCORE"
   echo "_Live cases skipped (claude CLI not found). Self-test only._" >> "$SCORE"
-  echo "Wrote $SCORE"; exit 0
+  echo "Wrote $SCORE"
+  echo "View the golden self-test: ./view.sh ${ITER}   (headless: ./view.sh ${ITER} --static review.html)"
+  exit 0
 fi
 
 # Iterate cases from evals.json.
@@ -124,6 +153,10 @@ sys.stdout.write(last)
     if [ -f "$OUT/readiness-document.md" ]; then
       res=$(grade "$OUT/readiness-document.md") || res=$'FAIL\t-\t-'
       IFS=$'\t' read -r st rd bl <<<"$res"
+      # Emit the eval-viewer layout for this run (fanout.json/trace.jsonl stay in
+      # the run dir, not outputs/, so they don't clutter the viewer's file list).
+      write_meta "$OUT" "$id" "$p"
+      assemble_run "$OUT" "$OUT/readiness-document.md"
     else
       st="NO-OUTPUT"; rd="-"; bl="-"
     fi
@@ -131,11 +164,19 @@ sys.stdout.write(last)
   done
 done
 
+# Aggregate a benchmark.json for the viewer's Benchmark tab (skipped if no graded runs).
+if python3 ../eval-viewer/make_benchmark.py "$RUNS" --skill "hsb-teamwork:readiness-package" > "$RUNS/benchmark.json" 2>/dev/null; then
+  echo "Wrote $RUNS/benchmark.json"
+else
+  rm -f "$RUNS/benchmark.json"
+fi
+
 echo ""
 echo "Wrote $SCORE"
+echo "View results: ./view.sh ${ITER}   (headless/remote: ./view.sh ${ITER} --static review.html)"
 echo "Fan-out: with_skill must read PASS (>=3 core agents, ∥>=2). A with_skill row"
 echo "showing 'FAIL (inline, 0 spawns)' means the orchestrator built the doc itself"
 echo "instead of delegating — the regression this column exists to catch. baseline is"
 echo "the control and is expected to stay inline. Per-run detail: <case>/<mode>/fanout.json."
-echo "Next: have an LLM grade each with_skill/readiness-document.md against rubric.md"
+echo "Next: have an LLM grade each with_skill/outputs/readiness-document.md against rubric.md"
 echo "(Layer 2, qualitative) and append the 1-5 scores to the scorecard."

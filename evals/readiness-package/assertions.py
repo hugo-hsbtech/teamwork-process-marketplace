@@ -107,9 +107,39 @@ def grade(path):
     return {"file": path, "pass": ok_all, "readiness_pct": readiness,
             "blocking_satisfied": f"{sat}/{len(blocking)}", "checks": checks}
 
+def to_grading(rep):
+    """Map the structural report onto the eval-viewer's grading.json shape:
+    {summary:{pass_rate,passed,failed,total}, expectations:[{text,passed,evidence}]}.
+    The viewer (evals/eval-viewer) renders this as the per-run "Grades" panel."""
+    exps = [{"text": c["check"], "passed": c["ok"], "evidence": c["detail"]}
+            for c in rep["checks"]]
+    passed = sum(1 for e in exps if e["passed"])
+    total = len(exps)
+    return {
+        "summary": {
+            "pass_rate": (passed / total) if total else 0,
+            "passed": passed,
+            "failed": total - passed,
+            "total": total,
+        },
+        "expectations": exps,
+    }
+
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("usage: assertions.py <readiness-document.md>"); sys.exit(2)
-    rep = grade(sys.argv[1])
+    args = sys.argv[1:]
+    grading_out = None
+    if "--grading-json" in args:
+        i = args.index("--grading-json")
+        try:
+            grading_out = args[i + 1]
+        except IndexError:
+            print("usage: assertions.py <readiness-document.md> [--grading-json <out.json>]"); sys.exit(2)
+        del args[i:i + 2]
+    if len(args) != 1:
+        print("usage: assertions.py <readiness-document.md> [--grading-json <out.json>]"); sys.exit(2)
+    rep = grade(args[0])
+    if grading_out:
+        with open(grading_out, "w", encoding="utf-8") as fh:
+            json.dump(to_grading(rep), fh, indent=2, ensure_ascii=False)
     print(json.dumps(rep, indent=2, ensure_ascii=False))
     sys.exit(0 if rep["pass"] else 1)
