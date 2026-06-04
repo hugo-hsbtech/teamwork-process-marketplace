@@ -52,6 +52,38 @@ other agent is read-only and returns *proposals/findings/verdicts* that **you**
 route to the single writer. Concurrent writes are impossible by construction. The
 ownership table is in `orchestration.md`.
 
+## Execution invariants (read before Phase 1)
+
+This file reads like a description; it is an **execution contract**. The dominant
+failure modes are (a) reading the pipeline and then filling the document yourself
+inline — a correct run has Agent calls in the transcript — and (b) spawning agents
+one at a time and awaiting each, which is what makes a run drag. Bind yourself to:
+
+1. **Delegation is mandatory.** "Run the pipeline" means *spawn the subagents*. Never
+   read the template and fill it in yourself.
+2. **Independent agents go out in ONE message.** When two agents have no dependency,
+   emit both Agent calls in the **same assistant turn** so they run concurrently. The
+   parallel pairs are: Phase 1 `hsb-source-indexer` ∥ `hsb-template-analyst`;
+   Phase 2 `hsb-question-strategist` ∥ `hsb-evidence-extractor`, and
+   `hsb-gap-reporter` ∥ `hsb-glossary-keeper` when both are due;
+   Phase 3 `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer`.
+3. **Audit incrementally.** After the first full audit, spawn the
+   `hsb-confidence-auditor` with `SECTIONS` = the ids touched since the last pass, so
+   it re-scores only those and carries the rest forward. Re-grading a settled
+   document every iteration is the main avoidable cost in a long run.
+4. **Track the run with TodoWrite.** Create the checklist below *before* Phase 1; this
+   is the mechanism that stops a multi-agent run from collapsing into serial,
+   one-at-a-time spawns.
+
+### The phase checklist (TodoWrite this before Phase 1)
+
+- [ ] Phase 1 · spawn `hsb-template-validator`; gate on pass
+- [ ] Phase 1 · **same message:** `hsb-source-indexer` ∥ `hsb-template-analyst`
+- [ ] Phase 2 · loop: **same message** `hsb-question-strategist` ∥ `hsb-evidence-extractor` → `hsb-ledger-writer` → ask human → `hsb-ledger-writer` → `hsb-doc-updater` (+ `hsb-synthesizer` for derived) → `hsb-confidence-auditor` (incremental `SECTIONS`) until the gate clears
+- [ ] Phase 3 · spawn `hsb-humanizer` (await — it writes the copy the rest read)
+- [ ] Phase 3 · **same message:** `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer`
+- [ ] Phase 4 · spawn `hsb-packager`; record the front in `initiative.json`; report to the human
+
 ## The agents you spawn (`subagent_type`)
 
 | Phase | `subagent_type` | Role |
@@ -130,10 +162,11 @@ any additional requested languages as separate `output/` files. Keep section
    the brokered `glossary.md`. See [`references/initiatives.md`](references/initiatives.md).
 2. **Phase 1 (parallel, gate):** spawn Indexer ∥ Analyst. Contract must exist before
    looping; a changed template hash restarts analysis.
-3. **Phase 2 (loop):** Strategist ∥ Extraction propose → Ledger Writer commits →
-   you ask the human the still-open questions → Ledger Writer records answers
-   (answers may spawn follow-ups) → Doc Updater fills → Auditor scores. Loop until
-   every blocking section is ≥ its `min-confidence` or honestly disposed.
+3. **Phase 2 (loop):** Strategist ∥ Extraction propose (same turn) → Ledger Writer
+   commits → you ask the human the still-open questions → Ledger Writer records
+   answers (answers may spawn follow-ups) → Doc Updater fills → Auditor scores
+   (full on the first pass, then only the touched `SECTIONS`). Loop until every
+   blocking section is ≥ its `min-confidence` or honestly disposed.
 4. **Phase 3 (isolated, parallel variants):** Humanizer writes the canonical clean
    copy; then Translator ∥ Enricher ∥ Finalizer each read it and write their own
    file. The **Finalizer** externalizes the **printable final deliverable** under

@@ -106,7 +106,9 @@ flowchart TD
   records the template hash (a changed hash restarts the analysis).
 - **Phase 2 — Capture loop:** the Strategist and Evidence Extractor *propose* in
   parallel; the Ledger Writer commits questions + answers; the Doc Updater fills
-  the document; the Auditor re-scores and gates. Each question is tagged `open`
+  the document; the Auditor re-scores and gates — fully on the first pass, then only
+  the sections touched since the last pass, so later iterations stay cheap. Each
+  question is tagged `open`
   (free-text prose, for pain/why gaps) or `choice` (interactive `AskUserQuestion`
   with scaffolded hypothesis options + escape hatches, for categorical gaps and
   follow-up rounds) — see `references/questioning-method.md`. Conflicts go to the

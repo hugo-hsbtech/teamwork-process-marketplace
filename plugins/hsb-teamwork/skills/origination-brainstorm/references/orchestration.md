@@ -143,15 +143,24 @@ Each iteration:
    `inputs` at a confidence bounded by those inputs, then route its proposals back to
    the Doc Updater, which writes them. (Skip it for trivial templates with no derived
    sections — the Doc Updater can compose inline.)
-5. **Confidence Auditor** (read-only) re-scores every section against its rubric,
+5. **Confidence Auditor** (read-only) re-scores sections against their rubric,
    checks the document for truncation, **flags** conflicts (it does not resolve
-   them), and returns the **gap verdict** + readiness score.
+   them), and returns the **gap verdict** + readiness score. **Audit incrementally:**
+   on the *first* audit it scores every section; on later loop iterations inject
+   `SECTIONS` — the ids touched since the last audit (filled, answered, or
+   reconciled) — so it re-scores **only those** and re-checks the gate using their
+   new verdicts plus the carried-forward verdicts of the untouched sections. This is
+   what keeps each loop iteration cheap; full re-grades of a settled document are the
+   main avoidable cost in a long run.
    - On a flagged conflict, spawn the **Reconciler** (read-only): it recommends
      which value to keep (or a disambiguating question); you route that to the
      Ledger Writer.
-   - To show the human where things stand, spawn the **Gap Reporter** (writes
-     `readiness-report.md`) — the live gap map.
-   - When domain terms or cross-phase decisions accumulate (typically after the
+   - To show the human where things stand and to keep terminology canonical, the
+     **Gap Reporter** (writes `readiness-report.md`) and the **Glossary Keeper**
+     (writes the shared store) read disjoint-from-each-other inputs and write
+     **distinct files**, so when both are due you spawn them **in the same turn**
+     (parallel). Spawn the **Gap Reporter** for the live gap map; and
+   - when domain terms or cross-phase decisions accumulate (typically after the
      first capture rounds, and again before production), spawn the **Glossary
      Keeper** with `DEFINITIONS_DIR` injected: it reads `qa-log.md` and
      `target-document.md` and writes canonical terms to the initiative's shared
@@ -164,8 +173,11 @@ Each iteration:
    `min-confidence` *or* honestly disposed (`assumption`/`discovery`/`deferred`).
    Otherwise loop — Strategist's next batch targets the Auditor's flagged gaps.
 
-Parallelism inside the loop: Strategist ∥ Extraction (read-only). Ledger Writer →
-Doc Updater run **serially** (each is a single-writer). Auditor is read-only after.
+Parallelism inside the loop: Strategist ∥ Extraction (read-only proposers) go out
+in **one turn**; likewise Gap Reporter ∥ Glossary Keeper (distinct files) when both
+are due. Ledger Writer → Doc Updater run **serially** (each is a single-writer).
+The Auditor is read-only after, and re-scores only the touched `SECTIONS` once the
+document has settled — so later iterations cost a fraction of the first.
 
 ## Phase 3 — Production (isolated context, parallel variants)
 

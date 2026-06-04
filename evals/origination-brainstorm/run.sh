@@ -38,8 +38,24 @@ trap 'rm -rf "$GIT_SHIM_DIR"' EXIT
 
 echo "# Scorecard — origination-brainstorm — iteration ${ITER}" > "$SCORE"
 echo "" >> "$SCORE"
-echo "| case | mode | structural | readiness | blocking |" >> "$SCORE"
-echo "|---|---|---|---|---|" >> "$SCORE"
+echo "| case | mode | structural | readiness | blocking | fan-out |" >> "$SCORE"
+echo "|---|---|---|---|---|---|" >> "$SCORE"
+
+# Summarize a fanout.py verdict into one scorecard cell.
+# with_skill -> "PASS (5 agents, ∥=3)" | "FAIL (inline, 0 spawns)"
+# baseline   -> just the facts, no verdict (inline is expected for the control).
+fanout_cell() { # <trace.jsonl> <mode> -> echoes the cell text
+  python3 -c '
+import json,sys
+mode=sys.argv[2]
+try: d=json.load(open(sys.argv[1]))
+except Exception: d={}
+n=d.get("distinct",0); mp=d.get("max_parallel_in_turn",0); sp=d.get("total_spawns",0)
+facts=("inline, 0 spawns" if sp==0 else f"{n} agents, ∥={mp}")
+if mode=="baseline": print(facts)              # control: report only
+else: print(("PASS" if d.get("fanout_pass") else "FAIL")+" ("+facts+")")
+' "$1" "$2"
+}
 
 grade() { # <doc> -> echoes "PASS|FAIL\treadiness\tblocking" (exit 0 even when the doc FAILS the grader)
   # `|| true` swallows assertions.py's exit-1-on-fail so pipefail doesn't make a
@@ -70,7 +86,7 @@ echo "== Self-test: grading the golden =="
 if g=$(grade golden/queue-voting.target-document.md); then
   IFS=$'\t' read -r st rd bl <<<"$g"
   echo "golden: $st readiness=$rd blocking=$bl"
-  echo "| golden (self-test) | fixture | $st | $rd | $bl |" >> "$SCORE"
+  echo "| golden (self-test) | fixture | $st | $rd | $bl | — |" >> "$SCORE"
 fi
 # Always lay out a viewer run for the golden so ./view.sh is demonstrable
 # without the claude CLI (it appears under the Outputs tab).
@@ -107,27 +123,44 @@ for e in json.load(open("evals.json"))["evals"]:
     [ -n "$seed" ] && cp "$seed" "$OUT/seed.md" 2>/dev/null || true
     p="${prompt//\{OUT\}/$OUT}"
     echo "== eval $id ($name) [$mode] =="
+    # Baseline runs the same task but explicitly WITHOUT the skill — the control
+    # that should stay inline (no fan-out). with_skill runs the skill as-is.
+    [ "$mode" = "baseline" ] && PROMPT="Do NOT use any skill or plugin. $p" || PROMPT="$p"
+    # Capture the full stream-json trace (NOT just the final text): it's the only
+    # record of whether the orchestrator actually spawned subagents, and in
+    # parallel. fanout.py grades HOW the doc was built; assertions.py grades WHAT.
+    # `--verbose` is required for stream-json under `-p`.
     # NOTE: redirect claude's stdin from /dev/null. This loop is fed by a pipe
     # (the python3 case list), and `claude -p` reads stdin — without </dev/null it
     # drains the remaining case lines, so the loop runs only once AND the agent
     # receives the leaked lines as instructions (running the wrong cases). See the
     # case-list pipe at the `| while read` above.
-    if [ "$mode" = "baseline" ]; then
-      # Baseline: same task, explicitly WITHOUT the skill, from a clean cwd.
-      ( cd "$REPO_ROOT" && PATH="$GIT_SHIM_DIR:$PATH" claude -p --permission-mode bypassPermissions "Do NOT use any skill or plugin. $p" ) </dev/null >"$OUT/agent.log" 2>&1 || true
-    else
-      ( cd "$REPO_ROOT" && PATH="$GIT_SHIM_DIR:$PATH" claude -p --permission-mode bypassPermissions "$p" ) </dev/null >"$OUT/agent.log" 2>&1 || true
-    fi
+    ( cd "$REPO_ROOT" && PATH="$GIT_SHIM_DIR:$PATH" claude -p --permission-mode bypassPermissions \
+        --output-format stream-json --verbose "$PROMPT" ) </dev/null >"$OUT/trace.jsonl" 2>"$OUT/agent.err" || true
+    # Derive a human-readable final message from the trace for quick inspection.
+    python3 -c '
+import json,sys
+last=""
+for l in open(sys.argv[1],encoding="utf-8",errors="replace"):
+    try: e=json.loads(l)
+    except Exception: continue
+    if e.get("type")=="result" and e.get("result"): last=e["result"]
+sys.stdout.write(last)
+' "$OUT/trace.jsonl" > "$OUT/agent.log" 2>/dev/null || true
+    # Fan-out verdict (did the skill actually orchestrate, in parallel?).
+    python3 fanout.py "$OUT/trace.jsonl" > "$OUT/fanout.json" 2>/dev/null || echo '{}' > "$OUT/fanout.json"
+    fan=$(fanout_cell "$OUT/fanout.json" "$mode")
     if [ -f "$OUT/target-document.md" ]; then
       res=$(grade "$OUT/target-document.md") || res=$'FAIL\t-\t-'
       IFS=$'\t' read -r st rd bl <<<"$res"
-      # Emit the eval-viewer layout for this run.
+      # Emit the eval-viewer layout for this run (fanout.json/trace.jsonl stay in
+      # the run dir, not outputs/, so they don't clutter the viewer's file list).
       write_meta "$OUT" "$id" "$p"
       assemble_run "$OUT" "$OUT/target-document.md"
     else
       st="NO-OUTPUT"; rd="-"; bl="-"
     fi
-    echo "| $name | $mode | $st | $rd | $bl |" >> "$SCORE"
+    echo "| $name | $mode | $st | $rd | $bl | $fan |" >> "$SCORE"
   done
 done
 
@@ -141,5 +174,9 @@ fi
 echo ""
 echo "Wrote $SCORE"
 echo "View results: ./view.sh ${ITER}   (headless/remote: ./view.sh ${ITER} --static review.html)"
+echo "Fan-out: with_skill must read PASS (>=3 core agents, ∥>=2). A with_skill row"
+echo "showing 'FAIL (inline, 0 spawns)' means the orchestrator built the doc itself"
+echo "instead of delegating — the regression this column exists to catch. baseline is"
+echo "the control and is expected to stay inline. Per-run detail: <case>/<mode>/fanout.json."
 echo "Next: have an LLM grade each with_skill/outputs/target-document.md against rubric.md"
-echo "(Layer 2, qualitative) and append the 1-5 scores to the scorecard."
+echo "(Layer 3, qualitative) and append the 1-5 scores to the scorecard."
