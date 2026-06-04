@@ -1,0 +1,58 @@
+# Glossário Canônico — PokerPlan
+<!-- rev: 1 · updated: 2026-06-03 -->
+
+> Referência normativa de terminologia para o demand PokerPlan.
+> Uso: Doc Updater, Humanizer e Translator devem adotar as formas canônicas e
+> nunca usar os sinônimos listados em "não usar". Este arquivo é mantido
+> exclusivamente pelo Glossary Keeper.
+
+---
+
+## Tabela de termos
+
+| Termo | Forma canônica | Definição (uma linha, pt-BR) | Não usar (sinônimos proibidos) | Notas |
+|---|---|---|---|---|
+| Planning Poker | **Planning Poker** | Técnica de estimativa colaborativa em que participantes votam simultaneamente com cartas para revelar divergências e chegar a um consenso. | Poker de planejamento, poker planning, planning poker (minúsculo inconsistente) | Nome próprio da técnica; manter em inglês conforme uso consolidado no mercado e na spec. |
+| Estimativa | **estimativa** | Valor atribuído ao esforço, complexidade ou tamanho relativo de uma tarefa, definido por consenso após a rodada de votação. | estimate (em contexto pt-BR), pontuação, nota, avaliação | Usar em minúsculo no meio de frase; evitar "estimate" em documentos em pt-BR. |
+| Sessão de estimativa | **sessão de estimativa** | Reunião estruturada (síncrona e remota, conforme premissa do MVP) em que o time realiza Planning Poker para um conjunto de tarefas. | reunião de estimativa, sessão de refinamento (ver nota), sessão de poker | "Sessão de refinamento" é termo correlato mas mais amplo (abrange outros rituais além da estimativa); usar "sessão de estimativa" quando o contexto for especificamente o PokerPlan. |
+| Refinamento | **refinamento** | Ritual ágil de revisão e estimativa do backlog; contexto no qual sessões de estimativa com Planning Poker tipicamente ocorrem. | grooming, backlog grooming, reunião de backlog | Usar "refinamento" para o ritual ágil; "sessão de estimativa" para o evento específico do PokerPlan. |
+| Host | **Host** | Papel no PokerPlan com controle exclusivo sobre revelar votos, encerrar e cancelar rodadas, e definir o consenso. | Criador da sala, dono da sala, administrador da sessão | Termo registrado na spec em inglês; manter "Host" (maiúsculo) como forma canônica. |
+| Facilitador | **Facilitador** | Sinônimo canônico de Host quando o contexto for o papel humano de quem conduz a dinâmica da sessão. | Moderador, conductor, coordenador da sessão | Host e Facilitador são intercambiáveis neste domínio; a spec usa "Host / Facilitador". Em texto corrido, preferir "Host" para referências ao papel técnico e "Facilitador" para o papel humano. |
+| Participante | **Participante** | Membro da sessão com permissão para votar, visualizar tarefas e participar das discussões, mas sem poderes de host. | Votante, membro, jogador, player | Corresponde ao tipo `PARTICIPANT` no modelo conceitual da spec. |
+| Observador | **Observador** | Papel na sessão que acompanha a votação e visualiza resultados, mas não vota. | Espectador, leitor, viewer | Corresponde ao tipo `OBSERVER` no modelo conceitual. |
+| Votação secreta | **votação secreta** | Mecanismo pelo qual os votos de cada participante ficam ocultos dos demais até a revelação, preservando a independência das estimativas (RN-001). | voto anônimo, voto oculto, votação fechada | Termo central do método; a "secrecy" é a propriedade que evita influência involuntária entre participantes. |
+| Rodada | **rodada** | Ciclo completo de votação para uma tarefa: abertura → votação → revelação → encerramento. Uma tarefa pode ter múltiplas rodadas (RN-006). | round, ciclo de votação, iteração de votação | Corresponde à entidade `Rodada` do modelo conceitual; status: OPEN → REVEALED → CLOSED. |
+| Revelação | **revelação** | Momento em que todos os votos de uma rodada são exibidos simultaneamente para os participantes, acionado pelo Host (RN-003). | reveal, virada das cartas, abertura dos votos | Evento pontual dentro da rodada; distinguir de "Revelação automática" (ver Auto Reveal). |
+| Auto Reveal | **Auto Reveal** | Funcionalidade opcional (MVP V1.1) que aciona a revelação automaticamente quando todos os participantes tiverem votado, sem ação do Host. | Revelação automática, auto-reveal, reveal automático | Termo da spec em inglês; manter "Auto Reveal" (maiúsculo) para a funcionalidade; "revelação automática" é aceitável em texto descritivo. RN-004. |
+| Consenso | **consenso** | Estimativa final acordada pelo grupo para uma tarefa, registrada pelo Host ao encerrar a rodada; não precisa ser a média matemática dos votos (RN-010). | média, valor médio, estimativa média, estimativa final (ver nota) | "Estimativa final" é aceitável como sinônimo em contexto que já deixou claro que é o valor pós-consenso; porém "consenso" é o termo primário para o processo e o resultado. |
+| Escala | **escala** | Conjunto de valores disponíveis para votação em uma sessão (ex.: Fibonacci, T-Shirt). | escala de pontos, deck, baralho de estimativa | A spec define duas escalas padrão: Fibonacci e T-Shirt. |
+| Fibonacci | **Fibonacci** | Escala de estimativa numérica baseada na sequência de Fibonacci: 0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ?, ∞, ☕. | sequência de Fibonacci, escala numérica, pontos Fibonacci | Incluir os valores especiais (?, ∞, ☕) ao descrever a escala completa. |
+| T-Shirt | **T-Shirt** | Escala de estimativa por tamanho de camiseta: PP, P, M, G, GG. | Camiseta, t-shirt sizing, tamanho de camiseta | A spec usa "T-Shirt"; "Camiseta" é aceitável em texto corrido informalmente, mas T-Shirt é o termo técnico canônico. |
+| Rastreabilidade | **rastreabilidade** | Capacidade de consultar o histórico completo de rodadas, votos e justificativas de uma tarefa para entender como e por que uma estimativa foi definida. | tracibilidade, trackeability, trilha de auditoria (de estimativas) | Um dos objetivos centrais do produto, conforme Q001, Q003, Q006 e Q009. |
+| Histórico de sessões | **histórico de sessões** | Registro persistente de todas as sessões, rodadas, votos e consensos realizados, disponível para consulta posterior (RN-007). | log de sessões, histórico de rodadas (ver nota), registro de estimativas | "Histórico de rodadas" é aceitável quando o escopo for especificamente as rodadas de uma tarefa; "histórico de sessões" cobre o nível mais amplo (toda a sessão). |
+| Hora-homem | **hora-homem** | Unidade de mensuração de esforço = 1 pessoa trabalhando por 1 hora; usada nos modelos de impacto (Q009) para quantificar o custo das sessões de estimativa. | homem-hora, person-hour, HH | Grafar sem hífen alternativo ("hora homem"): forma canônica é "hora-homem" com hífen. |
+| Squad | **squad** | Equipe ágil multidisciplinar e autônoma, tipicamente de 5 a 10 pessoas, que realiza sessões de Planning Poker regularmente. | time ágil (ver nota), equipe, célula | "Time ágil" é aceitável em contexto geral; "squad" é o termo mais preciso no contexto de organizações Scrum/ágil modernas. |
+| Time ágil | **time ágil** | Equipe que opera com metodologia ágil (Scrum, Kanban ou similar) e realiza estimativas de backlog; termo genérico que abrange squads e outras formações. | agile team, equipe de desenvolvimento, equipe scrum | Usar quando o contexto for genérico; preferir "squad" quando o contexto for específico de squads. |
+| Sprint | **sprint** | Ciclo de desenvolvimento de duração fixa (tipicamente 1–4 semanas) dentro do qual o time planeja, executa e entrega incrementos; contexto típico para sessões de estimativa. | iteração, ciclo, corrida | Termo Scrum; manter em inglês conforme uso consolidado no mercado. |
+| Scrum | **Scrum** | Framework ágil de desenvolvimento de software que define papéis (Scrum Master, Product Owner, time de desenvolvimento), eventos (sprint, refinamento, review, retrospectiva) e artefatos (backlog). | scrum (minúsculo inconsistente), metodologia scrum | Nome próprio do framework; grafar com maiúscula inicial. |
+| SaaS | **SaaS** | Modelo de entrega de software como serviço via assinatura pela internet; modelo de negócio declarado para o PokerPlan (produto comercial, monetização por organização). | Software as a Service (por extenso), saas (minúsculo) | Sigla consolidada; usar sempre em maiúsculas. |
+| Governança do processo de estimativa | **governança do processo de estimativa** | Conjunto de práticas, registros e métricas que permitem a uma organização monitorar, auditar e melhorar continuamente a qualidade de suas estimativas ao longo do tempo. | gestão de estimativas, controle de estimativas | Conceito articulado no Q009 como visão de longo prazo do PokerPlan ("ferramenta de GOVERNANÇA e RASTREABILIDADE"). |
+| Previsibilidade | **previsibilidade** | Capacidade de uma equipe de entregar o que planeja no prazo, benefício decorrente de estimativas de melhor qualidade e do registro histórico das sessões. | predictability, acurácia de entrega | Mencionada no Q009 como benefício qualitativo secundário do PokerPlan ("aumenta previsibilidade das entregas"). |
+| Aderência problema-mercado | **aderência problema-mercado** | Grau em que o problema endereçado pelo PokerPlan existe e é relevante o suficiente para o mercado-alvo justificar um produto comercial; ainda não validada formalmente (Q005, Q010). | problem-market fit, fit de mercado, validação de mercado | Termo usado no qa-log para distinguir da validação de produto (product-market fit); grafar em pt-BR como "aderência problema-mercado". |
+| Backlog | **backlog** | Lista priorizada de tarefas, funcionalidades ou itens de trabalho de um produto ou sprint, a partir da qual o time seleciona o que estimar e desenvolver. | product backlog (quando contexto deixar claro), lista de tarefas, fila de itens | Manter em inglês conforme uso consolidado no mercado; não traduzir para "lista de pendências". |
+| Product Owner | **Product Owner** | Persona afetada pela dor do PokerPlan; responsável pelo backlog e pela priorização; participa ou conduz sessões de estimativa. | PO (aceitável como abreviação), dono do produto, proprietário do produto | Tradução "dono do produto" é rara na prática; preferir o termo em inglês. |
+| Scrum Master | **Scrum Master** | Persona afetada; facilitador do framework Scrum, gerencia a dinâmica das sessões de estimativa no estado atual (workaround). | SM (aceitável como abreviação), mestre scrum | Manter em inglês; "mestre scrum" é tradução incomum no mercado. |
+| Tech Lead | **Tech Lead** | Persona afetada; líder técnico que participa de votações técnicas e precisa de histórico para justificar estimativas. | líder técnico, TL (aceitável como abreviação), tech lead (minúsculo aceitável em texto corrido) | "Líder técnico" é aceitável em texto corrido formal em pt-BR puro. |
+| MVP | **MVP** | Versão do produto com o conjunto mínimo de funcionalidades que entrega valor ao usuário e valida as premissas centrais do produto. | produto mínimo viável, Minimum Viable Product (por extenso) | A spec define MVP V1, V1.1 e V2 com escopos distintos; usar sempre com o sufixo de versão quando referenciando um escopo específico. |
+| Sala | **sala** | Espaço virtual criado pelo Host para uma sessão de Planning Poker, identificada por um código compartilhável (ex.: pokerplan.app/r/ABC123). | room, sessão (como sinônimo de sala — ver nota), canal | Distinguir "sala" (o ambiente persistente) de "sessão" (o evento/atividade). |
+| Tarefa | **tarefa** | Item do backlog que será estimado em uma sessão de Planning Poker; pode receber múltiplas rodadas de votação até atingir consenso. | item, story, user story, ticket, card | Em contexto de backlog, "user story" ou "ticket" são aceitáveis como referência ao artefato de origem; "tarefa" é o termo canônico dentro do PokerPlan. |
+
+---
+
+## Termos supersedidos
+
+_Nenhum termo supersedido nesta versão inicial._
+
+---
+
+<!-- END OF DOCUMENT -->

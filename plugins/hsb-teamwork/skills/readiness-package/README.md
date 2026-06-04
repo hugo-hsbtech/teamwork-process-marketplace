@@ -44,10 +44,14 @@ Two principles underpin correctness and parallelism:
 ```
 
 When you invoke it, it resolves the **initiative** to run in (confirm the latest
-open one or pick from the open list). Readiness runs as the `readiness/` **phase**
-of that initiative, inheriting from its `origination/` phase (the origination-record).
-The skill resolve-or-resumes `INITIATIVE_DIR/readiness/` and defaults the output
-language to pt-BR unless you specify otherwise.
+open one or pick from the open list), then reads the initiative's **works +
+definitions index** (`initiative.json`) to discover the origination-record to
+inherit from — the phase whose `produces` is `origination-record` — plus any debts
+prior fronts left open and the shared definitions. Readiness runs as the
+`readiness/` **phase** of that initiative; the skill resolve-or-resumes
+`INITIATIVE_DIR/readiness/`, records its own outputs and the owed Technical
+Assessment back into the index on freeze, and defaults the output language to pt-BR
+unless you specify otherwise.
 
 ## Input
 
@@ -73,7 +77,7 @@ All artifacts land in the initiative's `readiness/` phase, `INITIATIVE_DIR/readi
 ├── sources/                    # normalized input files
 ├── qa-log.md                   # Q&A ledger (questions + rationale + PO answers)
 ├── readiness-document.md       # the RP being filled and frozen
-├── glossary.md                 # canonical terms (optional)
+├── glossary.md                 # brokered read-only copy of the initiative's shared glossary
 ├── readiness-report.md         # live gap map (optional)
 └── output/
     ├── humanized.md            # canonical clean copy
@@ -81,6 +85,11 @@ All artifacts land in the initiative's `readiness/` phase, `INITIATIVE_DIR/readi
     ├── enriched.md             # visually enriched (scope table, persona map, etc.)
     └── manifest.md             # index of all artifacts + freeze state + TA flag
 ```
+
+The shared `glossary.md` and `decisions.md`, and the `initiative.json` works +
+definitions index, live one level up at the **initiative root** (`INITIATIVE_DIR/`),
+not inside `readiness/` — they are shared across every front. See
+[`../origination-brainstorm/references/initiatives.md`](../origination-brainstorm/references/initiatives.md).
 
 ## The Technical Assessment boundary
 

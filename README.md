@@ -178,7 +178,7 @@ The names are identical on Claude and Codex (`hsb-<role>`).
 | 2     | `hsb-ledger-writer`       | writes `qa-log.md`                           |
 | 2     | `hsb-doc-updater`         | writes the target document (`DOC`)           |
 | 2     | `hsb-synthesizer`         | composes `derived` sections for the writer (read-only) |
-| 2     | `hsb-glossary-keeper`     | writes `glossary.md`                         |
+| 2     | `hsb-glossary-keeper`     | writes the initiative's shared `glossary.md` + `decisions.md` |
 | 2     | `hsb-gap-reporter`        | writes `readiness-report.md`                 |
 | 2     | `hsb-confidence-auditor`  | re-scores + gate verdict (read-only)         |
 | 3     | `hsb-humanizer`           | writes `output/humanized.md`                 |
@@ -196,19 +196,31 @@ of the same initiative, so origination and readiness sit side by side:
 
 ```
 <TEAMWORK_ROOT>/<YYYYMMDD>-<HHMM>-<project>-<hash6>/
-├── initiative.json     # manifest: project, created, status (open|closed), phases
+├── initiative.json     # works + definitions index: status, phases, artifacts, readiness, owes
+├── glossary.md         # shared canonical terms — one per initiative
+├── decisions.md        # shared cross-phase decisions ledger
 ├── origination/        # the origination phase (PHASE_DIR)
 │   ├── contract.lock.md     # derived contract + template hash
 │   ├── sources-index.md     # index of ingested inputs
 │   ├── sources/             # normalized input files
 │   ├── qa-log.md            # the Q&A ledger (questions + rationale + answers)
 │   ├── target-document.md   # the document being filled
-│   ├── glossary.md          # canonical terms
+│   ├── glossary.md          # brokered read-only copy of the shared glossary
 │   ├── readiness-report.md  # live gap map
 │   └── output/              # humanized · translated · enriched · manifest
 └── readiness/          # the readiness phase (added when readiness-package runs)
     └── …
 ```
+
+The **initiative is the unit of awareness.** `initiative.json` is an *index of
+definitions and works*: per phase it records what was produced (the canonical
+artifact paths), how ready it was, and what it still **owes** downstream (e.g. a
+Technical Assessment). The shared `glossary.md` + `decisions.md` keep terms and
+cross-phase decisions defined **once** — no per-phase drift. So a new front
+(readiness today; tech-assessment / PRD next) becomes aware of *everything* prior
+fronts defined and produced by reading one file, instead of crawling each phase or
+hard-coding paths. The orchestrator owns these initiative-level files and **brokers**
+them down to the phase agents (which stay scoped to their own phase folder).
 
 **Re-running is safe.** A run resolves the open initiative (confirm the latest or
 pick from the open list — closed ones are omitted) and **resumes** its phase —

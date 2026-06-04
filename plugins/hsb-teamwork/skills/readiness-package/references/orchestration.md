@@ -53,7 +53,7 @@ code changes.
 | `hsb-reconciler` | read-only | Confirm loop — on conflicts (e.g. origination said X, PO now says Y) |
 | `hsb-ledger-writer` | **writer** (`qa-log.md`) | Confirm loop — records questions, answers, proposed entries |
 | `hsb-doc-updater` | **writer** (`readiness-document.md`) | Draft pass + confirm loop — the sole writer of the RP document |
-| `hsb-glossary-keeper` | **writer** (`glossary.md`) | Optional, when domain terms accumulate |
+| `hsb-glossary-keeper` | **writer** (initiative `glossary.md` + `decisions.md`) | Optional, when domain terms / cross-phase decisions accumulate; spawned with `DEFINITIONS_DIR` |
 | `hsb-gap-reporter` | **writer** (`readiness-report.md`) | Optional, gap map for the PO |
 | `hsb-confidence-auditor` | read-only | Confirm loop — re-scores sections, flags conflicts |
 | `hsb-synthesizer` | read-only | Optional — composes generic `derived` sections; in the RP the `inherited-readiness` and `tech-assessment-ref` derived sections are composed by the Stage Inheritor and Escalation Flagger instead |
@@ -85,14 +85,18 @@ to the orchestrator, who routes them through the single writers.
    confirm the latest open initiative or pick one from the open list (closed ones
    omitted). Readiness runs as a **phase of that same initiative**, not a separate
    folder.
-2. **Confirm the linked origination-record.** The origination-record is the selected
-   initiative's `origination/` phase (`INITIATIVE_DIR/origination/`, its
-   `output/humanized.md` or `target-document.md`). It must be `Product Ready`; if
-   the initiative has no origination phase, say so and stop — there is nothing to
-   inherit. (A PO may override with an external origination-record path.)
+2. **Read `initiative.json` and discover the origination-record from the works
+   index.** Find the phase whose `produces` is `origination-record` and read its
+   `artifacts.canonical` (the humanized copy) — that path is the linked
+   origination-record; do not assume `origination/`. Also note `phases.*.owes`
+   (debts you may be picking up) and the shared `definitions`. The record must be
+   `Product Ready`; if no phase produces an `origination-record`, say so and stop —
+   there is nothing to inherit. (A PO may override with an external path.)
 3. **Resolve-or-resume the `readiness/` phase** at `INITIATIVE_DIR/readiness/`. If
    it already exists, resume it; otherwise create it and register it in
-   `initiative.json.phases`.
+   `initiative.json.phases` (`started`, `state: active`,
+   `consumes: ["origination-record"]`). Seed the brokered `PHASE_DIR/glossary.md`
+   from the initiative store.
 4. **Confirm output language.** Default is `pt-BR` (mirrors the origination default).
    Record it; the translator will target this language in Phase 4.
 
@@ -105,9 +109,12 @@ the origination-record, and confirm language.
    passes; fix the template if it fails the audit checklist
    ([`../../origination-brainstorm/references/contract-and-template.md`](../../origination-brainstorm/references/contract-and-template.md) § audit checklist).
 2. Then spawn **in the same turn** (independent → parallel):
-   - **`hsb-source-indexer`** indexes the initiative's `origination/` phase
-     folder (its `output/humanized.md` or `target-document.md` as the primary
-     source) plus any extra files the PO provides. Writes `sources/` and `sources-index.md`.
+   - **`hsb-source-indexer`** indexes the origination-record — the
+     `artifacts.canonical` path you read from the works index in Phase 0 (its
+     `output/humanized.md`, or `target-document.md`) as the primary source — plus any
+     extra files the PO provides. You hand it that path; it writes `sources/` and
+     `sources-index.md`, staying within `PHASE_DIR`. This is the broker linking an
+     upstream work into this phase so the Stage Inheritor works purely locally.
    - **`hsb-template-analyst`** derives `contract.lock.md` from the RP
      template (hash-locked). If a prior `contract.lock.md` exists with a
      different hash, it restarts analysis and supersedes stale ledger entries.
@@ -167,8 +174,11 @@ Repeats until the freeze gate clears:
    Documented divergence for the temporary `deferred` path when a TA is owed
    but the tech-assessment skill does not yet exist.
 
-Optional: spawn **`hsb-glossary-keeper`** when domain terms accumulate (after
-first confirm rounds and again before production).
+Optional: spawn **`hsb-glossary-keeper`** (with `DEFINITIONS_DIR` injected) when
+domain terms or cross-phase decisions accumulate (after first confirm rounds and
+again before production). It writes the **initiative's** shared `glossary.md` /
+`decisions.md`; you then re-seed the brokered `PHASE_DIR/glossary.md`. Terms coined
+during readiness become available to later fronts because the store is shared.
 
 ## Phase 4 — Production & wrap
 
@@ -185,7 +195,14 @@ Once `freezeReady`:
    the TA-pending flag (if `tech-assessment-ref` disposition is `deferred`),
    open `discovery` dispositions, template hash/version, and the handoff note
    to PRD/PM.
-4. Report to the PO: what was produced, the readiness score, the TA flag if
+4. **Record the front in the initiative index.** Update this phase's
+   `initiative.json` entry: `state: frozen` (or note a provisional freeze), final
+   `readiness`, the `artifacts` paths (incl. `canonical: readiness/output/humanized.md`),
+   `produces: readiness-package`, and — crucially — push the Technical Assessment
+   debt into `owes` (e.g. `{ "ref": "TechAssessmentRef", "to": "tech-assessment",
+   "status": "deferred" }`). This turns a debt raised inside the RP document into a
+   fact the next front reads from the index.
+5. Report to the PO: what was produced, the readiness score, the TA flag if
    present, and every item still parked as `discovery` or `deferred`.
 
 ## The phase folder layout
@@ -194,17 +211,22 @@ The readiness front lives at `INITIATIVE_DIR/readiness/`, beside the `originatio
 phase it inherits from:
 
 ```
-INITIATIVE_DIR/readiness/        # PHASE_DIR for the readiness front
-├── contract.lock.md            # hsb-template-analyst
-├── sources-index.md            # hsb-source-indexer
-├── sources/                    # hsb-source-indexer (incl. inherited origination-record)
-├── qa-log.md                   # hsb-ledger-writer
-├── readiness-document.md       # hsb-doc-updater
-├── glossary.md                 # hsb-glossary-keeper (optional)
-├── readiness-report.md         # hsb-gap-reporter (optional)
-└── output/
-    ├── humanized.md            # hsb-humanizer
-    ├── translated.pt-BR.md     # hsb-translator
-    ├── enriched.md             # hsb-visual-enricher
-    └── manifest.md             # hsb-packager
+INITIATIVE_DIR/                  # shared by every front
+├── initiative.json             # orchestrator — works + definitions index
+├── glossary.md                 # Glossary Keeper — shared canonical terms
+├── decisions.md                # Glossary Keeper — shared cross-phase decisions
+├── origination/                # the upstream front (the origination-record)
+└── readiness/                  # PHASE_DIR for the readiness front
+    ├── contract.lock.md        # hsb-template-analyst
+    ├── sources-index.md        # hsb-source-indexer
+    ├── sources/                # hsb-source-indexer (incl. inherited origination-record)
+    ├── qa-log.md               # hsb-ledger-writer
+    ├── readiness-document.md   # hsb-doc-updater
+    ├── glossary.md             # brokered read-only copy of the initiative glossary
+    ├── readiness-report.md     # hsb-gap-reporter (optional)
+    └── output/
+        ├── humanized.md        # hsb-humanizer
+        ├── translated.pt-BR.md # hsb-translator
+        ├── enriched.md         # hsb-visual-enricher
+        └── manifest.md         # hsb-packager
 ```

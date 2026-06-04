@@ -4,14 +4,45 @@
   "created": "2026-06-03T18:33:00-03:00",
   "status": "open",
   "language": "pt-BR",
+  "definitions": {
+    "glossary": "glossary.md",
+    "decisions": "decisions.md"
+  },
   "phases": {
     "origination": {
       "started": "2026-06-03T18:33:00-03:00",
-      "state": "frozen"
+      "state": "frozen",
+      "templateHash": "7d95916c27cef9200f18c5c754b84941efa1ec5267be61604833a3aa224194d9",
+      "readiness": 63,
+      "produces": "origination-record",
+      "consumes": [],
+      "artifacts": {
+        "document": "origination/target-document.md",
+        "canonical": "origination/output/humanized.md",
+        "manifest": "origination/output/manifest.md"
+      },
+      "owes": []
     },
     "readiness": {
       "started": "2026-06-04T09:10:00-03:00",
-      "state": "active"
+      "state": "frozen",
+      "templateHash": "74cd7c34fc0d21a0e37ee6720a50418772f31f3fbaeddcc8696d833068ba30ef",
+      "readiness": 78,
+      "produces": "readiness-package",
+      "consumes": ["origination-record"],
+      "artifacts": {
+        "document": "readiness/readiness-document.md",
+        "canonical": "readiness/output/humanized.md",
+        "manifest": "readiness/output/manifest.md"
+      },
+      "owes": [
+        {
+          "ref": "TechAssessmentRef",
+          "to": "tech-assessment",
+          "status": "deferred",
+          "note": "TA pendente — fora do escopo atual da ferramenta; congelamento provisório"
+        }
+      ]
     }
   }
 }

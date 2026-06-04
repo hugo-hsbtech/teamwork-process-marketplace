@@ -99,9 +99,13 @@ these invariants matter most.
   `qa-log.md` schema: `Q###` blocks, header summary, rationale/spawned-by fields.
 - [`../origination-brainstorm/references/initiatives.md`](../origination-brainstorm/references/initiatives.md) —
   initiatives root resolution (`$TEAMWORK_HOME` → git-root + `/.teamwork` → cwd),
-  resolve-or-select, and the `.teamwork/<initiative>/` layout. The RP runs as the
-  `readiness/` **phase** of the selected initiative (`INITIATIVE_DIR/readiness/`),
-  inheriting from that same initiative's `origination/` phase.
+  resolve-or-select, the `.teamwork/<initiative>/` layout, the **works + definitions
+  index** (`initiative.json`), the shared definitions store (`glossary.md` /
+  `decisions.md`), and **brokering**. The RP runs as the `readiness/` **phase** of
+  the selected initiative (`INITIATIVE_DIR/readiness/`); it discovers the
+  origination-record to inherit from by reading the works index (the phase whose
+  `produces` is `origination-record`), and records its own outputs and the owed
+  Technical Assessment back into the index on freeze.
 - [`../origination-brainstorm/references/writing-integrity.md`](../origination-brainstorm/references/writing-integrity.md) —
   single-writer rule, read-modify-write, queue/drain, `rev` marker, no-truncation
   sentinel. Every writer in this pipeline obeys these rules.
@@ -155,7 +159,7 @@ keyed by stable id, never clobbers, and the document ends with a
 | 2 | `hsb-ledger-writer` | commit questions/answers/proposals to `qa-log.md` |
 | 2 | `hsb-doc-updater` | write and update `readiness-document.md` (`DOC`) |
 | 2 | `hsb-synthesizer` | compose generic `derived` sections for the Doc Updater (read-only, optional — in the RP the `inherited-readiness` and `tech-assessment-ref` derived sections are composed by the Stage Inheritor and Escalation Flagger instead) |
-| 2 | `hsb-glossary-keeper` | maintain canonical terms in `glossary.md` (optional) |
+| 2 | `hsb-glossary-keeper` | maintain the initiative's shared `glossary.md` + `decisions.md` (sole writer; spawned with `DEFINITIONS_DIR`; optional) |
 | 2 | `hsb-gap-reporter` | write the live gap map `readiness-report.md` (optional) |
 | 2 | `hsb-confidence-auditor` | re-score sections + gate verdict (read-only) |
 | 4 | `hsb-humanizer` | write `output/humanized.md` |
@@ -183,6 +187,15 @@ directory), `PHASE_DIR`, `TEMPLATE`, `DOC` (the target document's filename —
 `readiness-document.md` for this skill), and the companion guide. **Run independent
 agents in the same turn** so they execute in parallel (Indexer ∥ Analyst in Phase 1;
 Translator ∥ Visual Enricher in Phase 4).
+
+**You broker everything above `PHASE_DIR`.** The initiative-level files
+(`initiative.json`, `glossary.md`, `decisions.md`) are yours; agents stay
+`PHASE_DIR`-scoped. Read the works index to find the origination-record
+(`artifacts.canonical` of the phase that `produces` an `origination-record`) and
+hand that path to the Source Indexer; seed each phase's read-only
+`PHASE_DIR/glossary.md` from the store before spawning readers; spawn the Glossary
+Keeper with `DEFINITIONS_DIR` injected; and update the index when the front starts
+and freezes. See [`../origination-brainstorm/references/initiatives.md`](../origination-brainstorm/references/initiatives.md).
 
 ## Authoring model — draft-then-confirm
 
@@ -247,10 +260,13 @@ annotation markers stay in the engine's canonical form regardless of output lang
 ## The flow (summary — full detail in `references/orchestration.md`)
 
 1. **Phase 0 (you + PO):** resolve-or-select the initiative (confirm the latest
-   open one or pick from the open list); confirm its `Product Ready` `origination/`
-   phase is the origination-record to inherit from; resolve the `readiness/` phase
-   folder (`INITIATIVE_DIR/readiness/`); confirm output language. Collect only what
-   is needed at this stage — do not ask a wall of questions.
+   open one or pick from the open list); **read `initiative.json`** and locate the
+   `Product Ready` origination-record from the works index (the phase whose
+   `produces` is `origination-record`, via `artifacts.canonical`) — also noting any
+   `owes` and the shared `definitions`; resolve the `readiness/` phase folder
+   (`INITIATIVE_DIR/readiness/`), register it in the index, and seed the brokered
+   glossary; confirm output language. Collect only what is needed at this stage — do
+   not ask a wall of questions.
 2. **Phase 1 — Setup (parallel, gate):** spawn Validator; then Indexer ∥ Analyst in
    parallel (Indexer ingests the origination-record folder; Analyst derives
    `contract.lock.md`). Once both complete, spawn `hsb-stage-inheritor` (read-only);
@@ -270,7 +286,10 @@ annotation markers stay in the engine's canonical form regardless of output lang
    not_requested}`.
 5. **Phase 4 — Production + wrap:** Humanizer writes `output/humanized.md` (must
    finish first); then Translator ∥ Visual Enricher in parallel; then Packager
-   writes `output/manifest.md`. Report to the PO: artifacts produced, readiness
+   writes `output/manifest.md`. **Record the front in the initiative index:** set the
+   `readiness/` entry to `frozen` (or provisional), final `readiness`, `artifacts`,
+   `produces: readiness-package`, and push the Technical Assessment debt into `owes`
+   so the next front reads it. Report to the PO: artifacts produced, readiness
    score, TA flag if present, and every item parked as `discovery` or `deferred`.
 
 ## The Technical Assessment boundary
@@ -312,9 +331,10 @@ Invoke it as `/hsb-teamwork:readiness-package`.
 
 The plugin is self-contained (template, guide, and exemplar bundled under
 `assets/`), so no repository content is required at runtime. The origination-record
-is the selected initiative's own `origination/` phase (the PO may also point at an
-external one). The initiatives root resolves via `$TEAMWORK_HOME` → git root +
-`/.teamwork` → cwd, consistent with the origination engine
+is discovered from the selected initiative's works index (the phase that `produces`
+an `origination-record`; the PO may also point at an external one). The initiatives
+root resolves via `$TEAMWORK_HOME` → git root + `/.teamwork` → cwd, consistent with
+the origination engine
 ([`../origination-brainstorm/references/initiatives.md`](../origination-brainstorm/references/initiatives.md)).
 The template is swappable — pass a custom RP template path as `TEMPLATE`.
 
