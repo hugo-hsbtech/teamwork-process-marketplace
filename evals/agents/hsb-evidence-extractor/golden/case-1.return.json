@@ -1,0 +1,23 @@
+{
+  "proposals": [
+    {
+      "question_id": "Q001",
+      "targets": "problem",
+      "answer": "Enterprise admins cannot manage their own user seats; every change is a support ticket with a 1-3 business-day turnaround, so new hires wait days for access.",
+      "disposition": "inferred",
+      "source": "file:brief.md (S1) — 'The pain' section",
+      "confidence": 85,
+      "hint": "Stated directly in the brief; confirm turnaround SLA with support to raise confidence."
+    },
+    {
+      "question_id": "Q003",
+      "targets": "nfr-latency",
+      "answer": null,
+      "disposition": "discovery",
+      "source": "—",
+      "confidence": 0,
+      "hint": "The sources contain no performance/latency/SLA data. Needs investigation with engineering — do NOT assume a number. Routed to discovery for the orchestrator."
+    }
+  ],
+  "conflicts": []
+}
