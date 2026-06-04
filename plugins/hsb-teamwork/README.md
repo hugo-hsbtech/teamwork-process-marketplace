@@ -4,17 +4,22 @@
 > architecture of the pipeline, and the eval suite, see the
 > [repository README](../../README.md).
 
-A demand-to-delivery toolkit for **Claude Code** and **Codex**. Its first skill,
-`intake-brainstorm`, turns a rough demand description (and any files you point at)
-into a fully-filled, confidence-graded document, then produces humanized,
-translated, and visually-enriched variants. This page is the **install-and-use
-guide**; pick your tool below.
+A demand-to-delivery toolkit for **Claude Code** and **Codex**. Skills so far:
+
+- **`intake-brainstorm`** — turns a rough demand description (and any files you
+  point at) into a fully-filled, confidence-graded document, then produces
+  humanized, translated, and visually-enriched variants.
+- **`readiness-package`** — takes a Product Ready intake-record and produces a
+  frozen Readiness Package (RP) via a draft-then-confirm flow, with automatic
+  CTO-escalation detection.
+
+This page is the **install-and-use guide**; pick your tool below.
 
 - Marketplace: **`hsb-tech`** · Plugin: **`hsb-teamwork`**
 - Author: Hugo Seabra · Dedicated repo: `hugo-hsbtech/teamwork-process-marketplace`
 
-**`hsb-teamwork` is a multi-step toolkit.** Today it ships one skill,
-`intake-brainstorm`. Planned siblings in the same plugin: `readiness-package`,
+**`hsb-teamwork` is a multi-step toolkit.** Today it ships two skills,
+`intake-brainstorm` and `readiness-package`. Planned siblings in the same plugin:
 `tech-assessment`, `prd-generation` — each invoked as `/hsb-teamwork:<skill>`
 (Claude) or `/hsb-teamwork-<skill>` (Codex). They share this plugin's agents and
 reference files, so the pipeline mechanics carry across every step.
@@ -54,6 +59,14 @@ Then describe your demand in one line, optionally naming files to read. The
 orchestrator asks only the gaps, fills the document, and produces the variants.
 You can also just describe a demand in normal chat — the skill is set to trigger
 on intake/capture/triage requests.
+
+```
+/hsb-teamwork:readiness-package
+```
+
+Point at a Product Ready intake-record. The skill drafts the Readiness Package,
+presents it for your confirmation, and freezes the final RP. CTO-escalation
+triggers are flagged automatically.
 
 ### Update / remove
 
