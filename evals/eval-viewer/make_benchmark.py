@@ -23,7 +23,7 @@ def load(path):
 
 def main():
     args = sys.argv[1:]
-    skill = "intake-brainstorm"
+    skill = "origination-brainstorm"
     evals_path = "evals.json"
     if "--skill" in args:
         i = args.index("--skill"); skill = args[i + 1]; del args[i:i + 2]
@@ -92,7 +92,7 @@ def main():
         "runs": runs,
         "notes": [
             "Pass rate = fraction of structural assertions (assertions.py) satisfied per run.",
-            "with_skill runs the hsb-teamwork:intake-brainstorm skill; baseline runs the same prompt with no skill.",
+            "with_skill runs the hsb-teamwork:origination-brainstorm skill; baseline runs the same prompt with no skill.",
             "One run per configuration (stddev = 0); raise runs_per_configuration for variance.",
         ],
     }

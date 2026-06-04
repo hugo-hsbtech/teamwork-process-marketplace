@@ -4,9 +4,9 @@
   "evals": [
     {
       "id": 0,
-      "name": "intake-to-rp-seat-management",
-      "prompt": "Run the hsb-teamwork readiness-package skill in non-interactive mode. Linked intake-record (Product Ready): evals/readiness-package/fixtures/sources/01-intake-record-seat-management.md. Inherit the capture sections from it (Origin=inherited, preserve source/confidence); draft the new product sections (business-rules, user-stories with Given/When/Then, NFRs, edge-cases) at partial confidence with Origin=ai_drafted; detect CTO escalation and record tech-assessment-ref honestly. For any genuine gap, use an honest disposition rather than asking. Write the filled RP to {OUT}/readiness-document.md (keep the section annotations and the END OF DOCUMENT sentinel). Do not ask questions.",
-      "files": ["evals/readiness-package/fixtures/sources/01-intake-record-seat-management.md"],
+      "name": "origination-to-rp-seat-management",
+      "prompt": "Run the hsb-teamwork readiness-package skill in non-interactive mode. Linked origination-record (Product Ready): evals/readiness-package/fixtures/sources/01-origination-record-seat-management.md. Inherit the capture sections from it (Origin=inherited, preserve source/confidence); draft the new product sections (business-rules, user-stories with Given/When/Then, NFRs, edge-cases) at partial confidence with Origin=ai_drafted; detect CTO escalation and record tech-assessment-ref honestly. For any genuine gap, use an honest disposition rather than asking. Write the filled RP to {OUT}/readiness-document.md (keep the section annotations and the END OF DOCUMENT sentinel). Do not ask questions.",
+      "files": ["evals/readiness-package/fixtures/sources/01-origination-record-seat-management.md"],
       "golden": "golden/seat-management.readiness-document.md",
       "expected_output": "A filled RP: all blocking sections resolved at/above threshold or honestly disposed, every content section tagged with a valid Origin, tech-assessment-ref resolved (deferred when escalation is required), sentinel present."
     },

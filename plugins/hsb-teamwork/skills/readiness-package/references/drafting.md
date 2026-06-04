@@ -21,8 +21,8 @@ every section:
 - **`readiness-inheritor`** proposes carry-forward entries for inheritable
   sections (`exec-summary`, `context-problem`, `objectives`, `personas`,
   `scope`, `metrics`, `release-criteria`, `risks`; plus the non-blocking
-  `effort-estimate` and `roadmap` when the intake-record informs them). Each
-  entry is tagged `Origin: inherited` with the intake-record's preserved
+  `effort-estimate` and `roadmap` when the origination-record informs them). Each
+  entry is tagged `Origin: inherited` with the origination-record's preserved
   confidence.
 - **`readiness-drafter`** proposes first-draft entries for the new product
   sections (`business-rules`, `user-stories`, `nfrs`, `edge-cases`). Each
@@ -32,7 +32,7 @@ every section:
   thin), it proposes `Disposition: discovery` instead of inventing content —
   honesty over coverage.
 
-The `intake-doc-updater` writes all proposals into `readiness-document.md`
+The `origination-doc-updater` writes all proposals into `readiness-document.md`
 through the single-writer path (see [`orchestration.md`](orchestration.md)
 § Phase 2).
 
@@ -41,8 +41,8 @@ through the single-writer path (see [`orchestration.md`](orchestration.md)
 The PO receives a fully-drafted document. The work is **reviewing, editing,
 and confirming** — not filling blanks. For each section the PO either:
 
-- **Accepts** the draft as-is → `intake-ledger-writer` records confirmation;
-  `intake-doc-updater` promotes `Origin: ai_drafted` → `po_authored`.
+- **Accepts** the draft as-is → `origination-ledger-writer` records confirmation;
+  `origination-doc-updater` promotes `Origin: ai_drafted` → `po_authored`.
 - **Edits** the draft → PO's version recorded, origin promotes to `po_authored`
   / `decided`.
 - **Accepts an inherited entry** as sufficient for the RP → origin stays
@@ -60,20 +60,20 @@ whether it has been validated by the PO (`personas/02-po.md:149`):
 
 | `origin` | Meaning | Confidence state |
 |---|---|---|
-| `inherited` | Carried from the intake-record with its graded source | Partial, traceable — may rise on PO confirmation |
+| `inherited` | Carried from the origination-record with its graded source | Partial, traceable — may rise on PO confirmation |
 | `ai_drafted` | Engine pre-filled; awaiting PO review | Partial until confirmed |
 | `po_authored` | PO decided directly or explicitly confirmed a draft | Full confidence |
 | `reused_from_KB` | Reused from a prior RP/ADR *(deferred — out of scope)* | Full, if confirmed |
 
 The promotion path is: `inherited` / `ai_drafted` → **PO review** → `po_authored`.
-The `intake-doc-updater` performs the promotion when `intake-ledger-writer`
+The `origination-doc-updater` performs the promotion when `origination-ledger-writer`
 records a confirmed answer. Confidence rises at promotion time to reflect the
 PO's judgment; it is never inflated before that.
 
 ## Why questions are a fallback, not the primary mode
 
-The question-first machinery (`intake-question-strategist` → human →
-`intake-ledger-writer`) is the engine's default loop for the intake skill,
+The question-first machinery (`origination-question-strategist` → human →
+`origination-ledger-writer`) is the engine's default loop for the origination skill,
 where the Submitter fills a blank document. For the RP, that model is inverted:
 the system pre-rationalizes; the PO judges.
 
@@ -84,8 +84,8 @@ the system pre-rationalizes; the PO judges.
 2. The PO explicitly asks to deepen a section (a follow-up investigation the
    PO initiates, not the engine).
 
-In all other cases, the PO judges the draft directly. The `intake-confidence-auditor`
-identifies the low-confidence gaps and the `intake-question-strategist` targets
+In all other cases, the PO judges the draft directly. The `origination-confidence-auditor`
+identifies the low-confidence gaps and the `origination-question-strategist` targets
 only those. This keeps the interaction as a judgment surface, not an interview.
 
 ## How proposals flow to the single writer
@@ -94,11 +94,11 @@ Both `readiness-inheritor` and `readiness-drafter` are **read-only proposers**:
 they return structured proposal lists to the orchestrator and write nothing.
 
 The orchestrator routes:
-1. Proposals → **`intake-ledger-writer`** (records in `qa-log.md`).
-2. Ledger entries → **`intake-doc-updater`** (writes to `readiness-document.md`).
+1. Proposals → **`origination-ledger-writer`** (records in `qa-log.md`).
+2. Ledger entries → **`origination-doc-updater`** (writes to `readiness-document.md`).
 
-This preserves the single-writer guarantee from the intake engine
-([`../../intake-brainstorm/references/writing-integrity.md`](../../intake-brainstorm/references/writing-integrity.md)):
-`readiness-document.md` has exactly one writer (`intake-doc-updater`), and
-`qa-log.md` has exactly one writer (`intake-ledger-writer`). The drafters never
+This preserves the single-writer guarantee from the origination engine
+([`../../origination-brainstorm/references/writing-integrity.md`](../../origination-brainstorm/references/writing-integrity.md)):
+`readiness-document.md` has exactly one writer (`origination-doc-updater`), and
+`qa-log.md` has exactly one writer (`origination-ledger-writer`). The drafters never
 hold the pen on shared files.

@@ -1,6 +1,6 @@
 # eval-viewer
 
-Shared review tooling for every `hsb-teamwork` eval set (`../intake-brainstorm/`,
+Shared review tooling for every `hsb-teamwork` eval set (`../origination-brainstorm/`,
 `../readiness-package/`, …). A zero-dependency (Python stdlib only) local web app
 for reviewing eval runs: each test case's prompt + produced files inline, a per-run
 **Grades** panel, a **Benchmark** tab (with-skill vs. baseline pass rates), and a
@@ -43,7 +43,7 @@ Run-dir extras the viewer ignores (only `outputs/` is shown): `seed.md`,
 
 ## Usage
 
-From any skill's eval dir (`../intake-brainstorm/`, `../readiness-package/`):
+From any skill's eval dir (`../origination-brainstorm/`, `../readiness-package/`):
 
 ```bash
 ./view.sh 1                       # serve at http://localhost:3117, opens a browser
