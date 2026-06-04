@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build a new `/hsb-teamwork:readiness-package` skill that turns a `Product Ready` intake-record into a frozen Readiness Package (RP), reusing the intake engine and adding three RP-specific agents plus a draft-then-confirm authoring model.
+**Goal:** Build a new `/hsb-teamwork:readiness-package` skill that turns a `Product Ready` origination-record into a frozen Readiness Package (RP), reusing the origination engine and adding three RP-specific agents plus a draft-then-confirm authoring model.
 
-**Architecture:** The RP skill is a sibling of `intake-brainstorm` in the same plugin. It reuses all 15 engine agents unchanged (they are template-driven), keeps the engine's `<!-- intake: ... -->` annotation grammar so the analyst/doc-updater/auditor and the structural grader work without code changes, and adds a new annotated RP template, a companion guide, an exemplar, RP-specific reference docs (citing intake's shared method, no duplication), three `readiness-*` agents, a Codex mirror, and an eval suite. The confidence line gains an `Origin:` field to carry the documented `inherited | ai_drafted | po_authored` provenance.
+**Architecture:** The RP skill is a sibling of `origination-brainstorm` in the same plugin. It reuses all 15 engine agents unchanged (they are template-driven), keeps the engine's `<!-- origination: ... -->` annotation grammar so the analyst/doc-updater/auditor and the structural grader work without code changes, and adds a new annotated RP template, a companion guide, an exemplar, RP-specific reference docs (citing origination's shared method, no duplication), three `readiness-*` agents, a Codex mirror, and an eval suite. The confidence line gains an `Origin:` field to carry the documented `inherited | ai_drafted | po_authored` provenance.
 
 **Tech Stack:** Markdown (skill/agent/template/reference authoring), Python 3 (structural grader), Bash (eval runner), TOML (Codex wrappers), JSON (plugin/marketplace/eval manifests).
 
@@ -24,9 +24,9 @@
 - `plugins/hsb-teamwork/skills/readiness-package/assets/target-template.readiness-package.md` — the contract
 - `plugins/hsb-teamwork/skills/readiness-package/assets/target-template.readiness-package.guide.md` — filling rules
 - `plugins/hsb-teamwork/skills/readiness-package/assets/golden-example.md` — calibration bar
-- `plugins/hsb-teamwork/skills/readiness-package/references/orchestration.md` — RP phases + agent roster (cites intake's shared method)
+- `plugins/hsb-teamwork/skills/readiness-package/references/orchestration.md` — RP phases + agent roster (cites origination's shared method)
 - `plugins/hsb-teamwork/skills/readiness-package/references/drafting.md` — draft-then-confirm + origin/disposition
-- `plugins/hsb-teamwork/skills/readiness-package/references/inheritance.md` — carry-forward from the intake-record
+- `plugins/hsb-teamwork/skills/readiness-package/references/inheritance.md` — carry-forward from the origination-record
 - `plugins/hsb-teamwork/skills/readiness-package/references/escalation.md` — TA triggers + the freeze divergence
 
 **New — agents:**
@@ -46,7 +46,7 @@
 - `evals/readiness-package/rubric.md`
 - `evals/readiness-package/run.sh`
 - `evals/readiness-package/.gitignore`
-- `evals/readiness-package/fixtures/sources/01-intake-record-queue-voting.md` (the inherited input)
+- `evals/readiness-package/fixtures/sources/01-origination-record-queue-voting.md` (the inherited input)
 - `evals/readiness-package/golden/queue-voting.readiness-document.md` (hand-authored golden)
 
 **Modify:**
@@ -61,7 +61,7 @@
 
 ## The RP contract (annotation table)
 
-Every fillable section carries `<!-- intake: id=<id>; blocks=<bool>; min-confidence=<n>; kind=<meta|capture|derived> -->`. These exact values are the contract — use them verbatim in Task 1 and Task 4.
+Every fillable section carries `<!-- origination: id=<id>; blocks=<bool>; min-confidence=<n>; kind=<meta|capture|derived> -->`. These exact values are the contract — use them verbatim in Task 1 and Task 4.
 
 | id | section (pt-BR) | kind | blocks | min-confidence |
 |----|-----------------|------|--------|----------------|
@@ -99,12 +99,12 @@ Every fillable section carries `<!-- intake: id=<id>; blocks=<bool>; min-confide
 **Files:**
 - Create: `plugins/hsb-teamwork/skills/readiness-package/assets/target-template.readiness-package.md`
 
-Source the prose/section bodies from `/home/hugo/Dropbox/DevProjects/HSB/hsb-teamwork-process/templates/02-readiness-package.md`. Keep section bodies as `[fill]` placeholders (exactly like the intake template — the grader only runs on produced docs, never the template).
+Source the prose/section bodies from `/home/hugo/Dropbox/DevProjects/HSB/hsb-teamwork-process/templates/02-readiness-package.md`. Keep section bodies as `[fill]` placeholders (exactly like the origination template — the grader only runs on produced docs, never the template).
 
-- [ ] **Step 1: Read the source RP template and the intake template for format**
+- [ ] **Step 1: Read the source RP template and the origination template for format**
 
 Run: `sed -n '1,60p' /home/hugo/Dropbox/DevProjects/HSB/hsb-teamwork-process/templates/02-readiness-package.md`
-Run: `sed -n '1,40p' plugins/hsb-teamwork/skills/intake-brainstorm/assets/target-template.intake-record.md`
+Run: `sed -n '1,40p' plugins/hsb-teamwork/skills/origination-brainstorm/assets/target-template.origination-record.md`
 Purpose: confirm the section roster and copy the annotation/header/sentinel house style.
 
 - [ ] **Step 2: Write the template header verbatim**
@@ -113,12 +113,12 @@ Purpose: confirm the section roster and copy the annotation/header/sentinel hous
 <!--
 TARGET TEMPLATE · Readiness Package (default)
 This file is the contract. Each fillable section carries an annotation:
-  <!- - intake: id=...; blocks=...; min-confidence=...; kind=... - ->
+  <!- - origination: id=...; blocks=...; min-confidence=...; kind=... - ->
 and a self-sufficient rubric. The Template Analyst derives contract.lock.md from
-these (the same engine as intake-brainstorm — the marker keyword stays `intake:`).
+these (the same engine as origination-brainstorm — the marker keyword stays `origination:`).
 The confidence line adds an `Origin:` field (inherited | ai_drafted | po_authored)
 per personas/02-po.md. To use a different document type, copy this file, re-annotate,
-and pass it as TEMPLATE. See references/contract-and-template.md (in intake-brainstorm).
+and pass it as TEMPLATE. See references/contract-and-template.md (in origination-brainstorm).
 Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 -->
 
@@ -133,10 +133,10 @@ For each row in the contract table above, emit a heading, its annotation line, a
 
 ```markdown
 ## Seção 2 — Contexto e Problema (a dor, não a solução)
-<!-- intake: id=context-problem; blocks=true; min-confidence=80; kind=capture -->
+<!-- origination: id=context-problem; blocks=true; min-confidence=80; kind=capture -->
 > Rubric: cenário atual, limitações, dor do cliente e impacto de negócio — o
 > problema, nunca a solução. Se descreve uma solução ("construir X"), NÃO está
-> satisfeita: reformule para a dor subjacente. Herdada do intake quando possível.
+> satisfeita: reformule para a dor subjacente. Herdada do origination quando possível.
 
 [fill]
 
@@ -145,7 +145,7 @@ For each row in the contract table above, emit a heading, its annotation line, a
 
 ```markdown
 ## Seção 7 — User Stories + Critérios de Aceite
-<!-- intake: id=user-stories; blocks=true; min-confidence=80; kind=capture -->
+<!-- origination: id=user-stories; blocks=true; min-confidence=80; kind=capture -->
 > Rubric: uma história por bloco de valor, "Como [persona], quero [ação], para
 > [benefício]"; critérios de aceite em Given/When/Then, verificáveis por não-dev,
 > com limites específicos. origin=ai_drafted no draft pass; o PO confirma.
@@ -157,7 +157,7 @@ For each row in the contract table above, emit a heading, its annotation line, a
 
 ```markdown
 ## Referência ao Technical Assessment
-<!-- intake: id=tech-assessment-ref; blocks=false; min-confidence=0; kind=derived -->
+<!-- origination: id=tech-assessment-ref; blocks=false; min-confidence=0; kind=derived -->
 > Rubric: ponte para o artefato do CTO — status + veredito + link, NÃO conteúdo.
 > Se a escalada for requisitada, congela só com Disposition=deferred (TA pendente,
 > fora do escopo desta ferramenta) ou Status=Assinado quando o TA existir.
@@ -172,7 +172,7 @@ For each row in the contract table above, emit a heading, its annotation line, a
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 ```
 
-The `meta` and `revisions` sections use a table form (no confidence line needed — `kind=meta`). Mirror the intake template's Metadata table, adding `**Intake vinculado** | INT-AAAA-NNN` and `**Escalada ao CTO** | —` rows.
+The `meta` and `revisions` sections use a table form (no confidence line needed — `kind=meta`). Mirror the origination template's Metadata table, adding `**Origination vinculado** | INT-AAAA-NNN` and `**Escalada ao CTO** | —` rows.
 
 - [ ] **Step 4: Add the end sentinel as the final line**
 
@@ -182,7 +182,7 @@ The `meta` and `revisions` sections use a table form (no confidence line needed 
 
 - [ ] **Step 5: Verify the template structure**
 
-Run: `grep -c "intake: id=" plugins/hsb-teamwork/skills/readiness-package/assets/target-template.readiness-package.md`
+Run: `grep -c "origination: id=" plugins/hsb-teamwork/skills/readiness-package/assets/target-template.readiness-package.md`
 Expected: `18`
 
 Run: `tail -n 1 plugins/hsb-teamwork/skills/readiness-package/assets/target-template.readiness-package.md`
@@ -205,7 +205,7 @@ git commit -m "Add Readiness Package target template (the RP contract)"
 **Files:**
 - Create: `plugins/hsb-teamwork/skills/readiness-package/assets/target-template.readiness-package.guide.md`
 
-Mirror `assets/target-template.intake-record.guide.md`: keyed by annotation `id`, grouped into the sections the engine fills. Each entry states the rubric, whether it blocks, and how to fill it under draft-then-confirm.
+Mirror `assets/target-template.origination-record.guide.md`: keyed by annotation `id`, grouped into the sections the engine fills. Each entry states the rubric, whether it blocks, and how to fill it under draft-then-confirm.
 
 - [ ] **Step 1: Write the guide header + inheritance note**
 
@@ -217,20 +217,20 @@ How each section is filled, by `id`. The RP is authored **draft-then-confirm**
 confidence with an explicit `Origin`, and the PO reviews, edits, justifies, and
 freezes. No section starts empty.
 
-Origins: `inherited` (carried from the linked intake-record, keep its source),
+Origins: `inherited` (carried from the linked origination-record, keep its source),
 `ai_drafted` (engine first-draft, partial confidence until the PO confirms),
 `po_authored` (the PO decided), `reused_from_KB` (deferred — out of scope).
 ```
 
 - [ ] **Step 2: Write one entry per `id` (inheritable sections)**
 
-For `exec-summary`, `context-problem`, `objectives`, `personas`, `scope`, `metrics`, `release-criteria`, `risks`, `effort-estimate`, `roadmap` — state: "Origin defaults to `inherited` when the intake-record covers it (keep the inherited `Source` and confidence), else `ai_drafted`." Quote the golden rule for `context-problem` verbatim:
+For `exec-summary`, `context-problem`, `objectives`, `personas`, `scope`, `metrics`, `release-criteria`, `risks`, `effort-estimate`, `roadmap` — state: "Origin defaults to `inherited` when the origination-record covers it (keep the inherited `Source` and confidence), else `ai_drafted`." Quote the golden rule for `context-problem` verbatim:
 
 ```markdown
 - **`context-problem`** (blocks, min-conf 80) — the guardian section. Pain with
   observable symptoms, no solution. If the draft names a feature, turn it back into
   the pain that feature would relieve; if you can't, it isn't satisfied. Inherit the
-  intake-record's problem statement and deepen it; never downgrade its confidence.
+  origination-record's problem statement and deepen it; never downgrade its confidence.
 ```
 
 - [ ] **Step 3: Write entries for the ai_drafted product sections**
@@ -279,7 +279,7 @@ git commit -m "Add Readiness Package companion guide (filling rules per section)
 **Files:**
 - Create: `plugins/hsb-teamwork/skills/readiness-package/assets/golden-example.md`
 
-A short, fictional, repo-independent exemplar showing the quality bar — NOT the eval golden (that's Task 4). Mirror `intake-brainstorm/assets/golden-example.md`'s texture: honest confidence numbers, used dispositions, explicit `Origin` tags.
+A short, fictional, repo-independent exemplar showing the quality bar — NOT the eval golden (that's Task 4). Mirror `origination-brainstorm/assets/golden-example.md`'s texture: honest confidence numbers, used dispositions, explicit `Origin` tags.
 
 - [ ] **Step 1: Write the preamble verbatim**
 
@@ -298,10 +298,10 @@ Assessment reference. Do not copy its content — copy its *bar*.
 Show `context-problem`, `user-stories` (with one ST-001 and Given/When/Then), `nfrs`, `metrics`, and `tech-assessment-ref`. Each carries the full confidence line with a realistic `Origin`. Example texture:
 
 ```markdown
-**Contexto e Problema** — `Confidence: 86 · Origin: inherited · Source: intake INT-2026-014 §problem + support export · Status: resolved · Disposition: inherited · Hint: herdado do intake a 88; mantido`
+**Contexto e Problema** — `Confidence: 86 · Origin: inherited · Source: origination INT-2026-014 §problem + support export · Status: resolved · Disposition: inherited · Hint: herdado do origination a 88; mantido`
 [2-3 sentences of pain, no solution]
 
-**User Stories + Critérios de Aceite** — `Confidence: 80 · Origin: ai_drafted · Source: drafted from scope + intake personas · Status: resolved · Disposition: ai_drafted · Hint: PO confirmou ST-001 e ST-002; AC verificáveis`
+**User Stories + Critérios de Aceite** — `Confidence: 80 · Origin: ai_drafted · Source: drafted from scope + origination personas · Status: resolved · Disposition: ai_drafted · Hint: PO confirmou ST-001 e ST-002; AC verificáveis`
 **ST-001 — Self-service seat add/remove**
 Como admin enterprise, quero adicionar/remover assentos, para não depender do suporte.
 *Given* an admin on the billing screen *when* they add a seat *then* the seat is active within 60s and the invoice reflects it next cycle.
@@ -328,14 +328,14 @@ This is the test-first validation of the template + annotation + grader triad. W
 
 - [ ] **Step 1: Write the RP structural grader**
 
-Adapted from `evals/intake-brainstorm/assertions.py`: same sentinel/truncation/annotation/blocking/confidence checks, plus an **Origin** check and a **tech-assessment-ref** check (instead of intake's triage check). Write `evals/readiness-package/assertions.py`:
+Adapted from `evals/origination-brainstorm/assertions.py`: same sentinel/truncation/annotation/blocking/confidence checks, plus an **Origin** check and a **tech-assessment-ref** check (instead of origination's triage check). Write `evals/readiness-package/assertions.py`:
 
 ```python
 #!/usr/bin/env python3
 """Deterministic structural grader for a Readiness Package document.
 
 Validates a produced readiness-document.md against the contract encoded in its own
-section annotations (<!-- intake: id=...; blocks=...; min-confidence=...; kind=... -->).
+section annotations (<!-- origination: id=...; blocks=...; min-confidence=...; kind=... -->).
 No LLM required. Pairs with rubric.md (the qualitative LLM-graded layer).
 
 Usage:  python3 assertions.py <path/to/readiness-document.md>
@@ -344,7 +344,7 @@ Exits 0 if all hard checks pass, 1 otherwise. Prints a JSON report.
 import re, sys, json
 
 SENTINEL = "<!-- END OF DOCUMENT -->"
-ANNOT = re.compile(r"<!--\s*intake:\s*(.*?)\s*-->")
+ANNOT = re.compile(r"<!--\s*origination:\s*(.*?)\s*-->")
 HONEST = {"assumption", "discovery", "deferred"}
 ORIGINS = {"inherited", "ai_drafted", "po_authored", "reused_from_kb"}
 TRUNC = ["(unchanged)", "[continues]", "remaining sections omitted",
@@ -455,8 +455,8 @@ Expected: FAIL — `usage`/file-not-found or exit 1 (the golden doesn't exist ye
 
 - [ ] **Step 3: Hand-author the eval golden RP**
 
-Create `evals/readiness-package/golden/queue-voting.readiness-document.md` — a fully-filled RP for the "self-service seat management" demand (the same demand as the intake golden, so the pipeline ties together). It MUST:
-- carry the same section headings + `<!-- intake: id=...; ... -->` annotations as the Task 1 template (all 18);
+Create `evals/readiness-package/golden/queue-voting.readiness-document.md` — a fully-filled RP for the "self-service seat management" demand (the same demand as the origination golden, so the pipeline ties together). It MUST:
+- carry the same section headings + `<!-- origination: id=...; ... -->` annotations as the Task 1 template (all 18);
 - fill every `blocks=true` capture section either ≥ its `min-confidence` or with an honest disposition;
 - include the `Origin:` field on every content section with a valid value (`inherited` for §1-5/10-12, `ai_drafted` or `po_authored` for §6-9);
 - resolve `tech-assessment-ref` honestly (e.g. `Disposition: deferred`, "Escalada requisitada? = Sim", hint "TA pendente — skill ainda não existe");
@@ -488,28 +488,28 @@ git commit -m "Add RP structural grader and golden readiness document (passes se
 - Create: `plugins/hsb-teamwork/agents/readiness-drafter.md`
 - Create: `plugins/hsb-teamwork/agents/readiness-escalation-flagger.md`
 
-All three are read-only proposers (`tools: Read, Grep, Glob`) — the reused `intake-doc-updater` and `intake-ledger-writer` remain the single writers. Mirror the body shape of `agents/intake-question-strategist.md` (role paragraph → guidance → "Return … to the orchestrator. Write nothing.").
+All three are read-only proposers (`tools: Read, Grep, Glob`) — the reused `origination-doc-updater` and `origination-ledger-writer` remain the single writers. Mirror the body shape of `agents/origination-question-strategist.md` (role paragraph → guidance → "Return … to the orchestrator. Write nothing.").
 
 - [ ] **Step 1: Write `readiness-inheritor.md` verbatim frontmatter + body**
 
 ```markdown
 ---
 name: readiness-inheritor
-description: Setup-phase read-only proposer for the readiness-package pipeline. Reads the linked intake-record (the inherited source) plus the RP contract, and proposes carry-forward content for the RP's inheritable sections (exec-summary, context-problem, objectives, personas, scope, metrics, release-criteria, risks), preserving each item's confidence/source/disposition and tagging Origin=inherited. It never writes shared files; the orchestrator routes its proposals to the Ledger Writer and Doc Updater. Spawn it once at setup, after the source is indexed.
+description: Setup-phase read-only proposer for the readiness-package pipeline. Reads the linked origination-record (the inherited source) plus the RP contract, and proposes carry-forward content for the RP's inheritable sections (exec-summary, context-problem, objectives, personas, scope, metrics, release-criteria, risks), preserving each item's confidence/source/disposition and tagging Origin=inherited. It never writes shared files; the orchestrator routes its proposals to the Ledger Writer and Doc Updater. Spawn it once at setup, after the source is indexed.
 tools: Read, Grep, Glob
 ---
 
 You are the Inheritor in the hsb-teamwork readiness-package pipeline. The linked
-intake-record is an already-graded artefact: your job is to carry its content
+origination-record is an already-graded artefact: your job is to carry its content
 forward into the RP, not to re-infer it from scratch.
 
-Read the RP contract (contract.lock.md), the indexed intake-record under sources/,
+Read the RP contract (contract.lock.md), the indexed origination-record under sources/,
 and the in-progress readiness-document.md. For each RP capture section that the
-intake-record already covers, propose an entry that:
+origination-record already covers, propose an entry that:
 
-1. reuses the intake-record's content, restated in product terms for the RP section;
+1. reuses the origination-record's content, restated in product terms for the RP section;
 2. **preserves the inherited `Source` and confidence** — never invent a higher number
-   than the intake carried; if the RP section needs more than the intake gives, lower
+   than the origination carried; if the RP section needs more than the origination gives, lower
    the confidence and add a hint naming what the PO must deepen;
 3. tags `Origin: inherited` and `Disposition: inherited`;
 4. carries forward any open disposition (assumption/discovery/deferred) verbatim, so
@@ -600,7 +600,7 @@ git commit -m "Add readiness-* agents: inheritor, drafter, escalation-flagger"
 
 ---
 
-## Task 6: RP reference docs (cite intake's shared method)
+## Task 6: RP reference docs (cite origination's shared method)
 
 **Files:**
 - Create: `plugins/hsb-teamwork/skills/readiness-package/references/orchestration.md`
@@ -608,34 +608,34 @@ git commit -m "Add readiness-* agents: inheritor, drafter, escalation-flagger"
 - Create: `plugins/hsb-teamwork/skills/readiness-package/references/inheritance.md`
 - Create: `plugins/hsb-teamwork/skills/readiness-package/references/escalation.md`
 
-These add only RP-specific method and **cite** intake's engine-level references by relative path (`../../intake-brainstorm/references/<file>`) — no duplication.
+These add only RP-specific method and **cite** origination's engine-level references by relative path (`../../origination-brainstorm/references/<file>`) — no duplication.
 
 - [ ] **Step 1: Write `orchestration.md`**
 
-Heading structure (mirror intake's `orchestration.md` house style):
+Heading structure (mirror origination's `orchestration.md` house style):
 ```markdown
 # Orchestration — RP phases, agents, and what is reused
 
 ## What this reuses (no duplication)
 [Cite, by relative path, the shared engine method:
- ../../intake-brainstorm/references/contract-and-template.md,
+ ../../origination-brainstorm/references/contract-and-template.md,
  ledger-schema.md, sessions.md, writing-integrity.md, grounding.md,
  questioning-method.md. State that the single-writer rule, RMW, the session
  resolve-or-resume, and the ledger schema all apply unchanged.]
 
 ## The agents you spawn (subagent_type)
-[Table: the 15 reused intake-* engine agents + the 3 new readiness-* agents,
- each with read-only/writer and when-spawned. Mark intake-doc-updater and
- intake-ledger-writer as the sole writers.]
+[Table: the 15 reused origination-* engine agents + the 3 new readiness-* agents,
+ each with read-only/writer and when-spawned. Mark origination-doc-updater and
+ origination-ledger-writer as the sole writers.]
 
 ## Phase 0 — Identify the demand (you + the PO)
-[Resolve the linked intake-record path; resolve-or-resume the
- <demand-slug>-readiness/ session per ../../intake-brainstorm/references/sessions.md;
+[Resolve the linked origination-record path; resolve-or-resume the
+ <demand-slug>-readiness/ session per ../../origination-brainstorm/references/sessions.md;
  confirm output language (default pt-BR).]
 
 ## Phase 1 — Setup
 [template-validator -> template-analyst (RP contract.lock.md); source-indexer in
- parallel indexes the linked intake-record + extra files; then readiness-inheritor
+ parallel indexes the linked origination-record + extra files; then readiness-inheritor
  pre-fills inheritable sections.]
 
 ## Phase 2 — Draft pass
@@ -658,9 +658,9 @@ Heading structure (mirror intake's `orchestration.md` house style):
 
 Content: the two stages (draft pass → confirm loop), the `Origin` lifecycle (`inherited`/`ai_drafted` at partial confidence → `po_authored`/`decided` on confirmation), why questions are a fallback not the primary mode (cite `personas/02-po.md:324, 327`), and how the drafter's proposals flow through the single writer (doc-updater). State explicitly: questions fire only when the engine cannot draft a section confidently or the PO asks to deepen it.
 
-- [ ] **Step 3: Write `inheritance.md`** — carry-forward from the intake-record
+- [ ] **Step 3: Write `inheritance.md`** — carry-forward from the origination-record
 
-Content: the intake-record is indexed as a source but treated specially; the inheritor preserves the intake's `Source` and confidence (never inflates), maps intake sections → RP sections (problem→context-problem, reach/personas→personas, scope→scope, metrics→metrics), and carries open dispositions forward into "Prontidão herdada". Cite `personas/02-po.md:245` (`inherited` = partial confidence, traceable).
+Content: the origination-record is indexed as a source but treated specially; the inheritor preserves the origination's `Source` and confidence (never inflates), maps origination sections → RP sections (problem→context-problem, reach/personas→personas, scope→scope, metrics→metrics), and carries open dispositions forward into "Prontidão herdada". Cite `personas/02-po.md:245` (`inherited` = partial confidence, traceable).
 
 - [ ] **Step 4: Write `escalation.md`** — triggers + the freeze divergence
 
@@ -668,10 +668,10 @@ Content: the architectural trigger list (`personas/02-po.md:299`), the `tech-ass
 
 - [ ] **Step 5: Verify the cross-references resolve**
 
-Run: `grep -rl "intake-brainstorm/references" plugins/hsb-teamwork/skills/readiness-package/references/`
+Run: `grep -rl "origination-brainstorm/references" plugins/hsb-teamwork/skills/readiness-package/references/`
 Expected: at least `orchestration.md` listed.
 
-Run: `ls plugins/hsb-teamwork/skills/intake-brainstorm/references/contract-and-template.md`
+Run: `ls plugins/hsb-teamwork/skills/origination-brainstorm/references/contract-and-template.md`
 Expected: file exists (the cited target is real).
 
 - [ ] **Step 6: Commit**
@@ -695,14 +695,14 @@ git commit -m "Add RP reference docs (orchestration, drafting, inheritance, esca
 ---
 name: readiness-package
 description: >-
-  Orchestrate a multi-agent pipeline that turns a Product Ready intake-record into
+  Orchestrate a multi-agent pipeline that turns a Product Ready origination-record into
   a frozen Readiness Package (RP) — the Product Owner's rationalization artefact:
   executive summary, problem/context, objectives, personas, scope in/out, business
   rules, user stories with Given/When/Then acceptance criteria, NFRs, edge cases,
   metrics, release criteria, and risks. Use this skill WHENEVER someone wants to
-  rationalize, specify, "write the RP for", or turn a triaged demand / intake record
-  into a product-ready definition. It reuses the intake-brainstorm engine and authors
-  draft-then-confirm: the pipeline pre-fills every section (inherited from the intake
+  rationalize, specify, "write the RP for", or turn a triaged demand / origination record
+  into a product-ready definition. It reuses the origination-brainstorm engine and authors
+  draft-then-confirm: the pipeline pre-fills every section (inherited from the origination
   record or AI-drafted) at partial confidence, and the PO reviews, edits, justifies,
   and freezes. It detects whether the demand needs a CTO Technical Assessment and
   records that as a tracked, deferred reference. Template-driven and portable; works
@@ -713,27 +713,27 @@ user-invocable: true
 
 - [ ] **Step 2: Write the SKILL.md body**
 
-Mirror `intake-brainstorm/SKILL.md`'s sections, RP-adapted:
+Mirror `origination-brainstorm/SKILL.md`'s sections, RP-adapted:
 ```markdown
 # Readiness Package (orchestrator)
 
 ## First, read these (once per run)
 [List the RP references (references/orchestration.md, drafting.md, inheritance.md,
- escalation.md) AND the cited intake shared method by relative path. Name the default
+ escalation.md) AND the cited origination shared method by relative path. Name the default
  template assets/target-template.readiness-package.md + its .guide.md + golden-example.md.]
 
 ## The principle that makes parallelism safe
-[Single-writer rule, RMW, sentinel — cite ../intake-brainstorm/references/writing-integrity.md.]
+[Single-writer rule, RMW, sentinel — cite ../origination-brainstorm/references/writing-integrity.md.]
 
 ## The agents you spawn (subagent_type)
-[The 15 reused intake-* agents + readiness-inheritor, readiness-drafter,
+[The 15 reused origination-* agents + readiness-inheritor, readiness-drafter,
  readiness-escalation-flagger. Note: doc-updater and ledger-writer are the only writers.]
 
 ## Authoring model — draft-then-confirm
 [Draft pass then confirm loop; Origin lifecycle; questions are a fallback. See drafting.md.]
 
 ## Modes
-[Fresh (intake-record -> RP), Revisit (re-score an existing RP), Batch/headless.]
+[Fresh (origination-record -> RP), Revisit (re-score an existing RP), Batch/headless.]
 
 ## Language
 [Default pt-BR; mirror requested language.]
@@ -746,8 +746,8 @@ Mirror `intake-brainstorm/SKILL.md`'s sections, RP-adapted:
  the RP freezes provisionally. See escalation.md + spec §8.]
 
 ## Installing in other projects
-[Same portability note as intake: paths passed in, session resolved via $INTAKE_HOME
- -> git root -> cwd; the linked intake-record path is provided at run start.]
+[Same portability note as origination: paths passed in, session resolved via $ORIGINATION_HOME
+ -> git root -> cwd; the linked origination-record path is provided at run start.]
 
 ## Bundled resources
 [Table of assets/ + references/.]
@@ -755,7 +755,7 @@ Mirror `intake-brainstorm/SKILL.md`'s sections, RP-adapted:
 
 - [ ] **Step 3: Write README.md**
 
-A short readme mirroring `intake-brainstorm/README.md`: what the skill does, how to invoke (`/hsb-teamwork:readiness-package`), the inputs (a Product Ready intake-record), the outputs (`readiness-document.md` + humanized/translated/enriched/manifest in `<demand-slug>-readiness/`), and the TA boundary.
+A short readme mirroring `origination-brainstorm/README.md`: what the skill does, how to invoke (`/hsb-teamwork:readiness-package`), the inputs (a Product Ready origination-record), the outputs (`readiness-document.md` + humanized/translated/enriched/manifest in `<demand-slug>-readiness/`), and the TA boundary.
 
 - [ ] **Step 4: Verify**
 
@@ -797,15 +797,15 @@ You are the Drafter in the hsb-teamwork readiness-package pipeline (Codex adapte
 
 Propose first-draft content for the new RP product sections (business rules, user stories with Given/When/Then acceptance criteria, NFRs per ISO/IEC 25010, edge cases) at partial confidence with Origin=ai_drafted, for the PO to confirm.
 
-Read your full role specification at `agents/readiness-drafter.md` and the shared method under `skills/readiness-package/references/` and `skills/intake-brainstorm/references/` (start with skills/readiness-package/references/orchestration.md) in the package, and follow them exactly. Obey writing-integrity.md: never truncate, use read-modify-write, key edits by stable id, and end every produced document with the `<!-- END OF DOCUMENT -->` sentinel, verified. The orchestrator provides SESSION_DIR and any paths you need. Return your result to the orchestrator.
+Read your full role specification at `agents/readiness-drafter.md` and the shared method under `skills/readiness-package/references/` and `skills/origination-brainstorm/references/` (start with skills/readiness-package/references/orchestration.md) in the package, and follow them exactly. Obey writing-integrity.md: never truncate, use read-modify-write, key edits by stable id, and end every produced document with the `<!-- END OF DOCUMENT -->` sentinel, verified. The orchestrator provides SESSION_DIR and any paths you need. Return your result to the orchestrator.
 """
 ```
-For `hsb-readiness-inheritor.toml`: description "Carry the linked intake-record's graded sections forward into the RP, preserving confidence/source and tagging Origin=inherited."; role path `agents/readiness-inheritor.md`.
+For `hsb-readiness-inheritor.toml`: description "Carry the linked origination-record's graded sections forward into the RP, preserving confidence/source and tagging Origin=inherited."; role path `agents/readiness-inheritor.md`.
 For `hsb-readiness-escalation-flagger.toml`: description "Decide whether the demand owes a CTO Technical Assessment and record the tech-assessment-ref disposition (deferred when out of scope)."; role path `agents/readiness-escalation-flagger.md`.
 
 - [ ] **Step 2: Write the Codex prompt `hsb-teamwork-readiness-package.md`**
 
-Mirror `codex/prompts/hsb-teamwork-intake-brainstorm.md`, pointing at the RP skill:
+Mirror `codex/prompts/hsb-teamwork-origination-brainstorm.md`, pointing at the RP skill:
 ```markdown
 # /hsb-teamwork-readiness-package — orchestrator (Codex)
 
@@ -813,16 +813,16 @@ Act as the **hsb-teamwork readiness-package orchestrator**. Read `codex/AGENTS.m
 in the package (the readiness-package section) and follow it for this run. You are
 the only layer that talks to the user.
 
-1. Identify the demand and the linked Product Ready intake-record. Pick the mode
+1. Identify the demand and the linked Product Ready origination-record. Pick the mode
    (fresh / revisit / batch) and the output language (default pt-BR).
 2. Resolve-or-resume the `<demand-slug>-readiness/` session (see the package's
-   `skills/intake-brainstorm/references/sessions.md`).
+   `skills/origination-brainstorm/references/sessions.md`).
 3. Run the phases — setup, draft pass, confirm loop, production, wrap — performing
    each specialist role yourself, or by delegating to the Codex subagents in
    `codex/agents/` (run sequentially; Codex is single-agent).
 
 Non-negotiables (full detail under `skills/readiness-package/references/` and the
-cited `skills/intake-brainstorm/references/`):
+cited `skills/origination-brainstorm/references/`):
 - the RP template is the contract; fill every blocksFreeze section to its threshold
   or an honest disposition; tag each entry's Origin (inherited/ai_drafted/po_authored);
 - draft-then-confirm: pre-fill, then the PO judges — questions are a fallback;
@@ -838,7 +838,7 @@ $ARGUMENTS
 
 - [ ] **Step 3: Update `codex/AGENTS.md`**
 
-Add a top note that the adapter now covers two skills, and a "## readiness-package" section pointing RP runs at `../skills/readiness-package/SKILL.md` + its references, restating the sequential execution order for the RP phases (setup → draft pass → confirm loop → production → wrap). Keep the existing intake-brainstorm content intact.
+Add a top note that the adapter now covers two skills, and a "## readiness-package" section pointing RP runs at `../skills/readiness-package/SKILL.md` + its references, restating the sequential execution order for the RP phases (setup → draft pass → confirm loop → production → wrap). Keep the existing origination-brainstorm content intact.
 
 - [ ] **Step 4: Update `codex/README.md`**
 
@@ -869,7 +869,7 @@ git commit -m "Add Codex mirror for readiness-package (wrappers, prompt, AGENTS/
 
 Bump `"version"` to `"0.2.0"`. Replace the `"description"` value's Available/Planned clause with:
 ```
-Available: intake-brainstorm (raw demand -> a fully-filled, confidence-graded document via a multi-agent pipeline, plus humanized/translated/enriched variants); readiness-package (a Product Ready intake-record -> a frozen Readiness Package via draft-then-confirm, with CTO-escalation detection). Planned: tech-assessment, prd-generation.
+Available: origination-brainstorm (raw demand -> a fully-filled, confidence-graded document via a multi-agent pipeline, plus humanized/translated/enriched variants); readiness-package (a Product Ready origination-record -> a frozen Readiness Package via draft-then-confirm, with CTO-escalation detection). Planned: tech-assessment, prd-generation.
 ```
 Add `"readiness"` and `"product-owner"` to `"keywords"`.
 
@@ -877,12 +877,12 @@ Add `"readiness"` and `"product-owner"` to `"keywords"`.
 
 Bump the plugin entry `"version"` to `"0.2.0"`. Update its `"description"` line to:
 ```
-HSB Teamwork — a demand-to-delivery toolkit for Claude Code and Codex. Skills: intake-brainstorm, readiness-package (available); tech-assessment, prd-generation (planned).
+HSB Teamwork — a demand-to-delivery toolkit for Claude Code and Codex. Skills: origination-brainstorm, readiness-package (available); tech-assessment, prd-generation (planned).
 ```
 
 - [ ] **Step 3: Update the plugin README**
 
-Add a one-line entry for `/hsb-teamwork:readiness-package` next to the intake-brainstorm entry, describing input (Product Ready intake-record) → output (frozen RP).
+Add a one-line entry for `/hsb-teamwork:readiness-package` next to the origination-brainstorm entry, describing input (Product Ready origination-record) → output (frozen RP).
 
 - [ ] **Step 4: Verify JSON validity**
 
@@ -905,14 +905,14 @@ git commit -m "Register readiness-package skill in plugin and marketplace manife
 - Create: `evals/readiness-package/rubric.md`
 - Create: `evals/readiness-package/run.sh`
 - Create: `evals/readiness-package/.gitignore`
-- Create: `evals/readiness-package/fixtures/sources/01-intake-record-queue-voting.md`
+- Create: `evals/readiness-package/fixtures/sources/01-origination-record-queue-voting.md`
 - Modify: `evals/README.md`
 
 - [ ] **Step 1: Create the inherited-input fixture**
 
-Copy the intake golden (the queue-voting demand's filled intake record) as the RP's inherited input, so the pipeline ties together:
+Copy the origination golden (the queue-voting demand's filled origination record) as the RP's inherited input, so the pipeline ties together:
 
-Run: `mkdir -p evals/readiness-package/fixtures/sources && cp evals/intake-brainstorm/golden/queue-voting.target-document.md evals/readiness-package/fixtures/sources/01-intake-record-queue-voting.md`
+Run: `mkdir -p evals/readiness-package/fixtures/sources && cp evals/origination-brainstorm/golden/queue-voting.target-document.md evals/readiness-package/fixtures/sources/01-origination-record-queue-voting.md`
 Expected: file created.
 
 - [ ] **Step 2: Write `evals.json`**
@@ -924,9 +924,9 @@ Expected: file created.
   "evals": [
     {
       "id": 0,
-      "name": "intake-to-rp-queue-voting",
-      "prompt": "Run the hsb-teamwork readiness-package skill in non-interactive mode. Linked intake-record (Product Ready): evals/readiness-package/fixtures/sources/01-intake-record-queue-voting.md. Inherit the capture sections from it (Origin=inherited, preserve source/confidence); draft the new product sections (business-rules, user-stories with Given/When/Then, NFRs, edge-cases) at partial confidence with Origin=ai_drafted; detect CTO escalation and record tech-assessment-ref honestly. For any genuine gap, use an honest disposition rather than asking. Write the filled RP to {OUT}/readiness-document.md (keep the section annotations and the END OF DOCUMENT sentinel). Do not ask questions.",
-      "files": ["evals/readiness-package/fixtures/sources/01-intake-record-queue-voting.md"],
+      "name": "origination-to-rp-queue-voting",
+      "prompt": "Run the hsb-teamwork readiness-package skill in non-interactive mode. Linked origination-record (Product Ready): evals/readiness-package/fixtures/sources/01-origination-record-queue-voting.md. Inherit the capture sections from it (Origin=inherited, preserve source/confidence); draft the new product sections (business-rules, user-stories with Given/When/Then, NFRs, edge-cases) at partial confidence with Origin=ai_drafted; detect CTO escalation and record tech-assessment-ref honestly. For any genuine gap, use an honest disposition rather than asking. Write the filled RP to {OUT}/readiness-document.md (keep the section annotations and the END OF DOCUMENT sentinel). Do not ask questions.",
+      "files": ["evals/readiness-package/fixtures/sources/01-origination-record-queue-voting.md"],
       "golden": "golden/queue-voting.readiness-document.md",
       "expected_output": "A filled RP: all blocking sections resolved at/above threshold or honestly disposed, every content section tagged with a valid Origin, tech-assessment-ref resolved (deferred when escalation is required), sentinel present."
     },
@@ -945,15 +945,15 @@ Expected: file created.
 
 - [ ] **Step 3: Create the revisit seed fixture**
 
-Create `evals/readiness-package/fixtures/underfilled-rp-seed.md` — a partial RP with the correct annotations but several blocking sections left as `[fill]` or empty confidence lines, mirroring `evals/intake-brainstorm/fixtures/underfilled-seed.md`. (Add `fixtures/underfilled-rp-seed.md` to the files committed in this task.)
+Create `evals/readiness-package/fixtures/underfilled-rp-seed.md` — a partial RP with the correct annotations but several blocking sections left as `[fill]` or empty confidence lines, mirroring `evals/origination-brainstorm/fixtures/underfilled-seed.md`. (Add `fixtures/underfilled-rp-seed.md` to the files committed in this task.)
 
 - [ ] **Step 4: Write `rubric.md`**
 
-Adapt `evals/intake-brainstorm/rubric.md`. Layer 1 (automated) lists the RP grader checks: `sentinel_present`, `no_truncation_markers`, `has_annotations`, `blocking[<id>]_satisfied`, `confidence_lines_present`, `origin_present_valid`, `tech_assessment_ref_resolved`. Layer 2 (qualitative, 1-5) dimensions: problem-not-solution; confidence + Origin honesty (inherited preserves intake's number, ai_drafted stays partial until confirmed); dispositions used well; testable Given/When/Then acceptance criteria; NFRs that don't claim feasibility; escalation called correctly; fidelity to golden.
+Adapt `evals/origination-brainstorm/rubric.md`. Layer 1 (automated) lists the RP grader checks: `sentinel_present`, `no_truncation_markers`, `has_annotations`, `blocking[<id>]_satisfied`, `confidence_lines_present`, `origin_present_valid`, `tech_assessment_ref_resolved`. Layer 2 (qualitative, 1-5) dimensions: problem-not-solution; confidence + Origin honesty (inherited preserves origination's number, ai_drafted stays partial until confirmed); dispositions used well; testable Given/When/Then acceptance criteria; NFRs that don't claim feasibility; escalation called correctly; fidelity to golden.
 
 - [ ] **Step 5: Write `run.sh`**
 
-Adapt `evals/intake-brainstorm/run.sh` with these exact changes: header says `readiness-package`; the self-test grades `golden/queue-voting.readiness-document.md`; the `grade()` target and the produced-file check use `readiness-document.md` (not `target-document.md`); keep the `</dev/null` stdin-drain fix and the baseline-vs-with_skill loop. Make it executable.
+Adapt `evals/origination-brainstorm/run.sh` with these exact changes: header says `readiness-package`; the self-test grades `golden/queue-voting.readiness-document.md`; the `grade()` target and the produced-file check use `readiness-document.md` (not `target-document.md`); keep the `</dev/null` stdin-drain fix and the baseline-vs-with_skill loop. Make it executable.
 
 Run: `chmod +x evals/readiness-package/run.sh`
 
@@ -965,7 +965,7 @@ runs/
 
 - [ ] **Step 7: Update `evals/README.md`**
 
-Add a `readiness-package/` subtree alongside `intake-brainstorm/` in the directory diagram, and a one-line note that it grades `intake-record -> RP` (structural via `assertions.py`, qualitative via `rubric.md`).
+Add a `readiness-package/` subtree alongside `origination-brainstorm/` in the directory diagram, and a one-line note that it grades `origination-record -> RP` (structural via `assertions.py`, qualitative via `rubric.md`).
 
 - [ ] **Step 8: Run the grader self-test through run.sh**
 
@@ -993,7 +993,7 @@ If no CLI: skip to Step 4.
 - [ ] **Step 2: Run the live eval case 0 with the skill**
 
 Run: `cd evals/readiness-package && ./run.sh && cd ../..`
-Expected: scorecard now has an `intake-to-rp-queue-voting | with_skill` row. Inspect `evals/readiness-package/runs/iteration-1/eval-0/with_skill/readiness-document.md`.
+Expected: scorecard now has an `origination-to-rp-queue-voting | with_skill` row. Inspect `evals/readiness-package/runs/iteration-1/eval-0/with_skill/readiness-document.md`.
 
 - [ ] **Step 3: Grade the live output structurally**
 
@@ -1022,8 +1022,8 @@ git commit -m "Tune readiness-package prompts to pass live structural eval"
 
 ## Notes for the implementer
 
-- **Do not modify the engine agents** (`agents/intake-*.md`) or `evals/intake-brainstorm/`. The RP skill reuses them as-is; if something seems to need a change there, it's a signal the RP template/guide should carry the difference instead.
-- **The annotation marker stays `intake:`** in the RP template — it's the engine's contract grammar, not the document type. Changing it would break `template-analyst`, `doc-updater`, and the grader.
-- **`readiness-document.md`** is the RP's filled target document (the analog of intake's `target-document.md`); keep that filename consistent across the SKILL.md, evals, and grader.
+- **Do not modify the engine agents** (`agents/origination-*.md`) or `evals/origination-brainstorm/`. The RP skill reuses them as-is; if something seems to need a change there, it's a signal the RP template/guide should carry the difference instead.
+- **The annotation marker stays `origination:`** in the RP template — it's the engine's contract grammar, not the document type. Changing it would break `template-analyst`, `doc-updater`, and the grader.
+- **`readiness-document.md`** is the RP's filled target document (the analog of origination's `target-document.md`); keep that filename consistent across the SKILL.md, evals, and grader.
 - **Freeze divergence is intentional** (spec §8): a provisionally-frozen RP with a deferred TA is the correct output until the tech-assessment skill exists. The grader's `tech_assessment_ref_resolved` accepts `deferred`.
 ```

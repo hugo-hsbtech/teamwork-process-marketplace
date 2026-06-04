@@ -5,40 +5,40 @@ How each section is filled, by `id`. The RP is authored **draft-then-confirm**
 confidence with an explicit `Origin`, and the PO reviews, edits, justifies, and
 freezes. No section starts empty.
 
-Origins: `inherited` (carried from the linked intake-record, keep its source),
+Origins: `inherited` (carried from the linked origination-record, keep its source),
 `ai_drafted` (engine first-draft, partial confidence until the PO confirms),
 `po_authored` (the PO decided), `reused_from_KB` (deferred — out of scope).
 
 ---
 
-## Inheritable sections (origin defaults to `inherited` when the intake-record covers it)
+## Inheritable sections (origin defaults to `inherited` when the origination-record covers it)
 
 For all sections in this group: origin defaults to `inherited` when the
-intake-record covers the material (keep the inherited Source and confidence as-is,
+origination-record covers the material (keep the inherited Source and confidence as-is,
 never downgrade); else `ai_drafted`. The PO confirms or edits; on confirmation the
 entry becomes `Origin: po_authored`.
 
 - **`exec-summary`** (blocks, min-conf 70) — 2–4 short paragraphs: what is the
   problem, what will be built, and what is the expected business outcome. Must be
   readable by any stakeholder without additional context. Inherit and expand from
-  the intake-record's problem/impact fields when possible. A draft that merely
+  the origination-record's problem/impact fields when possible. A draft that merely
   re-states the feature request without anchoring to the business outcome is not
   satisfied.
 
 - **`context-problem`** (blocks, min-conf 80) — the guardian section. Pain with
   observable symptoms, no solution. If the draft names a feature, turn it back into
   the pain that feature would relieve; if you can't, it isn't satisfied. Inherit the
-  intake-record's problem statement and deepen it; never downgrade its confidence.
+  origination-record's problem statement and deepen it; never downgrade its confidence.
 
 - **`objectives`** (blocks, min-conf 70) — numbered, observable objectives this
   delivery must achieve after release. Each objective must be verifiable: if it
   cannot be measured or observed, it is not satisfied. Minimum two objectives.
-  Inherit from intake-record impact/urgency when available.
+  Inherit from origination-record impact/urgency when available.
 
 - **`personas`** (blocks, min-conf 70) — for each persona: the job-to-be-done (what
   they are trying to accomplish) and how they are affected by this delivery. Without
   a defined persona, scope and acceptance criteria have no anchor. Inherit from the
-  intake-record's `reach` field when available; expand with job-to-be-done framing.
+  origination-record's `reach` field when available; expand with job-to-be-done framing.
 
 - **`scope`** (blocks, min-conf 75) — protects the downstream from scope creep. Must
   list explicitly what is OUT, not only what is in. Deferred items feed the Roadmap
@@ -48,7 +48,7 @@ entry becomes `Origin: po_authored`.
 - **`metrics`** (blocks, min-conf 70) — projected values: the baseline that
   metrics.md will confront with post-rollout actuals. Include leading and lagging
   indicators and at least one guardrail (the metric that must not worsen). Each
-  target carries its projection confidence. Inherit from intake-record impact
+  target carries its projection confidence. Inherit from origination-record impact
   quantifications; mark low-confidence projections with a firming hint.
 
 - **`release-criteria`** (blocks, min-conf 70) — high-level indicators that define
@@ -59,7 +59,7 @@ entry becomes `Origin: po_authored`.
 - **`risks`** (blocks, min-conf 70) — product, business, adoption, external, and
   compliance risks. Technical risks migrate to the Technical Assessment. Each risk
   carries probability, impact, and mitigation. Product/business dependencies listed
-  separately. Inherit known risks from the intake-record's constraints/assumptions.
+  separately. Inherit known risks from the origination-record's constraints/assumptions.
 
 - **`effort-estimate`** (non-blocking, min-conf 0) — internal use only: the PO's
   rough guess to support sequencing. The firm number comes from the CTO in the
@@ -83,7 +83,7 @@ confirmation each entry becomes `Origin: po_authored`.
 - **`business-rules`** (blocks, min-conf 80) — rules, validations, and state
   transitions that govern the functionality. Each rule must be verifiable and
   atomic. State-transition flows must cover error paths, not just the happy path.
-  Draft by inferring rules from the intake-record's scope signals and problem
+  Draft by inferring rules from the origination-record's scope signals and problem
   statement; flag any rule that requires PO confirmation explicitly. A draft with
   only the happy path is not satisfied.
 
@@ -127,7 +127,7 @@ escalation-flagger decides whether a Technical Assessment is owed. When it is:
   skill lands, this tightens to require Status=Assinado.
 When no escalation is needed, set Status=not_requested, Disposition=decided.
 
-### `meta` — identifiers, status, and linked intake
+### `meta` — identifiers, status, and linked origination
 
 Holds the stable IDs (RP-AAAA-NNN, linked INT-AAAA-NNN), the responsible PO,
 escalation flag, freeze status, and output language. Filled by the engine from
@@ -139,14 +139,14 @@ Tracks version, date, author, status, and change summary for each revision.
 Initialised with v1/Rascunho at creation; updated on each confirmed edit cycle.
 Non-blocking.
 
-### `inherited-readiness` — open dispositions carried from the intake-record
+### `inherited-readiness` — open dispositions carried from the origination-record
 
-A summary table listing the intake readiness score, assumptions still to validate,
+A summary table listing the origination readiness score, assumptions still to validate,
 open discovery unknowns, and delegated requirements with owners — surfacing what
 came in soft so it is visible at the start of execution, not buried in sections.
-Filled by the engine from the linked intake-record's readiness/handoff data;
+Filled by the engine from the linked origination-record's readiness/handoff data;
 the PO reviews and confirms nothing was missed. If a carried assumption is later
-falsified during execution, the demand must be re-evaluated (the intake re-triage
+falsified during execution, the demand must be re-evaluated (the origination re-triage
 trigger applies downstream). Non-blocking.
 
 ---
@@ -154,7 +154,7 @@ trigger applies downstream). Non-blocking.
 ## The bar
 
 A good RP reads like a product demand *understood and owned*: the problem is pain
-not solution, every inheritable section traces back to the intake-record with its
+not solution, every inheritable section traces back to the origination-record with its
 confidence preserved, ai_drafted product sections are explicit first-drafts the PO
 can confirm or contest (never silent assertions), dispositions are honest
 (`discovery` is acceptable; blank is not), and the `tech-assessment-ref` is either

@@ -1,9 +1,9 @@
 {
   "name": "hsb-teamwork",
   "version": "0.2.0",
-  "description": "HSB Teamwork — a demand-to-delivery toolkit. Each step is a skill invoked as /hsb-teamwork:<skill>. Available: intake-brainstorm (raw demand -> a fully-filled, confidence-graded document via a multi-agent pipeline, plus humanized/translated/enriched variants); readiness-package (a Product Ready intake-record -> a frozen Readiness Package via draft-then-confirm, with CTO-escalation detection). Planned: tech-assessment, prd-generation. Template-driven and portable; includes a Codex adapter.",
+  "description": "HSB Teamwork — a demand-to-delivery toolkit. Each step is a skill invoked as /hsb-teamwork:<skill>. Available: origination-brainstorm (raw demand -> a fully-filled, confidence-graded document via a multi-agent pipeline, plus humanized/translated/enriched variants); readiness-package (a Product Ready origination-record -> a frozen Readiness Package via draft-then-confirm, with CTO-escalation detection). Planned: tech-assessment, prd-generation. Template-driven and portable; includes a Codex adapter.",
   "author": { "name": "Hugo Seabra", "email": "contato.hsbtec@gmail.com" },
   "homepage": "https://github.com/hugo-hsbtech/teamwork-process-marketplace",
   "repository": "https://github.com/hugo-hsbtech/teamwork-process-marketplace",
-  "keywords": ["intake", "brainstorm", "requirements", "triage", "product", "multi-agent", "codex", "readiness", "product-owner"]
+  "keywords": ["origination", "brainstorm", "requirements", "triage", "product", "multi-agent", "codex", "readiness", "product-owner"]
 }
