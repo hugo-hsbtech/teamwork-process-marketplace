@@ -40,12 +40,16 @@ if ! command -v claude >/dev/null 2>&1; then
   echo "Wrote $SCORE"; exit 0
 fi
 
-# Iterate cases from evals.json
+# Iterate cases from evals.json.
+# Fields are joined with the ASCII Unit Separator (\x1f), NOT a tab: tab is an IFS
+# *whitespace* char, so `read` collapses consecutive tabs and an empty `seed` field
+# would shift the prompt into `seed`, leaving the prompt empty (claude -p "" errors).
+# \x1f is non-whitespace, so empty fields are preserved.
 python3 -c '
 import json
 for e in json.load(open("evals.json"))["evals"]:
-    print("\t".join([str(e["id"]), e["name"], e.get("seed","") or "", e["prompt"]]))
-' | while IFS=$'\t' read -r id name seed prompt; do
+    print("\x1f".join([str(e["id"]), e["name"], e.get("seed","") or "", e["prompt"]]))
+' | while IFS=$'\x1f' read -r id name seed prompt; do
   for mode in with_skill baseline; do
     OUT="$RUNS/eval-${id}/${mode}"; mkdir -p "$OUT"
     [ -n "$seed" ] && cp "$seed" "$OUT/seed.md" 2>/dev/null || true
@@ -58,9 +62,9 @@ for e in json.load(open("evals.json"))["evals"]:
     # case-list pipe at the `| while read` above.
     if [ "$mode" = "baseline" ]; then
       # Baseline: same task, explicitly WITHOUT the skill, from a clean cwd.
-      ( cd "$REPO_ROOT" && claude -p "Do NOT use any skill or plugin. $p" ) </dev/null >"$OUT/agent.log" 2>&1 || true
+      ( cd "$REPO_ROOT" && claude -p --permission-mode bypassPermissions "Do NOT use any skill or plugin. $p" ) </dev/null >"$OUT/agent.log" 2>&1 || true
     else
-      ( cd "$REPO_ROOT" && claude -p "$p" ) </dev/null >"$OUT/agent.log" 2>&1 || true
+      ( cd "$REPO_ROOT" && claude -p --permission-mode bypassPermissions "$p" ) </dev/null >"$OUT/agent.log" 2>&1 || true
     fi
     if [ -f "$OUT/readiness-document.md" ]; then
       res=$(grade "$OUT/readiness-document.md") || res="FAIL\t-\t-"
