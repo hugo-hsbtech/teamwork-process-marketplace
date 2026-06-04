@@ -1,14 +1,23 @@
 # readiness-package
 
 > **Part of the `hsb-teamwork` toolkit.** `readiness-package` is the second skill,
-> invoked as `/hsb-teamwork:readiness-package`. It receives the output of
-> `origination-brainstorm` and produces the PO's rationalization artefact. Sibling steps
+> invoked as `/hsb-teamwork:readiness-package`. It runs the Product Owner's full
+> two-act journey on a demand and produces the PO's artefacts. Sibling steps
 > planned in the same plugin: `tech-assessment`, `prd-generation` — each a skill
 > under `/hsb-teamwork:<skill>`, reusing this skill's engine.
 
-A portable, PO-facing Claude skill that turns a **Product Ready origination-record** —
-the triaged output of `/hsb-teamwork:origination-brainstorm` — into a fully-frozen
-**Readiness Package (RP)**: the Product Owner's rationalization artefact.
+A portable, PO-facing Claude skill that runs the **Product Owner's two acts**
+(`teamwork-process/personas/02-po.md` §3) on an origination-record:
+
+1. **Act 1 — Triage.** Score the demand against the triage criteria and commit a
+   routing decision — `Product Ready` / `Discovery` / `Backlog` / `Reject` —
+   recorded as an **Intake Record** (`INT-AAAA-NNN`). Only `Product Ready` opens
+   Act 2; the other three short-circuit (recorded, then stop). This gate is what
+   keeps the skill from pre-interpreting a demand as product before it is triaged —
+   and it is the main efficiency win, since most demands never pay the RP cost.
+2. **Act 2 — Rationalization.** Turn the `Product Ready` demand into a fully-frozen
+   **Readiness Package (RP)** (`RP-AAAA-NNN`): the Product Owner's rationalization
+   artefact.
 
 The RP contains: executive summary, problem/context, objectives, personas,
 scope in/out, business rules, user stories with Given/When/Then acceptance
@@ -19,23 +28,31 @@ criteria, NFRs, edge cases, metrics, release criteria, and risks.
 
 ## The big idea
 
-The pipeline **pre-fills every section before the PO sees the document** — the
-screen looks like the system already rationalized the demand and is asking for
-the PO's judgment, not like a blank form. The PO's job is to **review, edit,
-justify, and freeze**.
+**Triage first, rationalize only what passes.** Act 1 asks the structured
+triage questions and commits a routing decision; only a `Product Ready` demand
+enters Act 2's expensive pipeline. In Act 2 the pipeline **pre-fills every section
+before the PO sees the document** — the screen looks like the system already
+rationalized the demand and is asking for the PO's judgment, not like a blank
+form. The PO's job is to **review, edit, justify, and freeze**.
 
-Two principles underpin correctness and parallelism:
+Principles underpinning correctness, speed, and parallelism:
 
-1. **Draft-then-confirm.** `hsb-stage-inheritor` carries inheritable sections
+1. **Triage gate (Act 1).** `hsb-triage-assessor` scores the criteria from the
+   origination-record; the orchestrator asks the PO only the criteria it could not
+   settle, and the PO commits the routing decision. `Discovery`/`Backlog`/`Reject`
+   short-circuit — no RP drafting runs.
+2. **Draft-then-confirm (Act 2).** `hsb-stage-inheritor` carries inheritable sections
    forward from the origination-record at preserved confidence; `hsb-section-drafter`
-   proposes first drafts for the new product sections. Every section has an
-   entry — `inherited`, `ai_drafted`, or an honest `discovery` — before the PO
-   opens the document. Questions are a fallback, not the primary mode.
-2. **One writer per file.** `readiness-document.md` is written exclusively by
-   `hsb-doc-updater`; `qa-log.md` is written exclusively by
-   `hsb-ledger-writer`. The three stage-agnostic proposers this skill drives
-   (`hsb-stage-inheritor`, `hsb-section-drafter`, `hsb-escalation-flagger`) are
-   read-only; the orchestrator routes their proposals through the single writers.
+   proposes first drafts for the new product sections — **fanned out one per section
+   in parallel** so the draft pass is fast. Every section has an entry —
+   `inherited`, `ai_drafted`, or an honest `discovery` — before the PO opens the
+   document. Questions there are a fallback, not the primary mode.
+3. **One writer per file.** `intake-record.md` (Act 1) and `readiness-document.md`
+   (Act 2) are written exclusively by `hsb-doc-updater`; `qa-log.md` exclusively by
+   `hsb-ledger-writer`. The stage-agnostic proposers this skill drives
+   (`hsb-triage-assessor`, `hsb-stage-inheritor`, `hsb-section-drafter`,
+   `hsb-escalation-flagger`) are read-only; the orchestrator routes their proposals
+   through the single writers, which is what makes the fan-out safe.
 
 ## How to invoke
 
@@ -46,19 +63,20 @@ Two principles underpin correctness and parallelism:
 When you invoke it, it resolves the **initiative** to run in (confirm the latest
 open one or pick from the open list), then reads the initiative's **works +
 definitions index** (`initiative.json`) to discover the origination-record to
-inherit from — the phase whose `produces` is `origination-record` — plus any debts
-prior fronts left open and the shared definitions. Readiness runs as the
-`readiness/` **phase** of that initiative; the skill resolve-or-resumes
-`INITIATIVE_DIR/readiness/`, records its own outputs and the owed Technical
-Assessment back into the index on freeze, and defaults the output language to pt-BR
-unless you specify otherwise.
+triage — the phase whose `produces` is `origination-record` — plus any debts prior
+fronts left open and the shared definitions. Act 1 runs as the `intake/` **phase**
+(producing the Intake Record); only if triage decides `Product Ready` does Act 2 run
+as the `readiness/` **phase**, recording its outputs and the owed Technical Assessment
+back into the index on freeze. The output language defaults to pt-BR unless you
+specify otherwise.
 
 ## Input
 
-A **Product Ready origination-record** — the `target-document.md` (or its
-`output/humanized.md`) in the initiative's `origination/` phase, produced by
-`/hsb-teamwork:origination-brainstorm` after the demand has been triaged to
-`Product Ready` status.
+A **candidate origination-record** — the `target-document.md` (or its
+`output/humanized.md` / `final/<project>-NNN.md`) in the initiative's `origination/`
+phase, produced by `/hsb-teamwork:origination-brainstorm`. The skill triages it in
+Act 1; it does **not** assume it is already `Product Ready` — that is the routing
+decision the PO commits at the gate.
 
 The PO provides:
 - The initiative to run in (its `origination/` phase is the origination-record; an
@@ -117,11 +135,16 @@ behavior and is documented in
 
 ## Modes
 
-- **Fresh** (default) — origination-record exists, no RP yet. Full pipeline.
-- **Revisit** — existing `readiness-document.md` in the `readiness/` phase folder. Re-score,
-  report the gap map, re-open questions only on weak sections.
-- **Batch / headless** — a set of origination-records, no live PO. No-question draft
-  path; output is always "draft for review," never frozen on its own.
+- **Fresh** (default) — origination-record exists, no triage decision yet. Full
+  journey: Act 1 triage → gate → (if `Product Ready`) Act 2 rationalization.
+- **Triage-only** — run Act 1 and stop at the gate regardless of decision (e.g.
+  batch-triaging a queue). Produces Intake Records without paying the Act 2 cost.
+- **Revisit** — existing `intake/` or `readiness/` phase. Resume at Act 2 if triage
+  already decided `Product Ready`; re-score an existing RP and re-open questions only
+  on weak sections; or re-run Act 1 to re-open a triage decision.
+- **Batch / headless** — a set of origination-records, no live PO. Triage under honest
+  dispositions; only `Product Ready` ones run the no-question draft path; output is
+  always "draft for review," never frozen on its own.
 
 ## Using it elsewhere
 
@@ -144,17 +167,20 @@ plugins/hsb-teamwork/
 │   ├── SKILL.md                                    # orchestrator spec
 │   ├── README.md                                   # this file
 │   ├── references/
-│   │   ├── orchestration.md                        # phases, roster, single-writer rule
-│   │   ├── drafting.md                             # draft-then-confirm, Origin lifecycle
+│   │   ├── triage.md                               # Act 1 — criteria, decision model, gate, short-circuit
+│   │   ├── orchestration.md                        # phases (both acts), roster, single-writer rule
+│   │   ├── drafting.md                             # triage-first questioning + draft-then-confirm
 │   │   ├── inheritance.md                          # origination-to-RP section mapping
 │   │   └── escalation.md                           # TA triggers, freeze gate, provisional path
 │   └── assets/
+│       ├── target-template.intake-record.md        # default Intake Record template (Act 1, annotated)
+│       ├── target-template.intake-record.guide.md  # companion guide for the Intake Record
 │       ├── target-template.readiness-package.md    # default RP template (annotated)
 │       ├── target-template.readiness-package.guide.md  # companion filling guide
 │       └── golden-example.md                       # calibration exemplar
-└── agents/hsb-*.md                                 # 17 shared engine agents
+└── agents/hsb-*.md                                 # shared engine agents (incl. hsb-triage-assessor)
 ```
 
-The three stage-agnostic agents this skill drives (`hsb-stage-inheritor`,
-`hsb-section-drafter`, `hsb-escalation-flagger`) are defined in `agents/hsb-*.md`
-alongside the rest of the shared roster.
+The stage-agnostic agents this skill drives (`hsb-triage-assessor`,
+`hsb-stage-inheritor`, `hsb-section-drafter`, `hsb-escalation-flagger`) are defined in
+`agents/hsb-*.md` alongside the rest of the shared roster.

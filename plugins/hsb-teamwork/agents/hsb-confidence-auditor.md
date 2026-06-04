@@ -12,7 +12,15 @@ Inputs (injected): `SKILL_DIR`, `PHASE_DIR`. Read `SKILL_DIR/references/
 grounding.md` and the bundled exemplar, then `PHASE_DIR/contract.lock.md`,
 `$DOC`, and `qa-log.md`.
 
-For every `capture` and `derived` section:
+**Scope (`SECTIONS`).** On the first audit of a document, score every section.
+On later passes inside the confirm loop, the orchestrator may inject `SECTIONS` —
+the ids touched since the last audit (edited, confirmed, or newly drafted). When
+present, **re-score only those sections** and re-check the gate using their new
+verdicts plus the prior verdicts of the untouched sections (which the orchestrator
+carries forward); do not re-grade sections that did not change. This keeps each
+confirm-loop iteration cheap. When `SECTIONS` is absent, audit the whole document.
+
+For every section in scope (`capture` and `derived`):
 1. **Re-score** its confidence against the rubric — do not trust the stated number;
    judge the actual content. Flag over-confidence (a 90 on thin evidence) and
    unsupported claims as hard findings.

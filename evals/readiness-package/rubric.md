@@ -26,6 +26,19 @@ Run by `assertions.py` on each produced `readiness-document.md`:
 
 A run must pass **all** structural checks to be eligible for qualitative scoring.
 
+### Process checks (from `fanout.py`, on the run trace)
+
+These grade *how* the journey ran, not just the artifact:
+
+- `triage_present` — Act 1 ran the gate proposer (`hsb-triage-assessor`) before any
+  RP drafting. A Product Ready run must show triage first; a `Discovery`/`Backlog`/
+  `Reject` run short-circuits after it (no `hsb-section-drafter`, no
+  `readiness-document.md`).
+- `drafter_fanout_in_turn ≥ 2` — the Act 2 draft pass fanned out section drafters in
+  parallel (one per product section) rather than one serial drafter. This is the
+  process signal for the efficiency fix.
+- `fanout_pass` — ≥ 3 CORE agents ran AND at least one turn spawned ≥ 2 agents.
+
 ## Layer 2 — qualitative (LLM-graded, 1-5 each)
 
 Grade the produced document against `grounding.md` and the golden (when present).
@@ -39,6 +52,7 @@ For an LLM grader, prompt: *"Score 1-5 and justify, citing the text."*
 | **Testable Given/When/Then acceptance criteria** | Each user story's ACs are expressed in Given/When/Then with specific, numeric bounds (e.g. ≤ 60 s, HTTP 403), verifiable by a non-developer | Vague ACs ("it works", "no errors"), missing bounds, or no Given/When/Then format |
 | **NFRs that don't claim feasibility** | NFR section describes the *quality requirement* (what the PO needs); explicitly defers implementation and viability to the Technical Assessment | NFRs prescribe solutions, claim architectural feasibility, or omit the TA deferral |
 | **Escalation called correctly** | CTO escalation detected and `tech-assessment-ref` carries `Disposition=deferred` when a TA is owed; `not_requested` when no escalation is needed; consistent with complexity signals in scope/business-rules/NFRs | Escalation missed on a billing/provisioning feature, or incorrectly triggered on a trivial feature; TA ref left blank or unresolved |
+| **Triage gate correctness** (Act 1) | Intake Record commits one routing decision (`Product Ready`/`Discovery`/`Backlog`/`Reject`) with the full decision model (`verdict`/`rationale`/`basis`/`source`/`reversible`); only `Product Ready` proceeds to the RP, the others short-circuit with a recorded rationale; questions asked only on criteria the assessor couldn't settle | Decision missing or unjustified; a non-`Product Ready` demand still ran the full RP pipeline; or the demand was pre-interpreted as product with no triage |
 | **Fidelity to the golden** (eval-0 only) | Same structural decisions as the golden (same blocking sections resolved, same escalation call, same scope boundaries); confidence texture comparable | Diverges on a key decision (e.g. skips escalation, drops a blocking section) without justification |
 
 ## Scorecard
