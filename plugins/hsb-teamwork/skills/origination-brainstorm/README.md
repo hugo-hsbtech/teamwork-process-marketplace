@@ -114,8 +114,12 @@ flowchart TD
   keeps terms consistent. The loop ends when every blocking section is ≥ X or
   honestly disposed.
 - **Phase 3 — Production:** the Humanizer writes the clean canonical copy; then the
-  Translator and Visual Enricher run in parallel as independent variants.
-- **Phase 4 — Wrap:** the Packager writes a manifest indexing every artifact.
+  Translator, Visual Enricher, and Finalizer run in parallel as independent
+  variants. The Finalizer externalizes the clearly-final, printable deliverable
+  under `final/<project>-NNN.md`, stripping every authoring scaffold so it is clean
+  to print and naming it after the initiative with a counter suffix.
+- **Phase 4 — Wrap:** the Packager writes a manifest indexing every artifact,
+  including the printable final deliverable.
 
 ## The single-writer guarantee
 
@@ -140,7 +144,7 @@ Reconciler decides — it never silently overwrites. Every produced document end
 with a `<!-- END OF DOCUMENT -->` sentinel the Auditor checks, so truncation is
 caught. Full rules: [`references/writing-integrity.md`](references/writing-integrity.md).
 
-## The agents (16 + orchestrator)
+## The agents (17 + orchestrator)
 
 Each agent is named for the specialty it performs, not the phase it runs in, so the
 same roster is reused by `readiness-package` and the planned stages.
@@ -162,6 +166,7 @@ same roster is reused by `readiness-package` and the planned stages.
 | 3 | `hsb-humanizer` | writes `output/humanized.md` |
 | 3 | `hsb-translator` | writes `output/translated.<lang>.md` |
 | 3 | `hsb-visual-enricher` | writes `output/enriched.md` |
+| 3 | `hsb-finalizer` | writes `final/<project>-NNN.md` (clean, printable final) |
 | 4 | `hsb-packager` | writes `output/manifest.md` |
 
 Agent definitions live in `agents/hsb-*.md`.
@@ -183,7 +188,8 @@ A run resolves an **initiative** and writes into its `origination/` **phase** fo
     ├── target-document.md  # the document being filled
     ├── glossary.md         # brokered read-only copy of the shared glossary
     ├── readiness-report.md # live gap map
-    └── output/             # humanized · translated · enriched · manifest
+    ├── output/             # humanized · translated · enriched · manifest
+    └── final/              # the clean, printable final deliverable(s): <project>-NNN.md
 ```
 
 The three initiative-level files (`initiative.json`, `glossary.md`, `decisions.md`)
@@ -230,7 +236,7 @@ The plugin is self-contained (template, companion guide, and exemplar are bundle
 under [`assets/`](assets/)), so no repository content is needed at runtime.
 
 - **Codex**: see [`../../codex/README.md`](../../codex/README.md) — the same method
-  files, an `AGENTS.md` orchestrator, an `/hsb-teamwork-origination-brainstorm` prompt, and the 16
+  files, an `AGENTS.md` orchestrator, an `/hsb-teamwork-origination-brainstorm` prompt, and the 17
   roles as Codex subagents (`hsb-*.toml`, same names as the Claude agents), run
   sequentially under Codex's single-agent model.
 
@@ -258,11 +264,11 @@ plugins/hsb-teamwork/        # the Claude Code plugin (self-contained)
 │       ├── target-template.origination-record.md
 │       ├── target-template.origination-record.guide.md
 │       └── golden-example.md
-├── agents/hsb-*.md                    # 16 Claude subagents (phase-agnostic specialists)
+├── agents/hsb-*.md                    # 17 Claude subagents (phase-agnostic specialists)
 └── codex/                             # Codex adapter (reuses the files above)
     ├── AGENTS.md
     ├── prompts/hsb-teamwork-origination-brainstorm.md
-    └── agents/hsb-*.toml               # 16 Codex subagents (same names, flat namespace)
+    └── agents/hsb-*.toml               # 17 Codex subagents (same names, flat namespace)
 ```
 
 The repo root holds `.claude-plugin/marketplace.json`, and `.claude/skills` +

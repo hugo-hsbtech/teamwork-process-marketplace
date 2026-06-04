@@ -50,7 +50,7 @@ Before doing anything else, bind yourself to these invariants:
    dependency, emit both Agent calls in the **same assistant turn** so they run
    concurrently. Do not spawn one, await it, then spawn the next. The parallel
    pairs are: Phase 1 `hsb-source-indexer` ∥ `hsb-template-analyst`;
-   Phase 4 `hsb-translator` ∥ `hsb-visual-enricher`.
+   Phase 4 `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer`.
 4. **Track the run with TodoWrite.** Create the checklist below *before* Phase 1.
    Mark each item `in_progress` when you spawn its agent(s) and `completed` when
    their output is routed. This is the mechanism that stops a multi-agent run
@@ -70,7 +70,7 @@ these invariants matter most.
 - [ ] Phase 2 · spawn `hsb-escalation-flagger`; route → `hsb-doc-updater`
 - [ ] Phase 3 · loop: `hsb-confidence-auditor` → (fallback) `hsb-question-strategist` → `hsb-ledger-writer` → `hsb-doc-updater` until `freezeReady`
 - [ ] Phase 4 · spawn `hsb-humanizer` (await — it writes the copy the rest read)
-- [ ] Phase 4 · **same message:** `hsb-translator` ∥ `hsb-visual-enricher`
+- [ ] Phase 4 · **same message:** `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer`
 - [ ] Phase 4 · spawn `hsb-packager`; report to the PO
 
 ## First, read these (once per run)
@@ -146,7 +146,7 @@ keyed by stable id, never clobbers, and the document ends with a
 
 ## The agents you spawn (`subagent_type`)
 
-### Reused engine agents (16)
+### Reused engine agents (17)
 
 | Phase | `subagent_type` | Role |
 |---|---|---|
@@ -165,6 +165,7 @@ keyed by stable id, never clobbers, and the document ends with a
 | 4 | `hsb-humanizer` | write `output/humanized.md` |
 | 4 | `hsb-translator` | write `output/translated.pt-BR.md` |
 | 4 | `hsb-visual-enricher` | write `output/enriched.md` |
+| 4 | `hsb-finalizer` | externalize the clean, printable final `final/<project>-NNN.md` |
 | 4 | `hsb-packager` | write `output/manifest.md` |
 
 ### Stage-agnostic agents this skill drives (3)
@@ -184,9 +185,10 @@ Full roster with writer-ownership table and phase assignments:
 
 When spawning, inject the paths each agent needs: `SKILL_DIR` (this skill's base
 directory), `PHASE_DIR`, `TEMPLATE`, `DOC` (the target document's filename —
-`readiness-document.md` for this skill), and the companion guide. **Run independent
-agents in the same turn** so they execute in parallel (Indexer ∥ Analyst in Phase 1;
-Translator ∥ Visual Enricher in Phase 4).
+`readiness-document.md` for this skill), and the companion guide. The **Finalizer**
+also needs `PROJECT_SLUG` (from `initiative.json.project`) to name the externalized
+deliverable. **Run independent agents in the same turn** so they execute in parallel
+(Indexer ∥ Analyst in Phase 1; Translator ∥ Visual Enricher ∥ Finalizer in Phase 4).
 
 **You broker everything above `PHASE_DIR`.** The initiative-level files
 (`initiative.json`, `glossary.md`, `decisions.md`) are yours; agents stay
@@ -285,9 +287,12 @@ annotation markers stay in the engine's canonical form regardless of output lang
    resolved or honestly disposed, and `TechAssessmentRef.status ∈ {signed,
    not_requested}`.
 5. **Phase 4 — Production + wrap:** Humanizer writes `output/humanized.md` (must
-   finish first); then Translator ∥ Visual Enricher in parallel; then Packager
-   writes `output/manifest.md`. **Record the front in the initiative index:** set the
-   `readiness/` entry to `frozen` (or provisional), final `readiness`, `artifacts`,
+   finish first); then Translator ∥ Visual Enricher ∥ Finalizer in parallel — the
+   Finalizer externalizes the **printable final deliverable** at
+   `final/<project>-NNN.md` (scaffolding stripped, counter-suffixed); then Packager
+   writes `output/manifest.md` (indexing the `final/` deliverable too). **Record the
+   front in the initiative index:** set the `readiness/` entry to `frozen` (or
+   provisional), final `readiness`, `artifacts` (incl. the `final` deliverable),
    `produces: readiness-package`, and push the Technical Assessment debt into `owes`
    so the next front reads it. Report to the PO: artifacts produced, readiness
    score, TA flag if present, and every item parked as `discovery` or `deferred`.

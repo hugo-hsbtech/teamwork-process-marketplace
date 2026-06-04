@@ -133,8 +133,10 @@ flowchart TD
         HU["Humanizer"] --> HMD[("humanized.md")]
         TR["Translator"] --> TMD[("translated.lang.md")]
         VE["Visual Enricher"] --> EMD[("enriched.md")]
+        FIN["Finalizer"] --> FNL[("final/project-NNN.md")]
         HMD --> TR
         HMD --> VE
+        HMD --> FIN
     end
 
     subgraph P4["Phase 4 · Wrap"]
@@ -143,6 +145,7 @@ flowchart TD
 
     TMD --> PK
     EMD --> PK
+    FNL --> PK
     PK --> O
     O -->|" report + readiness "| H
 ```
@@ -158,10 +161,16 @@ flowchart TD
   Reporter shows the live gap map. The loop ends when every blocking section is
   ≥ X or honestly disposed.
 - **Phase 3 — Production:** the Humanizer writes the clean canonical copy; then
-  the Translator and Visual Enricher run in parallel as independent variants.
-- **Phase 4 — Wrap:** the Packager writes a manifest indexing every artifact.
+  the Translator, Visual Enricher, and Finalizer run in parallel as independent
+  variants. The **Finalizer** externalizes the clearly-final, printable
+  deliverable under `final/<project>-NNN.md` — stripping every authoring scaffold
+  (HTML comments and annotations, rubrics, the per-section confidence/disposition
+  lines) so the document is clean to print, named after the initiative with a
+  counter suffix.
+- **Phase 4 — Wrap:** the Packager writes a manifest indexing every artifact,
+  including the printable final deliverable.
 
-### The 16 agents (+ orchestrator)
+### The 17 agents (+ orchestrator)
 
 The agents are named for the specialty they perform, not the phase they run in, so
 the same roster serves origination-brainstorm, readiness-package, and the planned stages.
@@ -184,6 +193,7 @@ The names are identical on Claude and Codex (`hsb-<role>`).
 | 3     | `hsb-humanizer`           | writes `output/humanized.md`                 |
 | 3     | `hsb-translator`          | writes `output/translated.<lang>.md`         |
 | 3     | `hsb-visual-enricher`     | writes `output/enriched.md`                  |
+| 3     | `hsb-finalizer`           | writes `final/<project>-NNN.md` (printable)  |
 | 4     | `hsb-packager`            | writes `output/manifest.md`                  |
 
 ### Initiative artifacts
@@ -207,7 +217,8 @@ of the same initiative, so origination and readiness sit side by side:
 │   ├── target-document.md   # the document being filled
 │   ├── glossary.md          # brokered read-only copy of the shared glossary
 │   ├── readiness-report.md  # live gap map
-│   └── output/              # humanized · translated · enriched · manifest
+│   ├── output/              # humanized · translated · enriched · manifest
+│   └── final/               # the clean, printable final deliverable(s): <project>-NNN.md
 └── readiness/          # the readiness phase (added when readiness-package runs)
     └── …
 ```
@@ -258,7 +269,7 @@ origination/capture/triage requests.
 
 ### Codex
 
-Codex has no marketplace; you place a slash-command prompt, the 16 subagents, and
+Codex has no marketplace; you place a slash-command prompt, the 17 subagents, and
 an `AGENTS.md` orchestrator. The Codex artifacts are vendor-prefixed (`hsb-*`)
 because Codex uses a flat namespace; the names match the Claude agents one-to-one.
 
@@ -302,7 +313,7 @@ teamwork-process-marketplace/
 │       ├── .claude-plugin/plugin.json
 │       ├── README.md                 # install & use guide
 │       ├── skills/origination-brainstorm/ # SKILL.md, README, references/, assets/
-│       ├── agents/hsb-*.md           # 16 Claude subagents (phase-agnostic specialists)
+│       ├── agents/hsb-*.md           # 17 Claude subagents (phase-agnostic specialists)
 │       └── codex/                    # Codex adapter (AGENTS.md, prompt, *.toml agents)
 ├── evals/                            # repo-level eval suite (dev/CI only)
 │   └── origination-brainstorm/            # assertions.py, evals.json, rubric.md, run.sh, fixtures, golden

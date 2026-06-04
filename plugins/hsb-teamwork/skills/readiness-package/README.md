@@ -79,11 +79,13 @@ All artifacts land in the initiative's `readiness/` phase, `INITIATIVE_DIR/readi
 ├── readiness-document.md       # the RP being filled and frozen
 ├── glossary.md                 # brokered read-only copy of the initiative's shared glossary
 ├── readiness-report.md         # live gap map (optional)
-└── output/
-    ├── humanized.md            # canonical clean copy
-    ├── translated.pt-BR.md     # translated variant (or the confirmed output language)
-    ├── enriched.md             # visually enriched (scope table, persona map, etc.)
-    └── manifest.md             # index of all artifacts + freeze state + TA flag
+├── output/
+│   ├── humanized.md            # canonical clean copy
+│   ├── translated.pt-BR.md     # translated variant (or the confirmed output language)
+│   ├── enriched.md             # visually enriched (scope table, persona map, etc.)
+│   └── manifest.md             # index of all artifacts + freeze state + TA flag
+└── final/                      # the clean, printable final deliverable(s)
+    └── <project>-NNN.md        # externalized, scaffolding-stripped, counter-suffixed
 ```
 
 The shared `glossary.md` and `decisions.md`, and the `initiative.json` works +
@@ -150,7 +152,7 @@ plugins/hsb-teamwork/
 │       ├── target-template.readiness-package.md    # default RP template (annotated)
 │       ├── target-template.readiness-package.guide.md  # companion filling guide
 │       └── golden-example.md                       # calibration exemplar
-└── agents/hsb-*.md                                 # 16 shared engine agents
+└── agents/hsb-*.md                                 # 17 shared engine agents
 ```
 
 The three stage-agnostic agents this skill drives (`hsb-stage-inheritor`,
