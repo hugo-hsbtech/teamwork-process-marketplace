@@ -40,7 +40,14 @@ origination sections to RP sections, preserving the origination's already-graded
 
 Sections with no origination coverage are left for `hsb-section-drafter` to propose
 or for the PO to author. The inheritor never invents content for sections the
-origination did not cover.
+origination did not cover. Note that `user-journey` (Seção 6.5) has no origination
+counterpart — it is drafted fresh by `hsb-section-drafter`, and `user-stories`
+derive from its steps.
+
+**From the Intake Record (not the origination).** The RP `meta` also inherits the
+**demand nature** (Greenfield / Brownfield / Híbrido) and the **Knowledge Base**
+reference (`tech-landscape-[system].md`) the PO classified at triage. The inheritor
+carries these forward verbatim into the RP metadata — it does not re-classify.
 
 **The `exec-summary` (Resumo Executivo) section** is synthesized from the
 origination's problem + objectives + scope rather than mapped from a single origination
@@ -76,8 +83,8 @@ inherited open items silently disappear; each carries its original origination r
 
 ## What the inheritor does not do
 
-- It does not draft the new product sections (`business-rules`, `user-stories`,
-  `nfrs`, `edge-cases`). Those are `hsb-section-drafter`'s job.
+- It does not draft the new product sections (`business-rules`, `user-journey`,
+  `user-stories`, `nfrs`, `edge-cases`). Those are `hsb-section-drafter`'s job.
 - It does not re-infer content the origination already graded — it carries forward,
   not re-analyzes.
 - It does not write any shared files. It returns proposals to the orchestrator,

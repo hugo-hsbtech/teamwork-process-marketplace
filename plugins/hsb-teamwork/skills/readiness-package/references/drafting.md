@@ -37,9 +37,10 @@ every section:
   entry is tagged `Origin: inherited` with the origination-record's preserved
   confidence.
 - **`hsb-section-drafter`** proposes first-draft entries for the new product
-  sections (`business-rules`, `user-stories`, `nfrs`, `edge-cases`). Each
-  entry is tagged `Origin: ai_drafted` at partial confidence with an explicit
-  hint naming what the PO must confirm.
+  sections (`business-rules`, `user-journey`, `user-stories`, `nfrs`, `edge-cases`).
+  The `user-stories` derive from the `user-journey` steps. Each entry is tagged
+  `Origin: ai_drafted` at partial confidence with an explicit hint naming what the
+  PO must confirm.
 - If the drafter cannot produce a defensible draft for a section (sources too
   thin), it proposes `Disposition: discovery` instead of inventing content —
   honesty over coverage.

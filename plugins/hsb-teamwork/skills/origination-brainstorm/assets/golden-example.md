@@ -2,8 +2,8 @@
 
 A condensed, fictional, repo-independent example of a *well-filled* capture. Use
 it to calibrate quality: depth of problem statement, honest confidence numbers,
-used dispositions, registered tensions, flagged derived sections. Do not copy its
-content — copy its *bar*.
+used dispositions, registered tensions, a lightweight greenfield/brownfield nature
+signal, flagged derived sections. Do not copy its content — copy its *bar*.
 
 ---
 
@@ -34,6 +34,9 @@ One $90k renewal closes in ~75 days and the admin asked for this explicitly.
 **Tensions registered:**
 - Impact High + confidence 68 → accept as assumption; quantify with Finance before committing.
 - Urgency High + effort unknown → if firm effort exceeds the renewal window, it's a business call to communicate to the account.
+
+**Nature signal** — `Confidence: 70 · Source: inferred from problem + reach · Status: resolved · Disposition: inferred · Hint: sinal leve para semear a classificação do PO; o admin já tem painel de faturamento, logo é ajuste em algo existente`
+**Touches:** Existing software — o fluxo de faturamento já existe; isto adiciona self-service a um módulo em produção (provável brownfield).
 
 **Assumptions:**
 1. Seat changes can reuse the existing billing-sync job without a new integration. — *To validate: Tech Lead.*

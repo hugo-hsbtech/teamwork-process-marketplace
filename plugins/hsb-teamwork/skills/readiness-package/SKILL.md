@@ -59,7 +59,7 @@ Before doing anything else, bind yourself to these invariants:
    concurrently. Do not spawn one, await it, then spawn the next. The parallel
    groups are: Setup `hsb-source-indexer` ∥ `hsb-template-analyst` (each act);
    Draft pass **fan-out** — one `hsb-section-drafter` per product section
-   (`business-rules` ∥ `user-stories` ∥ `nfrs` ∥ `edge-cases`), all in one turn;
+   (`business-rules` ∥ `user-journey` ∥ `user-stories` ∥ `nfrs` ∥ `edge-cases`), all in one turn;
    Production `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer`. The
    draft-pass fan-out is the main lever against slow runs — the read-only drafters
    run concurrently and converge on the single `hsb-doc-updater`.
@@ -86,7 +86,7 @@ these invariants matter most.
 - [ ] Phase B1 · spawn `hsb-template-validator` on the RP template; gate on pass
 - [ ] Phase B1 · **same message:** `hsb-source-indexer` (origination-record + intake-record) ∥ `hsb-template-analyst` (RP contract)
 - [ ] Phase B1 · spawn `hsb-stage-inheritor`; route proposals → `hsb-ledger-writer` → `hsb-doc-updater`
-- [ ] Phase B2 · **same message (fan-out):** `hsb-section-drafter` × {`business-rules`, `user-stories`, `nfrs`, `edge-cases`}; route all → `hsb-doc-updater`
+- [ ] Phase B2 · **same message (fan-out):** `hsb-section-drafter` × {`business-rules`, `user-journey`, `user-stories`, `nfrs`, `edge-cases`}; route all → `hsb-doc-updater`
 - [ ] Phase B2 · spawn `hsb-escalation-flagger` (carry the triage early-flag as a hint); route → `hsb-doc-updater`
 - [ ] Phase B3 · loop: `hsb-confidence-auditor` (incremental — only touched `SECTIONS`) → (fallback) `hsb-question-strategist` → `hsb-ledger-writer` → `hsb-doc-updater` until `freezeReady`
 - [ ] Phase B4 · spawn `hsb-humanizer` (await — it writes the copy the rest read)
@@ -202,7 +202,7 @@ their first consumer.
 |---|---|---|
 | A | `hsb-triage-assessor` | read-only proposer — scores the five triage criteria and proposes the routing decision (`Product Ready`/`Discovery`/`Backlog`/`Reject`) with the full decision model; the gate proposer for Act 1 |
 | B1 | `hsb-stage-inheritor` | read-only proposer — carries the upstream origination-record (and the triage outcome) forward into the RP's inheritable sections, preserving confidence/source/disposition |
-| B2 | `hsb-section-drafter` | read-only proposer — proposes `ai_drafted` entries for the RP's new product sections (`business-rules`, `user-stories`, `nfrs`, `edge-cases`); **fanned out one per `SECTION`** for parallelism |
+| B2 | `hsb-section-drafter` | read-only proposer — proposes `ai_drafted` entries for the RP's new product sections (`business-rules`, `user-journey`, `user-stories`, `nfrs`, `edge-cases`); **fanned out one per `SECTION`** for parallelism |
 | B2 | `hsb-escalation-flagger` | read-only proposer — scans for architectural triggers and proposes the `tech-assessment-ref` disposition |
 
 Full roster with writer-ownership table and phase assignments:
@@ -249,9 +249,10 @@ the document:
   `objectives`, `personas`, `scope`, `metrics`, `release-criteria`, `risks`)
   from the origination-record at preserved confidence, tagged `Origin: inherited`.
 - **`hsb-section-drafter`** proposes first drafts for the new product sections
-  (`business-rules`, `user-stories` with Given/When/Then ACs, `nfrs`, `edge-cases`),
-  tagged `Origin: ai_drafted` at partial confidence with an explicit hint naming
-  what the PO must confirm.
+  (`business-rules`, `user-journey` (end-to-end happy path + alternative paths),
+  `user-stories` with Given/When/Then ACs derived from the journey steps, `nfrs`,
+  `edge-cases`), tagged `Origin: ai_drafted` at partial confidence with an explicit
+  hint naming what the PO must confirm.
 - If the drafter cannot produce a defensible draft, it proposes
   `Disposition: discovery` — honesty over invented coverage.
 
@@ -337,8 +338,8 @@ annotation markers stay in the engine's canonical form regardless of output lang
    spawn `hsb-stage-inheritor`; route its proposals through `hsb-ledger-writer` →
    `hsb-doc-updater`. Gate: `contract.lock.md` exists and inherited sections written.
 5. **Phase B2 — Draft pass (fan-out):** spawn `hsb-section-drafter` **once per product
-   section in the same turn** (`business-rules` ∥ `user-stories` ∥ `nfrs` ∥
-   `edge-cases`); route all drafts to the single `hsb-doc-updater`. Then spawn
+   section in the same turn** (`business-rules` ∥ `user-journey` ∥ `user-stories` ∥
+   `nfrs` ∥ `edge-cases`); route all drafts to the single `hsb-doc-updater`. Then spawn
    `hsb-escalation-flagger` (carry the triage early-flag as a hint); `hsb-doc-updater`
    records the `tech-assessment-ref`. Every section now has an entry.
 6. **Phase B3 — Confirm loop (until `freezeReady`):** Auditor re-scores **only the

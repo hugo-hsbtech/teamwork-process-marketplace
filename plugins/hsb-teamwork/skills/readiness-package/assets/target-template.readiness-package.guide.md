@@ -87,11 +87,23 @@ confirmation each entry becomes `Origin: po_authored`.
   statement; flag any rule that requires PO confirmation explicitly. A draft with
   only the happy path is not satisfied.
 
+- **`user-journey`** (blocks, min-conf 70) — the end-to-end user journey, the
+  missing piece between "what" and "the stories". Draft the main happy-path journey
+  (3+ steps: trigger/action → expected result → touchpoint → precondition), plus
+  alternative/exit paths (which tie to edge-cases), and an **optional** service
+  blueprint only when there is relevant backstage/ops/human-in-the-loop. PO
+  territory — product flow, not detailed UX. Compression: a small improvement is a
+  3–5 step happy path with no blueprint. **User stories (next) derive from these
+  steps** — each happy-path step generates or validates a story. Without at least
+  the main journey's happy path, the section is NOT satisfied. Draft from scope,
+  personas, and business-rules; `Origin: ai_drafted` at partial confidence.
+
 - **`user-stories`** (blocks, min-conf 80) — one story per value block, in the
   format "Como [persona], quero [ação], para [benefício]"; acceptance criteria in
   Given/When/Then, verifiable by a non-developer, with specific limits (not "should
-  work well"). This is the behaviour contract that QA validates. Draft one story per
-  identifiable value block inferred from scope and personas; mark each as
+  work well"). This is the behaviour contract that QA validates. **Derive the stories
+  from the journey steps (`user-journey`)** — one story per happy-path step (and the
+  alternative paths) — and from scope and personas; mark each as
   `Origin: ai_drafted` at partial confidence. The PO confirms the story set,
   adjusts scope, and verifies that each acceptance criterion is testable by someone
   without code access. At least one story required; no upper limit, but prefer
@@ -130,8 +142,11 @@ When no escalation is needed, set Status=not_requested, Disposition=decided.
 ### `meta` — identifiers, status, and linked origination
 
 Holds the stable IDs (RP-AAAA-NNN, linked INT-AAAA-NNN), the responsible PO,
-escalation flag, freeze status, and output language. Filled by the engine from
-context at creation; the PO confirms IDs and freeze date. Non-blocking.
+escalation flag, freeze status, and output language. Also carries the **demand
+nature** (Greenfield / Brownfield / Híbrido) and the **Knowledge Base** reference
+(`tech-landscape-[system].md` · Parcial · A criar · N/A) **inherited from the Intake
+Record** — the Stage Inheritor copies these forward; do not re-derive them. Filled by
+the engine from context at creation; the PO confirms IDs and freeze date. Non-blocking.
 
 ### `revisions` — version history
 

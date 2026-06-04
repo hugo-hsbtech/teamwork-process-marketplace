@@ -29,6 +29,8 @@ Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 | **Versão** | v1 |
 | **Origination vinculado** | INT-AAAA-NNN |
 | **Responsável** | [Nome] (PO) |
+| **Natureza da demanda** | Greenfield / Brownfield / Híbrido (herdado do Intake) |
+| **Base de conhecimento** | `tech-landscape-[sistema].md` · Parcial · A criar · N/A (greenfield) |
 | **Escalada ao CTO** | — |
 | **Status** | Rascunho |
 | **Data de congelamento (freeze)** | — |
@@ -163,11 +165,52 @@ Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 
 ---
 
+## Seção 6.5 — Jornada(s) do Usuário (ponta-a-ponta)
+<!-- origination: id=user-journey; blocks=true; min-confidence=70; kind=capture -->
+> Rubric: a peça entre "o que" e "as histórias". A definição precisa de uma noção do
+> que o usuário faz **de ponta a ponta** — o caminho completo, não fragmentos. As
+> User Stories (Seção 7) **derivam** dos passos desta jornada. Território do PO
+> (produto, não UX detalhado de tela). Padrão: *user journey map* (happy path +
+> caminhos alternativos) e, quando há bastidor relevante, *service blueprint*
+> (opcional). Compressão: melhoria pequena = jornada de 3–5 passos do happy path,
+> sem blueprint. Sem ao menos o happy path da jornada principal, NÃO está satisfeita.
+
+### Jornada principal (happy path) — [Nome da jornada]
+
+> Os passos que o usuário percorre para alcançar o resultado de valor. Cada passo gera (ou valida) uma User Story na Seção 7.
+
+| # | Gatilho / Ação do usuário | Resultado esperado | Touchpoint / Tela | Pré-condição |
+|---|---|---|---|---|
+| 1 | [O que o usuário faz] | [O que o sistema entrega/responde] | [Onde acontece] | [O que precisa ser verdade antes] |
+
+### Caminhos alternativos e de saída
+
+> Desvios, cancelamentos, estados vazios. Ligam-se aos Edge Cases (Seção 9).
+
+- **[Caminho alternativo]:** [quando ocorre → para onde leva]
+- **[Saída / cancelamento]:** [o que acontece com o estado]
+
+### Service Blueprint *(opcional — só quando há bastidor/ops/integração humana relevante)*
+
+> Expõe o que sustenta a jornada "por trás do palco". Pular quando a jornada é puramente self-service.
+
+| Camada | [Passo 1] | [Passo 2] | [Passo 3] |
+|---|---|---|---|
+| **Frontstage** (o que o usuário vê) | | | |
+| **Backstage** (ações internas/time) | | | |
+| **Sistemas de apoio** (serviços, dados, terceiros) | | | |
+
+`Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
+
+---
+
 ## Seção 7 — User Stories + Critérios de Aceite
 <!-- origination: id=user-stories; blocks=true; min-confidence=80; kind=capture -->
 > Rubric: uma história por bloco de valor, "Como [persona], quero [ação], para
 > [benefício]"; critérios de aceite em Given/When/Then, verificáveis por não-dev,
-> com limites específicos. origin=ai_drafted no draft pass; o PO confirma.
+> com limites específicos. **Derivam dos passos da Jornada (Seção 6.5)** — cada
+> passo do happy path gera ou valida uma história. origin=ai_drafted no draft pass;
+> o PO confirma.
 
 [fill]
 
