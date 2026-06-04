@@ -18,8 +18,10 @@ echo "" >> "$SCORE"
 echo "| case | mode | structural | readiness | blocking |" >> "$SCORE"
 echo "|---|---|---|---|---|" >> "$SCORE"
 
-grade() { # <doc> -> echoes "PASS|FAIL\treadiness\tblocking"
-  python3 assertions.py "$1" 2>/dev/null \
+grade() { # <doc> -> echoes "PASS|FAIL\treadiness\tblocking" (exit 0 even when the doc FAILS the grader)
+  # `|| true` swallows assertions.py's exit-1-on-fail so pipefail doesn't make a
+  # legitimately-graded-but-failing doc look like a grade() error to the caller.
+  { python3 assertions.py "$1" 2>/dev/null || true; } \
     | python3 -c "import json,sys;r=json.load(sys.stdin);print(('PASS' if r['pass'] else 'FAIL')+'\t'+str(r['readiness_pct'])+'%\t'+r['blocking_satisfied'])"
 }
 
@@ -67,7 +69,7 @@ for e in json.load(open("evals.json"))["evals"]:
       ( cd "$REPO_ROOT" && claude -p --permission-mode bypassPermissions "$p" ) </dev/null >"$OUT/agent.log" 2>&1 || true
     fi
     if [ -f "$OUT/target-document.md" ]; then
-      res=$(grade "$OUT/target-document.md") || res="FAIL\t-\t-"
+      res=$(grade "$OUT/target-document.md") || res=$'FAIL\t-\t-'
       IFS=$'\t' read -r st rd bl <<<"$res"
     else
       st="NO-OUTPUT"; rd="-"; bl="-"
