@@ -15,7 +15,7 @@
 
 Nota: nenhum arquivo de traducao foi gerado. O idioma de saida (pt-BR) e igual ao idioma dos documentos-fonte; `output/humanized.md` e `output/enriched.md` sao variantes editoriais (legibilidade e enriquecimento visual), nao traducoes.
 
-| Caminho (relativo a SESSION_DIR) | O que e | Idioma | Agente/autor |
+| Caminho (relativo a PHASE_DIR) | O que e | Idioma | Agente/autor |
 |---|---|---|---|
 | `contract.lock.md` | Contrato travado derivado do template; inventario de secoes, tipos, thresholds e gate | pt-BR | Template Analyst |
 | `sources-index.md` | Indice de todas as fontes trazidas para a sessao; carry-forward das dispositions do intake | pt-BR | Source Indexer |

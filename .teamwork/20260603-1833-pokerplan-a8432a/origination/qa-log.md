@@ -1,6 +1,6 @@
 # Q&A Ledger — PokerPlan
 
-> Session: /home/hugo/Dropbox/DevProjects/HSB/hsb-teamwork-process/intake/pokerplan · Template: v1 · Rev: 6 · Updated: 2026-06-03
+> Phase: .teamwork/20260603-1833-pokerplan-a8432a/origination · Template: v1 · Rev: 6 · Updated: 2026-06-03
 > Readiness: 63% · Gate: Cleared · Open blocking: — (todas resolvidas) · Qualidade pendente (não-bloqueante): validação de mercado é item de discovery (TAM/aderência problema-mercado não validados), não gap de captura
 
 ---

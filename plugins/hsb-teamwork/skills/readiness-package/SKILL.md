@@ -97,9 +97,11 @@ these invariants matter most.
   threshold X, restart-on-change rule.
 - [`../origination-brainstorm/references/ledger-schema.md`](../origination-brainstorm/references/ledger-schema.md) —
   `qa-log.md` schema: `Q###` blocks, header summary, rationale/spawned-by fields.
-- [`../origination-brainstorm/references/sessions.md`](../origination-brainstorm/references/sessions.md) —
-  session root resolution (`$ORIGINATION_HOME` → git-root → cwd), resolve-or-resume,
-  slug derivation. The RP session folder is `SESSION_ROOT/<demand-slug>-readiness/`.
+- [`../origination-brainstorm/references/initiatives.md`](../origination-brainstorm/references/initiatives.md) —
+  initiatives root resolution (`$TEAMWORK_HOME` → git-root + `/.teamwork` → cwd),
+  resolve-or-select, and the `.teamwork/<initiative>/` layout. The RP runs as the
+  `readiness/` **phase** of the selected initiative (`INITIATIVE_DIR/readiness/`),
+  inheriting from that same initiative's `origination/` phase.
 - [`../origination-brainstorm/references/writing-integrity.md`](../origination-brainstorm/references/writing-integrity.md) —
   single-writer rule, read-modify-write, queue/drain, `rev` marker, no-truncation
   sentinel. Every writer in this pipeline obeys these rules.
@@ -172,7 +174,7 @@ Full roster with writer-ownership table and phase assignments:
 [`references/orchestration.md`](references/orchestration.md).
 
 When spawning, inject the paths each agent needs: `SKILL_DIR` (this skill's base
-directory), `SESSION_DIR`, `TEMPLATE`, and the companion guide. **Run independent
+directory), `PHASE_DIR`, `TEMPLATE`, and the companion guide. **Run independent
 agents in the same turn** so they execute in parallel (Indexer ∥ Analyst in Phase 1;
 Translator ∥ Visual Enricher in Phase 4).
 
@@ -203,14 +205,15 @@ rules: [`references/drafting.md`](references/drafting.md).
 
 ## Modes
 
-**Fresh** (default) — a `Product Ready` origination-record exists; no RP session yet.
-Run the full pipeline: Phase 0 (identify origination-record) → 1 (Setup) → 2 (Draft
-pass) → 3 (Confirm loop) → 4 (Production + wrap).
+**Fresh** (default) — the selected initiative has a `Product Ready` `origination/`
+phase; no `readiness/` phase yet. Run the full pipeline: Phase 0 (select the
+initiative + confirm its origination-record) → 1 (Setup) → 2 (Draft pass) → 3
+(Confirm loop) → 4 (Production + wrap).
 
-**Revisit** — an existing `readiness-document.md` is present in the session folder.
-Resume the session; spawn the Auditor to re-score the existing document; report the
-gap map; re-open the confirm loop only on the weak or unconfirmed sections. Bump
-the document version when re-writing.
+**Revisit** — an existing `readiness-document.md` is present in the initiative's
+`readiness/` phase folder. Resume the phase; spawn the Auditor to re-score the
+existing document; report the gap map; re-open the confirm loop only on the weak
+or unconfirmed sections. Bump the document version when re-writing.
 
 **Batch / headless** — a set of `Product Ready` origination-records and no live PO. For
 each, run Phase 1 + the no-question draft path: Inheritor proposes, Drafter
@@ -223,7 +226,7 @@ way before freezing:
 
 Never leave a bare `ai_drafted` entry sitting below its threshold — that fails the
 gate for the wrong reason. Output is always "draft for review," never a real
-`freezeReady` on its own. Produce one `-readiness/` session folder per demand;
+`freezeReady` on its own. Produce one `readiness/` phase per initiative;
 these runs are embarrassingly parallel.
 
 ## Language
@@ -237,10 +240,11 @@ annotation markers stay in the engine's canonical form regardless of output lang
 
 ## The flow (summary — full detail in `references/orchestration.md`)
 
-1. **Phase 0 (you + PO):** identify the demand and confirm which `Product Ready`
-   origination-record to inherit from; resolve-or-resume the
-   `SESSION_ROOT/<demand-slug>-readiness/` session folder; confirm output language.
-   Collect only what is needed at this stage — do not ask a wall of questions.
+1. **Phase 0 (you + PO):** resolve-or-select the initiative (confirm the latest
+   open one or pick from the open list); confirm its `Product Ready` `origination/`
+   phase is the origination-record to inherit from; resolve the `readiness/` phase
+   folder (`INITIATIVE_DIR/readiness/`); confirm output language. Collect only what
+   is needed at this stage — do not ask a wall of questions.
 2. **Phase 1 — Setup (parallel, gate):** spawn Validator; then Indexer ∥ Analyst in
    parallel (Indexer ingests the origination-record folder; Analyst derives
    `contract.lock.md`). Once both complete, spawn `readiness-inheritor` (read-only);
@@ -301,10 +305,11 @@ Install it from the `hsb-tech` marketplace:
 Invoke it as `/hsb-teamwork:readiness-package`.
 
 The plugin is self-contained (template, guide, and exemplar bundled under
-`assets/`), so no repository content is required at runtime. The linked
-origination-record path is provided by the PO at run start. The session root resolves
-via `$ORIGINATION_HOME` → git root → cwd, consistent with the origination engine
-([`../origination-brainstorm/references/sessions.md`](../origination-brainstorm/references/sessions.md)).
+`assets/`), so no repository content is required at runtime. The origination-record
+is the selected initiative's own `origination/` phase (the PO may also point at an
+external one). The initiatives root resolves via `$TEAMWORK_HOME` → git root +
+`/.teamwork` → cwd, consistent with the origination engine
+([`../origination-brainstorm/references/initiatives.md`](../origination-brainstorm/references/initiatives.md)).
 The template is swappable — pass a custom RP template path as `TEMPLATE`.
 
 ## Bundled resources

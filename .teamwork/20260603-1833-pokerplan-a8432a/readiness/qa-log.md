@@ -1,6 +1,6 @@
-# Q&A Ledger — pokerplan-readiness
+# Q&A Ledger — pokerplan (readiness phase)
 
-> Session: /home/hugo/Dropbox/DevProjects/HSB/teamwork-process-marketplace/intake/pokerplan-readiness · Template: readiness-package-v1 · Rev: 3 · Updated: 2026-06-03
+> Phase: .teamwork/20260603-1833-pokerplan-a8432a/readiness · Template: readiness-package-v1 · Rev: 3 · Updated: 2026-06-03
 > Readiness: 78% (PO confirm-loop Phase 3 completed) · Gate: PROVISIONAL FREEZE · Open blocking: effort-estimate (deferred/TA), nfrs (partial — browser matrix TBD), tech-assessment-ref (requested/deferred); commercial items (objectives/metrics target values, risks f/g/h, exec-summary Layer B) honestly disposed as discovery
 
 <!-- rev: 3 · updated: 2026-06-03 -->

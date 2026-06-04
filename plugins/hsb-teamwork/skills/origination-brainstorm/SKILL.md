@@ -41,8 +41,9 @@ here. Pass paths into agents; never let them assume a location.
 - [`references/grounding.md`](references/grounding.md) — the quality bar.
 - [`references/writing-integrity.md`](references/writing-integrity.md) — the
   no-truncation + serialize/queue/merge/conflict rules every writer obeys.
-- [`references/sessions.md`](references/sessions.md) — where session state lives,
-  and the resolve-or-resume rule so re-runs reuse work instead of duplicating it.
+- [`references/initiatives.md`](references/initiatives.md) — what an initiative is,
+  where its state lives, the `.teamwork/` layout with per-front phase folders, and
+  the resolve-or-select rule so re-runs reuse work instead of duplicating it.
 
 ## The principle that makes parallelism safe
 
@@ -72,7 +73,7 @@ ownership table is in `orchestration.md`.
 | 4 | `origination-packager` | write `output/manifest.md` |
 
 When spawning, inject the paths each agent needs: `SKILL_DIR` (this skill's base
-directory, which you are told at launch), `SESSION_DIR`, `TEMPLATE`, and the
+directory, which you are told at launch), `PHASE_DIR`, `TEMPLATE`, and the
 template's companion guide if one exists. **Run independent agents in the same
 turn** so they execute in parallel (Indexer ∥ Analyst; Strategist ∥ Extraction;
 Translator ∥ Enricher).
@@ -92,8 +93,8 @@ live human. For each, run Phase 1 + the *no-question* path: File Extraction
 proposes, Ledger Writer commits, Doc Updater fills, Auditor scores. Truly-unknown
 blocking fields land as honest `assumption`/`discovery` dispositions rather than
 real answers, so batch output is always "draft for review," never `gateReady` on
-its own. Produce one session folder per signal; these runs are embarrassingly
-parallel.
+its own. Produce one initiative per signal (its own `origination/` phase); these
+runs are embarrassingly parallel.
 
 ## Language
 
@@ -105,10 +106,12 @@ any additional requested languages as separate `output/` files. Keep section
 ## The flow (summary — full detail in `orchestration.md`)
 
 1. **Phase 0 (you + human):** collect statement, file refs, output language(s),
-   optional custom `TEMPLATE`; pick the mode; then **resolve-or-resume** the
-   session — anchor `SESSION_ROOT` at the project (git) root, not the cwd, and if
-   `SESSION_ROOT/<demand-slug>/` already exists, **resume it** instead of creating
-   a duplicate. See [`references/sessions.md`](references/sessions.md).
+   optional custom `TEMPLATE`; pick the mode; then **resolve-or-select** the
+   initiative — anchor `TEAMWORK_ROOT` at the project (git) root + `/.teamwork`,
+   not the cwd; confirm the latest open initiative or pick from the open list (or
+   start a new one); then resolve its origination `PHASE_DIR = INITIATIVE_DIR/origination/`,
+   resuming it if it already exists instead of creating a duplicate. See
+   [`references/initiatives.md`](references/initiatives.md).
 2. **Phase 1 (parallel, gate):** spawn Indexer ∥ Analyst. Contract must exist before
    looping; a changed template hash restarts analysis.
 3. **Phase 2 (loop):** Strategist ∥ Extraction propose → Ledger Writer commits →
@@ -148,7 +151,7 @@ lives alongside at the plugin's `codex/` (see its README). See the plugin
 | `references/questioning-method.md` | how to ask, dispositions, tensions |
 | `references/grounding.md` | quality bar + pointer to the exemplar |
 | `references/writing-integrity.md` | no-truncation + queue/merge/conflict rules for writers |
-| `references/sessions.md` | session location, resolve-or-resume, cross-run idempotency |
+| `references/initiatives.md` | initiative model, `.teamwork/` + phase-folder layout, resolve-or-select, cross-run idempotency |
 | `assets/target-template.origination-record.md` | default target template (annotated) |
 | `assets/target-template.origination-record.guide.md` | companion filling guide (incl. triage drafting) |
 | `assets/golden-example.md` | self-contained calibration exemplar |

@@ -83,7 +83,7 @@ producing draft-for-review documents). Same as the Claude version.
 For readiness-package runs, follow the skill at `../skills/readiness-package/SKILL.md`
 and its references under `../skills/readiness-package/references/`. Start with
 `../skills/readiness-package/references/orchestration.md`. The origination-brainstorm
-references (especially `sessions.md` and `writing-integrity.md`) also apply.
+references (especially `initiatives.md` and `writing-integrity.md`) also apply.
 
 ### Your role: readiness-package orchestrator
 
@@ -94,7 +94,7 @@ linked origination-record. You are the only layer that talks to the human.
 Read these once, then follow them for the whole run:
 - `../skills/readiness-package/references/orchestration.md` — phases, agent roles, phase gates.
 - `../skills/readiness-package/references/escalation.md` — CTO Technical Assessment trigger rules.
-- `../skills/origination-brainstorm/references/sessions.md` — session resolve-or-resume.
+- `../skills/origination-brainstorm/references/initiatives.md` — initiative resolve-or-select + phase folders.
 - `../skills/origination-brainstorm/references/writing-integrity.md` — no-truncation + merge rules (critical).
 
 ### Codex execution model for readiness-package
@@ -102,9 +102,10 @@ Read these once, then follow them for the whole run:
 Run the phases **sequentially** — either as Codex subagents or by performing each
 role yourself as a step, in this order:
 
-1. **Setup:** identify the demand and the linked origination-record; pick mode (fresh /
-   revisit / batch) and output language (default pt-BR); resolve-or-resume the
-   `<demand-slug>-readiness/` session; validate the RP template and derive
+1. **Setup:** resolve-or-select the initiative; its `origination/` phase is the
+   linked origination-record; pick mode (fresh / revisit / batch) and output
+   language (default pt-BR); resolve-or-resume the `readiness/` phase
+   (`INITIATIVE_DIR/readiness/`); validate the RP template and derive
    `contract.lock.md`.
 2. **Draft pass:** Inheritor role (`hsb-readiness-inheritor`) carries graded
    sections from the origination-record forward (Origin=inherited). Drafter role

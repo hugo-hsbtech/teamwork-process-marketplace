@@ -10,7 +10,7 @@ audit it directly, and structured enough that any agent can parse it.
 ```markdown
 # Q&A Ledger — <demand name>
 
-> Session: <SESSION_DIR> · Template: <template_version> · Rev: N · Updated: AAAA-MM-DD
+> Phase: <PHASE_DIR> · Template: <template_version> · Rev: N · Updated: AAAA-MM-DD
 > Readiness: <NN>% · Gate: <Open|Cleared> · Open blocking: <list or —>
 
 ## Q001 · targets: problem · status: answered

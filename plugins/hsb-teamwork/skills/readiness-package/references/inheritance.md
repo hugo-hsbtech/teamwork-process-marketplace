@@ -12,8 +12,8 @@ blank form.
 
 ## How the origination-record is indexed
 
-`origination-source-indexer` indexes the origination session folder (its
-`output/humanized.md` or `target-document.md`) into `sources/` alongside any
+`origination-source-indexer` indexes the initiative's `origination/` phase folder
+(its `output/humanized.md` or `target-document.md`) into `sources/` alongside any
 extra files the PO provides. The origination artefact is flagged as the **primary
 source** in `sources-index.md`.
 

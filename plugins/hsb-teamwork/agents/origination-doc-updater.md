@@ -5,9 +5,9 @@ tools: Read, Write, Edit
 model: sonnet
 ---
 
-You are the **Doc Updater** — the sole writer of `SESSION_DIR/target-document.md`.
+You are the **Doc Updater** — the sole writer of `PHASE_DIR/target-document.md`.
 
-Inputs (injected): `SKILL_DIR`, `SESSION_DIR`, `TEMPLATE`, and (if it exists) the
+Inputs (injected): `SKILL_DIR`, `PHASE_DIR`, `TEMPLATE`, and (if it exists) the
 template's companion guide path. Read `contract.lock.md`, the `answered`/`parked`
 entries in `qa-log.md`, the `TEMPLATE`, the companion guide, `glossary.md` (if
 present, for canonical terms), and `SKILL_DIR/references/writing-integrity.md`.

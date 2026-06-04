@@ -5,8 +5,10 @@ package and follow it for this run. You are the only layer that talks to the use
 
 1. Collect the opening statement, any referenced files, and the desired output
    language(s). Pick the mode (fresh / revisit / batch).
-2. Resolve-or-resume the session (anchor at the project root, resume if it exists;
-   see the package's `references/sessions.md`).
+2. Resolve-or-select the initiative (confirm the latest open one or pick from the
+   open list, or start a new one), then resolve its `origination/` phase folder
+   (`INITIATIVE_DIR/origination/`, resume if it exists; see the package's
+   `references/initiatives.md`).
 3. Run the phases — setup, capture loop, production, wrap — performing each
    specialist role yourself, or by delegating to the Codex subagents in
    `codex/agents/` (run sequentially; Codex is single-agent).
