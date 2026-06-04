@@ -26,6 +26,53 @@ keep the PO in the loop**. Heavy work is delegated so your context stays lean.
 This skill is **portable and repo-independent**. Everything it needs is bundled
 here. Pass paths into agents; never let them assume a location.
 
+## STOP — this is an execution contract, not a description
+
+The rest of this file reads like a specification. It is not. It is a set of
+actions *you must take by spawning agents*. The dominant failure mode of this
+skill is that you read it, understand the pipeline, and then **produce the
+document yourself inline** — then narrate a pipeline that never ran. A correct
+run has Agent tool calls in the transcript. A narrated pipeline with zero Agent
+calls is a **failed run, even if the document looks right.**
+
+Before doing anything else, bind yourself to these invariants:
+
+1. **You are read-only on every shared artifact.** Do not use Write or Edit on
+   `readiness-document.md`, `qa-log.md`, `contract.lock.md`, `sources/`, or
+   anything under `output/`. The *only* way each of those files gets written is
+   by spawning its single writer agent (the document is written **exclusively**
+   by `intake-doc-updater`; the ledger **exclusively** by `intake-ledger-writer`).
+   If you are about to type document content yourself, stop — that is the bug.
+2. **Delegation is mandatory, not optional.** "Run the pipeline" means *spawn the
+   subagents via the Agent tool*. It never means "read the template and fill it
+   in yourself."
+3. **Independent agents go out in ONE message.** When two agents have no
+   dependency, emit both Agent calls in the **same assistant turn** so they run
+   concurrently. Do not spawn one, await it, then spawn the next. The parallel
+   pairs are: Phase 1 `intake-source-indexer` ∥ `intake-template-analyst`;
+   Phase 4 `intake-translator` ∥ `intake-visual-enricher`.
+4. **Track the run with TodoWrite.** Create the checklist below *before* Phase 1.
+   Mark each item `in_progress` when you spawn its agent(s) and `completed` when
+   their output is routed. This is the mechanism that stops a multi-agent run
+   from collapsing into a single inline shortcut.
+
+**Headless / batch changes none of this.** "No live PO" means *no questions* and
+*honest dispositions* — it does **not** mean skip the agents. The pull to
+one-shot the artifact is strongest with no PO watching; that is exactly when
+these invariants matter most.
+
+### The phase checklist (TodoWrite this before Phase 1)
+
+- [ ] Phase 1 · spawn `intake-template-validator`; gate on pass
+- [ ] Phase 1 · **same message:** `intake-source-indexer` ∥ `intake-template-analyst`
+- [ ] Phase 1 · spawn `readiness-inheritor`; route proposals → `intake-ledger-writer` → `intake-doc-updater`
+- [ ] Phase 2 · spawn `readiness-drafter`; route → `intake-doc-updater`
+- [ ] Phase 2 · spawn `readiness-escalation-flagger`; route → `intake-doc-updater`
+- [ ] Phase 3 · loop: `intake-confidence-auditor` → (fallback) `intake-question-strategist` → `intake-ledger-writer` → `intake-doc-updater` until `freezeReady`
+- [ ] Phase 4 · spawn `intake-humanizer` (await — it writes the copy the rest read)
+- [ ] Phase 4 · **same message:** `intake-translator` ∥ `intake-visual-enricher`
+- [ ] Phase 4 · spawn `intake-packager`; report to the PO
+
 ## First, read these (once per run)
 
 ### RP-specific references

@@ -1,3 +1,4 @@
+.idea/
 
 # Local dev: agent symlinks exposed for headless eval runs (not part of the repo;
 # the plugin resolves agents itself). The skill symlink under .claude/skills/ is tracked.
