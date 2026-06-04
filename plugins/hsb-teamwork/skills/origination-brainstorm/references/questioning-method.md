@@ -100,7 +100,7 @@ empty:
 | says it's someone else's call | `deferred` | "I'll mark **<owner>** as the owner of that answer." |
 
 The gate is **"every blocking section has an honest disposition"** — not "the
-person knows everything." Never let the session stall on a blank.
+person knows everything." Never let the run stall on a blank.
 
 ## Tensions — the value mirror
 
@@ -132,6 +132,6 @@ bundled exemplar in `grounding.md`.
 ## What "done" feels like
 
 You are done asking when every blocking section is resolved or honestly disposed
-and the gate clears. The session shouldn't end on "you're still missing 4 fields"
+and the gate clears. The run shouldn't end on "you're still missing 4 fields"
 — it should end on "here is what this demand *is*, how solid each part is, and
 what we deliberately parked (with owners / time-box)."

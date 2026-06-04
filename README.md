@@ -186,25 +186,33 @@ The names are identical on Claude and Codex (`hsb-<role>`).
 | 3     | `hsb-visual-enricher`     | writes `output/enriched.md`                  |
 | 4     | `hsb-packager`            | writes `output/manifest.md`                  |
 
-### Session artifacts
+### Initiative artifacts
 
-A run creates one folder per demand at `<SESSION_ROOT>/<demand-slug>/`, where
-`SESSION_ROOT` is `$ORIGINATION_HOME` or your project's git root + `/origination`:
+Work is organized into **initiatives**. A run resolves an initiative at
+`<TEAMWORK_ROOT>/<YYYYMMDD>-<HHMM>-<project>-<hash6>/` (e.g.
+`20260603-1833-pokerplan-a8432a`), where `TEAMWORK_ROOT` is `$TEAMWORK_HOME` or
+your project's git root + `/.teamwork`. Each front runs as a **phase subfolder**
+of the same initiative, so origination and readiness sit side by side:
 
 ```
-<SESSION_ROOT>/<demand-slug>/
-├── contract.lock.md     # derived contract + template hash
-├── sources-index.md     # index of ingested inputs
-├── sources/             # normalized input files
-├── qa-log.md            # the Q&A ledger (questions + rationale + answers)
-├── target-document.md   # the document being filled
-├── glossary.md          # canonical terms
-├── readiness-report.md  # live gap map
-└── output/              # humanized · translated · enriched · manifest
+<TEAMWORK_ROOT>/<YYYYMMDD>-<HHMM>-<project>-<hash6>/
+├── initiative.json     # manifest: project, created, status (open|closed), phases
+├── origination/        # the origination phase (PHASE_DIR)
+│   ├── contract.lock.md     # derived contract + template hash
+│   ├── sources-index.md     # index of ingested inputs
+│   ├── sources/             # normalized input files
+│   ├── qa-log.md            # the Q&A ledger (questions + rationale + answers)
+│   ├── target-document.md   # the document being filled
+│   ├── glossary.md          # canonical terms
+│   ├── readiness-report.md  # live gap map
+│   └── output/              # humanized · translated · enriched · manifest
+└── readiness/          # the readiness phase (added when readiness-package runs)
+    └── …
 ```
 
-**Re-running is safe.** The same demand resolves to the same session and
-**resumes** — answers are merged, never duplicated, and nothing is re-asked.
+**Re-running is safe.** A run resolves the open initiative (confirm the latest or
+pick from the open list — closed ones are omitted) and **resumes** its phase —
+answers are merged, never duplicated, and nothing is re-asked.
 
 ### Modes
 
@@ -212,8 +220,8 @@ A run creates one folder per demand at `<SESSION_ROOT>/<demand-slug>/`, where
 - **Revisit** — point at an existing filled document; the Auditor re-scores it and
   questions re-open only on the weak sections.
 - **Batch / headless** — a pile of raw signals and no live human; the no-question
-  path (extract → fill → score) produces "draft for review" documents, one session
-  per signal, in parallel.
+  path (extract → fill → score) produces "draft for review" documents, one
+  initiative per signal, in parallel.
 
 > Deep dives: the skill's [README](plugins/hsb-teamwork/skills/origination-brainstorm/README.md)
 > (architecture + diagrams), its [`SKILL.md`](plugins/hsb-teamwork/skills/origination-brainstorm/SKILL.md)

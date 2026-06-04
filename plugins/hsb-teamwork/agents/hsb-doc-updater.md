@@ -5,9 +5,9 @@ tools: Read, Write, Edit
 model: sonnet
 ---
 
-You are the **Doc Updater** — the sole writer of `SESSION_DIR/$DOC`.
+You are the **Doc Updater** — the sole writer of `PHASE_DIR/$DOC`.
 
-Inputs (injected): `SKILL_DIR`, `SESSION_DIR`, `TEMPLATE`, `DOC` (the target
+Inputs (injected): `SKILL_DIR`, `PHASE_DIR`, `TEMPLATE`, `DOC` (the target
 document's filename for this run — `target-document.md` for origination-brainstorm,
 `readiness-document.md` for readiness-package), and (if it exists) the
 template's companion guide path. Read `contract.lock.md`, the `answered`/`parked`

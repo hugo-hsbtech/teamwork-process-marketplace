@@ -15,7 +15,7 @@ Do not copy their rules here; cite and apply them:
 |---|---|
 | [`../../origination-brainstorm/references/contract-and-template.md`](../../origination-brainstorm/references/contract-and-template.md) | Template annotation format (`origination:` markers), `contract.lock.md` derivation, template-hash restart policy |
 | [`../../origination-brainstorm/references/ledger-schema.md`](../../origination-brainstorm/references/ledger-schema.md) | `qa-log.md` schema — `Q###` blocks, header summary, rationale/spawned-by fields |
-| [`../../origination-brainstorm/references/sessions.md`](../../origination-brainstorm/references/sessions.md) | Session root resolution (`$ORIGINATION_HOME` → git-root → cwd), resolve-or-resume, slug derivation |
+| [`../../origination-brainstorm/references/initiatives.md`](../../origination-brainstorm/references/initiatives.md) | Initiatives root resolution (`$TEAMWORK_HOME` → git-root + `/.teamwork` → cwd), resolve-or-select, `.teamwork/<initiative>/` + phase-folder layout |
 | [`../../origination-brainstorm/references/writing-integrity.md`](../../origination-brainstorm/references/writing-integrity.md) | Single-writer rule, read-modify-write, queue/drain, `rev` marker, no-truncation sentinel |
 | [`../../origination-brainstorm/references/grounding.md`](../../origination-brainstorm/references/grounding.md) | Quality calibration against the golden exemplar |
 | [`../../origination-brainstorm/references/questioning-method.md`](../../origination-brainstorm/references/questioning-method.md) | Question rendering (`open` / `choice`), disposition routes, the `AskUserQuestion` protocol |
@@ -25,9 +25,10 @@ Do not copy their rules here; cite and apply them:
   others return read-only proposals to the orchestrator.
 - **Read-modify-write** — every writer re-reads the file before editing and
   merges changes keyed by stable id; it never clobbers.
-- **Session resolve-or-resume** — the `-readiness` session folder is resolved
-  per [`../../origination-brainstorm/references/sessions.md`](../../origination-brainstorm/references/sessions.md);
-  re-running resumes the same folder, nothing duplicates.
+- **Initiative resolve-or-select** — the `readiness/` phase folder is resolved
+  under the selected initiative
+  per [`../../origination-brainstorm/references/initiatives.md`](../../origination-brainstorm/references/initiatives.md);
+  re-running resumes the same phase folder, nothing duplicates.
 - **Ledger schema** — `qa-log.md` uses the same `Q###` block structure; the
   ledger-writer is the sole editor.
 - **Annotation marker** — the RP template uses the same `<!-- origination: id=...; blocks=...; ... -->`
@@ -38,8 +39,8 @@ Do not copy their rules here; cite and apply them:
 
 ### Reused engine agents
 
-These are phase-agnostic specialists (`hsb-*`), shared with origination-brainstorm and
-any future stage. They specialize through the RP template and guide, not through
+These are phase-agnostic specialists (`hsb-*`), shared with origination-brainstorm
+and any future stage. They specialize through the RP template and guide, not through
 code changes.
 
 | Agent | Writer? | When spawned |
@@ -77,19 +78,26 @@ readiness-package skill is their first consumer.
 agents above are read-only proposers; they return structured proposals
 to the orchestrator, who routes them through the single writers.
 
-## Phase 0 — Identify the demand (you + the PO)
+## Phase 0 — Select the initiative (you + the PO)
 
-1. **Resolve the linked origination-record path.** Confirm which `Product Ready`
-   demand's origination session folder to inherit from (`SESSION_ROOT/<demand-slug>/`).
-2. **Resolve-or-resume the `-readiness` session** per
-   [`../../origination-brainstorm/references/sessions.md`](../../origination-brainstorm/references/sessions.md):
-   session folder is `SESSION_ROOT/<demand-slug>-readiness/`. If it already
-   exists, resume it; if ambiguous, list candidates and ask.
-3. **Confirm output language.** Default is `pt-BR` (mirrors the origination default).
-   Record in session context; the translator will target this language in Phase 4.
+1. **Resolve-or-select the initiative** per
+   [`../../origination-brainstorm/references/initiatives.md`](../../origination-brainstorm/references/initiatives.md):
+   confirm the latest open initiative or pick one from the open list (closed ones
+   omitted). Readiness runs as a **phase of that same initiative**, not a separate
+   folder.
+2. **Confirm the linked origination-record.** The origination-record is the selected
+   initiative's `origination/` phase (`INITIATIVE_DIR/origination/`, its
+   `output/humanized.md` or `target-document.md`). It must be `Product Ready`; if
+   the initiative has no origination phase, say so and stop — there is nothing to
+   inherit. (A PO may override with an external origination-record path.)
+3. **Resolve-or-resume the `readiness/` phase** at `INITIATIVE_DIR/readiness/`. If
+   it already exists, resume it; otherwise create it and register it in
+   `initiative.json.phases`.
+4. **Confirm output language.** Default is `pt-BR` (mirrors the origination default).
+   Record it; the translator will target this language in Phase 4.
 
-Do not ask a wall of questions at this stage — just collect the origination-record
-path and confirm language.
+Do not ask a wall of questions at this stage — just select the initiative, confirm
+the origination-record, and confirm language.
 
 ## Phase 1 — Setup
 
@@ -97,9 +105,9 @@ path and confirm language.
    passes; fix the template if it fails the audit checklist
    ([`../../origination-brainstorm/references/contract-and-template.md`](../../origination-brainstorm/references/contract-and-template.md) § audit checklist).
 2. Then spawn **in the same turn** (independent → parallel):
-   - **`hsb-source-indexer`** indexes the linked origination-record folder (its
-     `output/humanized.md` or `target-document.md` as the primary source) plus
-     any extra files the PO provides. Writes `sources/` and `sources-index.md`.
+   - **`hsb-source-indexer`** indexes the initiative's `origination/` phase
+     folder (its `output/humanized.md` or `target-document.md` as the primary
+     source) plus any extra files the PO provides. Writes `sources/` and `sources-index.md`.
    - **`hsb-template-analyst`** derives `contract.lock.md` from the RP
      template (hash-locked). If a prior `contract.lock.md` exists with a
      different hash, it restarts analysis and supersedes stale ledger entries.
@@ -180,10 +188,13 @@ Once `freezeReady`:
 4. Report to the PO: what was produced, the readiness score, the TA flag if
    present, and every item still parked as `discovery` or `deferred`.
 
-## The session folder layout
+## The phase folder layout
+
+The readiness front lives at `INITIATIVE_DIR/readiness/`, beside the `origination/`
+phase it inherits from:
 
 ```
-SESSION_ROOT/<demand-slug>-readiness/
+INITIATIVE_DIR/readiness/        # PHASE_DIR for the readiness front
 ├── contract.lock.md            # hsb-template-analyst
 ├── sources-index.md            # hsb-source-indexer
 ├── sources/                    # hsb-source-indexer (incl. inherited origination-record)
