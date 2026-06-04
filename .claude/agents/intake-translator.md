@@ -1,1 +1,0 @@
-../../plugins/hsb-teamwork/agents/intake-translator.md

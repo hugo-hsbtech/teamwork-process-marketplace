@@ -1,1 +1,0 @@
-../../plugins/hsb-teamwork/agents/readiness-inheritor.md
