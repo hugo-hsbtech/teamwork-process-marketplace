@@ -1,14 +1,14 @@
 {
   "skill": "hsb-teamwork:readiness-package",
-  "notes": "Repo-level evals (dev/CI only; not shipped in the plugin). Each case runs the skill headlessly (no live PO: gaps become honest dispositions, ai_drafted sections stay partial) and is graded by assertions.py (structural) + rubric.md (qualitative, vs the golden).",
+  "notes": "Repo-level evals (dev/CI only; not shipped in the plugin). Each case runs the skill headlessly (no live PO: gaps become honest dispositions, ai_drafted sections stay partial) and is graded by assertions.py (structural, on the RP) + fanout.py (process: triage_present, drafter_fanout_in_turn, fanout_pass) + rubric.md (qualitative, vs the golden). Act 2 runs only when triage decides Product Ready.",
   "evals": [
     {
       "id": 0,
       "name": "origination-to-rp-seat-management",
-      "prompt": "Run the hsb-teamwork readiness-package skill in non-interactive mode. Linked origination-record (Product Ready): evals/readiness-package/fixtures/sources/01-origination-record-seat-management.md. Inherit the capture sections from it (Origin=inherited, preserve source/confidence); draft the new product sections (business-rules, user-stories with Given/When/Then, NFRs, edge-cases) at partial confidence with Origin=ai_drafted; detect CTO escalation and record tech-assessment-ref honestly. For any genuine gap, use an honest disposition rather than asking. Write the filled RP to {OUT}/readiness-document.md (keep the section annotations and the END OF DOCUMENT sentinel). Do not ask questions.",
+      "prompt": "Run the hsb-teamwork readiness-package skill in non-interactive mode on the candidate origination-record evals/readiness-package/fixtures/sources/01-origination-record-seat-management.md. ACT 1 — Triage: spawn hsb-triage-assessor to score the five criteria and propose the routing decision under honest dispositions (no live PO); this seat-management demand is a real, recurring, on-vision, high-impact problem, so the expected decision is Product Ready — write {OUT}/intake-record.md with the decision model (verdict/rationale/basis/source/reversible) and proceed. ACT 2 — Rationalization: inherit the capture sections (Origin=inherited, preserve source/confidence); draft the new product sections (business-rules, user-stories with Given/When/Then, NFRs, edge-cases) fanning out one hsb-section-drafter per section in parallel, at partial confidence with Origin=ai_drafted; detect CTO escalation and record tech-assessment-ref honestly. For any genuine gap, use an honest disposition rather than asking. Write the filled RP to {OUT}/readiness-document.md (keep the section annotations and the END OF DOCUMENT sentinel). Do not ask questions.",
       "files": ["evals/readiness-package/fixtures/sources/01-origination-record-seat-management.md"],
       "golden": "golden/seat-management.readiness-document.md",
-      "expected_output": "A filled RP: all blocking sections resolved at/above threshold or honestly disposed, every content section tagged with a valid Origin, tech-assessment-ref resolved (deferred when escalation is required), sentinel present."
+      "expected_output": "An Intake Record committing Product Ready with the decision model, then a filled RP: all blocking sections resolved at/above threshold or honestly disposed, every content section tagged with a valid Origin, tech-assessment-ref resolved (deferred when escalation is required), sentinel present. The trace shows triage before drafting and a parallel section-drafter fan-out."
     },
     {
       "id": 1,

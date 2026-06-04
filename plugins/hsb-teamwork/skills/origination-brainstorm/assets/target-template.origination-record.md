@@ -193,7 +193,11 @@ Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 ## Handoff
 <!-- origination: id=handoff; blocks=false; min-confidence=0; kind=derived; inputs=triage -->
 
-- **If Product Ready:** proceed to rationalization (Readiness Package).
+> The routing above is a **draft**. The PO ratifies or overrides it in **Act 1
+> (triage)** of the readiness journey — the Intake Record (`INT-AAAA-NNN`) — which
+> consumes this record. The destinations below are what that confirmed decision opens:
+
+- **If Product Ready:** the PO proceeds to **Act 2 (rationalization)** — the Readiness Package.
 - **If Discovery:** open the Discovery brief above; re-triage when it closes.
 - **If Backlog / Reject:** close the pass with a recorded rationale; notify originator.
 

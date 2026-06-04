@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Fan-out detector for a headless readiness-package run.
+"""Fan-out detector for a headless origination-brainstorm run.
 
 Grades *how* the document got built, not the document itself. assertions.py can
 pass on an artifact the model produced inline — so without this, the eval can't
-tell an orchestrated run (the skill spawning its subagents) from a model that
-read the template and one-shot the file while narrating a pipeline that never ran.
+tell an orchestrated run (the skill spawning its subagents) from a model that read
+the template and one-shot the file while narrating a pipeline that never ran. It
+also measures whether independent agents went out in the same turn, since spawning
+one at a time and awaiting each is what makes a run drag.
 
 Input: a stream-json trace (one JSON object per line) from
     claude -p --output-format stream-json --verbose ...
@@ -15,38 +17,40 @@ Verdict fields:
   agents                – sorted list of distinct subagent_type values spawned
   distinct              – len(agents)
   core_covered          – which of the CORE pipeline agents were spawned
-  max_parallel_in_turn  – most Task calls emitted in a single assistant message
+  max_parallel_in_turn  – most Agent calls emitted in a single assistant message
                           (>= 2 proves same-turn parallel fan-out)
   parallel_turns        – how many assistant turns spawned >= 2 agents
-  total_spawns          – total Task calls across the run
-  triage_present        – whether the Act 1 gate proposer (hsb-triage-assessor) ran
-  drafter_fanout_in_turn – most hsb-section-drafter calls in a single turn
-                          (>= 2 proves the Act 2 draft pass fanned out by section)
+  total_spawns          – total Agent calls across the run
+  strategist_extractor_in_turn – whether Strategist and Evidence Extractor were
+                          spawned together in one turn (the loop's parallel pair)
   fanout_pass           – True iff >=3 CORE agents ran AND at least one turn
                           spawned >= 2 agents in parallel
 """
 import json
 import sys
 
-# The subagent_types a real run must go through. We require coverage of most of
-# these, not all, so an honest headless run that skips an optional agent (e.g.
-# glossary-keeper) still passes. `hsb-triage-assessor` is the Act 1 gate proposer;
-# a Product Ready run goes through it before the Act 2 agents below.
+# The subagent_types a real origination run goes through. We require coverage of
+# most of these, not all, so an honest headless run that skips an optional agent
+# (e.g. glossary-keeper, gap-reporter) still passes. Unlike readiness, origination
+# has no triage gate and no per-section drafter fan-out — its capture loop is
+# interactive — so the parallel levers here are the Strategist ∥ Extractor pair and
+# the production trio, plus incremental auditing across iterations.
 CORE = {
-    "hsb-triage-assessor",
     "hsb-source-indexer",
     "hsb-template-analyst",
-    "hsb-stage-inheritor",
-    "hsb-section-drafter",
+    "hsb-question-strategist",
+    "hsb-evidence-extractor",
+    "hsb-ledger-writer",
     "hsb-doc-updater",
+    "hsb-confidence-auditor",
 }
 
 # Claude Code's subagent-spawn tool is "Task"; accept "Agent" too for forward-compat.
 SPAWN_TOOLS = {"Task", "Agent"}
 
-# The Act 2 draft pass fans out one hsb-section-drafter per product section in a
-# single turn; we report the largest such fan-out (the main lever against slow runs).
-DRAFTER = "hsb-section-drafter"
+# The capture loop's parallel pair (read-only proposers); both in one turn is the
+# cheap, always-available lever against slow runs.
+LOOP_PAIR = {"hsb-question-strategist", "hsb-evidence-extractor"}
 
 
 def parse(path):
@@ -54,7 +58,7 @@ def parse(path):
     total_spawns = 0
     parallel_turns = 0
     max_in_turn = 0
-    drafter_fanout_in_turn = 0
+    strategist_extractor_in_turn = False
     with open(path, encoding="utf-8", errors="replace") as fh:
         for line in fh:
             line = line.strip()
@@ -78,14 +82,14 @@ def parse(path):
             max_in_turn = max(max_in_turn, n)
             if n >= 2:
                 parallel_turns += 1
-            drafters_here = 0
+            here = set()
             for t in tasks:
                 st = (t.get("input") or {}).get("subagent_type")
                 if st:
                     seen.add(st)
-                    if st == DRAFTER:
-                        drafters_here += 1
-            drafter_fanout_in_turn = max(drafter_fanout_in_turn, drafters_here)
+                    here.add(st)
+            if LOOP_PAIR <= here:
+                strategist_extractor_in_turn = True
     covered = CORE & seen
     return {
         "agents": sorted(seen),
@@ -94,8 +98,7 @@ def parse(path):
         "max_parallel_in_turn": max_in_turn,
         "parallel_turns": parallel_turns,
         "total_spawns": total_spawns,
-        "triage_present": "hsb-triage-assessor" in seen,
-        "drafter_fanout_in_turn": drafter_fanout_in_turn,
+        "strategist_extractor_in_turn": strategist_extractor_in_turn,
         "fanout_pass": len(covered) >= 3 and max_in_turn >= 2,
     }
 

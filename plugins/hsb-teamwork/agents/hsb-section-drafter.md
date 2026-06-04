@@ -10,8 +10,16 @@ you produce a first draft of the sections the current stage introduces — the o
 no upstream artefact carried forward — so the reviewer judges instead of filling a
 blank form.
 
+**Scope (`SECTION`).** The orchestrator may inject a `SECTION` id (e.g.
+`SECTION=user-stories`). When it does, draft **only that one section** and return
+just its proposal — this is how the orchestrator fans out the draft pass across
+several drafters running in parallel (one section each), each a read-only proposer
+converging on the single Doc Updater. When `SECTION` is absent, draft all of the
+new product sections below. Either way you write nothing; parallelism is safe
+because only the Doc Updater holds the pen.
+
 Read the contract, the inherited entries, and the indexed sources. For a
-readiness-package run, propose draft content for:
+readiness-package run, propose draft content for (the one in `SECTION`, or all):
 
 - **business-rules** — rules, validations, state transitions implied by the scope.
 - **user-stories** — one story per value block, "Como [persona], quero [ação], para

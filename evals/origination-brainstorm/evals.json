@@ -1,6 +1,6 @@
 {
   "skill": "hsb-teamwork:origination-brainstorm",
-  "notes": "Repo-level evals (dev/CI only; not shipped in the plugin). Each case runs the skill headlessly (no live human: gaps become honest dispositions) and is graded by assertions.py (structural) + rubric.md (qualitative, vs the golden).",
+  "notes": "Repo-level evals (dev/CI only; not shipped in the plugin). Each case runs the skill headlessly (no live human: gaps become honest dispositions) and is graded by assertions.py (structural, on the document) + fanout.py (process: same-turn parallel fan-out, strategist_extractor_in_turn, fanout_pass) + rubric.md (qualitative, vs the golden).",
   "evals": [
     {
       "id": 0,

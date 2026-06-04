@@ -1,7 +1,9 @@
 # Grading rubric — origination-brainstorm
 
-Two layers. **Structural** is automated (`assertions.py`, deterministic, gates the
-run). **Qualitative** is LLM-graded against the golden bar (judgment, scored 1-5).
+Three layers. **Structural** is automated (`assertions.py`, deterministic, gates the
+run). **Process** is automated (`fanout.py`, on the stream-json trace) — it grades
+*how* the document got built. **Qualitative** is LLM-graded against the golden bar
+(judgment, scored 1-5).
 
 ## Layer 1 — structural (automated, pass/fail)
 
@@ -19,7 +21,21 @@ Run by `assertions.py` on each produced `target-document.md`:
 
 A run must pass **all** structural checks to be eligible for qualitative scoring.
 
-## Layer 2 — qualitative (LLM-graded, 1-5 each)
+## Layer 2 — process (automated, from the trace)
+
+Run by `fanout.py` on the run's stream-json trace. Proves the orchestrator actually
+spawned its pipeline (rather than one-shotting the document inline) and did so
+efficiently (independent agents in the same turn, not one-at-a-time):
+
+- `fanout_pass` — ≥3 CORE agents spawned **and** at least one turn spawned ≥2 agents
+  in parallel.
+- `strategist_extractor_in_turn` — the capture loop's read-only proposers
+  (`hsb-question-strategist` ∥ `hsb-evidence-extractor`) went out together in one turn.
+- `max_parallel_in_turn` / `parallel_turns` — the size and count of same-turn fan-outs
+  (the production trio `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer`
+  should show as a ≥3 fan-out).
+
+## Layer 3 — qualitative (LLM-graded, 1-5 each)
 
 Grade the produced document against `grounding.md` and the golden (when present).
 For an LLM grader, prompt: *"Score 1-5 and justify, citing the text."*
@@ -37,6 +53,7 @@ For an LLM grader, prompt: *"Score 1-5 and justify, citing the text."*
 
 `score.py` (or the runner) compiles, per iteration:
 - structural pass/fail + readiness % per case,
+- process: `fanout_pass` + `max_parallel_in_turn` (was the pipeline really orchestrated, in parallel?),
 - with-skill vs baseline delta (does the skill add lift over no-skill?),
 - qualitative 1-5 per dimension (filled by the grader).
 

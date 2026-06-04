@@ -1,4 +1,16 @@
-# Drafting — the draft-then-confirm model
+# Drafting — triage questions first, then the draft-then-confirm model
+
+There are **two distinct questioning modes**, one per act:
+
+- **Act 1 · Triage** is where the *structured questioning* lives. The
+  `hsb-triage-assessor` scores the criteria from the origination-record and the
+  orchestrator asks the PO **only the criteria it could not settle** — the
+  triage-priority questions — before any product is rationalized. The PO commits
+  the routing decision at the gate. Nothing reaches the RP pipeline until that
+  decision is `Product Ready`. See [`triage.md`](triage.md). This is the fix for
+  the old behaviour, where the skill silently pre-interpreted the demand as product.
+- **Act 2 · Rationalization** is **draft-then-confirm** (below): the PO judges
+  pre-filled sections, and questions there are a *fallback*, not the primary mode.
 
 The RP authoring model is **draft-then-confirm**, not section-by-section
 interviewing. The screen "should not look like a form filled by hand … it
@@ -34,7 +46,7 @@ every section:
 
 The `hsb-doc-updater` writes all proposals into `readiness-document.md`
 through the single-writer path (see [`orchestration.md`](orchestration.md)
-§ Phase 2).
+§ Phase B2).
 
 ### Stage 2 — Confirm loop
 
@@ -51,7 +63,7 @@ and confirming** — not filling blanks. For each section the PO either:
   (`:242-247`); does not block freeze.
 
 The loop repeats until `freezeReady` (see [`orchestration.md`](orchestration.md)
-§ Phase 3 gate check).
+§ Phase B3 gate check).
 
 ## The Origin lifecycle
 
