@@ -13,6 +13,27 @@ mkdir -p "$RUNS"
 SCORE="$RUNS/scorecard.md"
 REPO_ROOT="$(cd ../.. && pwd)"
 
+# --- Eval safety guard -------------------------------------------------------
+# An eval must TEST, never mutate the repo. The skill runs headlessly with broad
+# permissions, so a `git` shim is prepended to PATH for the claude calls: it lets
+# the skill READ git (session-root resolution uses `git rev-parse`) but hard-fails
+# any history/working-tree mutation (commit, add, push, ...). This is what stops a
+# headless run from committing to the repo. Flags like --disallowedTools do NOT
+# block git under bypassPermissions, so we enforce it at the binary level.
+REAL_GIT="$(command -v git)"
+GIT_SHIM_DIR="$(mktemp -d)"
+cat > "$GIT_SHIM_DIR/git" <<SHIM
+#!/bin/sh
+case "\$1" in
+  commit|add|push|reset|checkout|switch|merge|rebase|stash|rm|mv|apply|am|cherry-pick|revert|restore|clean|gc|update-index|fetch|pull|clone|init|worktree|tag|branch|remote|config)
+    echo "eval: 'git \$1' is disabled — eval tests must not mutate the repo" >&2; exit 13;;
+  *) exec "$REAL_GIT" "\$@";;
+esac
+SHIM
+chmod +x "$GIT_SHIM_DIR/git"
+trap 'rm -rf "$GIT_SHIM_DIR"' EXIT
+# -----------------------------------------------------------------------------
+
 echo "# Scorecard — readiness-package — iteration ${ITER}" > "$SCORE"
 echo "" >> "$SCORE"
 echo "| case | mode | structural | readiness | blocking |" >> "$SCORE"
@@ -64,9 +85,9 @@ for e in json.load(open("evals.json"))["evals"]:
     # case-list pipe at the `| while read` above.
     if [ "$mode" = "baseline" ]; then
       # Baseline: same task, explicitly WITHOUT the skill, from a clean cwd.
-      ( cd "$REPO_ROOT" && claude -p --permission-mode bypassPermissions "Do NOT use any skill or plugin. $p" ) </dev/null >"$OUT/agent.log" 2>&1 || true
+      ( cd "$REPO_ROOT" && PATH="$GIT_SHIM_DIR:$PATH" claude -p --permission-mode bypassPermissions "Do NOT use any skill or plugin. $p" ) </dev/null >"$OUT/agent.log" 2>&1 || true
     else
-      ( cd "$REPO_ROOT" && claude -p --permission-mode bypassPermissions "$p" ) </dev/null >"$OUT/agent.log" 2>&1 || true
+      ( cd "$REPO_ROOT" && PATH="$GIT_SHIM_DIR:$PATH" claude -p --permission-mode bypassPermissions "$p" ) </dev/null >"$OUT/agent.log" 2>&1 || true
     fi
     if [ -f "$OUT/readiness-document.md" ]; then
       res=$(grade "$OUT/readiness-document.md") || res=$'FAIL\t-\t-'
