@@ -78,21 +78,28 @@ read-only and returns proposals you route to the writer.
    owes, triage decision, and feasibility verdict. This skill is
    **initiative-scoped** (reads across all phases); it writes only under
    `INITIATIVE_DIR/analytics/`.
-2. **Phase 1 — Collect (parallel, same turn):** spawn `hsb-cost-collector`
+2. **Phase 0.5 — Pricing freshness gate:** read `PRICING` and check the price
+   lifecycle — `age = now − capturedAt` vs `ttlHours` (default 48, the human may
+   override). If **stale**, fetch a fresh table **before pricing** (invoke the
+   `claude-api` skill, else WebFetch the Anthropic pricing page), rewrite
+   `pricing.json`'s `models` + `capturedAt`, then proceed. If refresh is
+   unavailable, proceed with the stale table and tell the Reporter to flag it.
+3. **Phase 1 — Collect (parallel, same turn):** spawn `hsb-cost-collector`
    (ledger → investment §A/§B) ∥ `hsb-metrics-analyst` (qa-logs + documents +
    `initiative.json` → process/outcome §C/§D + the document-derived value score
    §E). Both read-only.
-3. **Phase 2 — Compose ROI (you):** pair investment against results to compute the
+4. **Phase 2 — Compose ROI (you):** pair investment against results to compute the
    §E composites per `roi-model.md` — cost-to-readiness, throughput per
    dollar/hour/token, value-anchored ROI (estimate), **gate savings** when a gate
    stopped the chain early, automation leverage, cache discipline. For gate
    savings, read sibling initiatives' `roi.json` (or the configured baseline) for
    the comparable full-run cost.
-4. **Phase 3 — Report (single writer):** spawn `hsb-roi-reporter` to render
+5. **Phase 3 — Report (single writer):** spawn `hsb-roi-reporter` to render
    `analytics/roi-report.md` (from the bundled template) and `analytics/roi.json`.
    Then report the headline to the human: total USD, tokens, model mix, lead time,
-   final readiness, the ROI panel, gate savings if any, and outstanding
-   debts/parked dispositions.
+   final readiness, the ROI panel, gate savings if any, the pricing vintage
+   (`capturedAt`, with a staleness flag if the table could not be refreshed), and
+   outstanding debts/parked dispositions.
 
 ## The agents you spawn (`subagent_type`)
 
@@ -119,6 +126,7 @@ they execute in parallel.
 ### The phase checklist (TodoWrite this before Phase 1)
 
 - [ ] Resolve-or-select the initiative (closed allowed); read `initiative.json`
+- [ ] Phase 0.5 · pricing freshness: if `now − capturedAt > ttlHours`, refresh the table before pricing (else flag stale)
 - [ ] Phase 1 · **same message:** `hsb-cost-collector` ∥ `hsb-metrics-analyst`
 - [ ] Phase 2 · compose the ROI composites (gate savings via sibling baselines)
 - [ ] Phase 3 · spawn `hsb-roi-reporter`; report the headline to the human

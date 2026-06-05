@@ -35,6 +35,10 @@ Write two files:
   from documents, not measured.
 - **Render `notCaptured` honestly** — when the ledger is absent or a phase never
   froze, write "not captured" with the reason; never invent a value.
+- **Show the pricing vintage** — render the header "Prices" line with
+  `pricing.capturedAt`; if the orchestrator marked the table **stale** (could not
+  refresh past `ttlHours`), flag it (⚠️ STALE + age) so the USD is read knowingly.
+  Carry `pricing: { capturedAt, ttlHours, stale }` into `roi.json`.
 - **Never truncate.** Read-modify-write; end `roi-report.md` with the
   `<!-- END OF DOCUMENT -->` sentinel and verify it. On re-run, merge into the
   existing files rather than duplicating.

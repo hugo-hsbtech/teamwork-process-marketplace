@@ -18,9 +18,13 @@ Produce, from the `usage` and `spawn` rows:
 1. **Tokens** — total and split by type (input / output / cacheCreate / cacheRead);
    grouped by `phase`, by `agent` (orchestrator vs subagent), by `role`
    (best-effort `subagent_type`), and by `model`.
-2. **USD** — total and the same groupings. Trust the `usd` already on each row;
-   if a row is missing `usd` (older ledger), recompute it from `PRICING` and note
-   it. Sum precisely; do not round away cents.
+2. **USD** — total and the same groupings. **Price authoritatively from `PRICING`**
+   (the freshness-checked table the orchestrator hands you): multiply each row's
+   **raw tokens** (`in`/`out`/`cacheCreate`/`cacheRead`) by the model's rates. The
+   row's own `usd` is only an at-capture snapshot — do not treat it as the figure
+   of record. Sum precisely; do not round away cents. If the orchestrator marks the
+   table **stale** (could not refresh past its `ttlHours`), pass that flag through
+   so the report can surface it with `pricing.capturedAt` and its age.
 3. **Model mix** — % of tokens and % of USD per `model`.
 4. **Cache** — cache-read tokens, cache-hit ratio
    `cacheRead / (input + cacheRead)`, and **cache savings** = the USD difference

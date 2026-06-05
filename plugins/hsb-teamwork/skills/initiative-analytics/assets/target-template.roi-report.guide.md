@@ -24,7 +24,9 @@ is sourced, value is labeled estimate, nothing is fabricated.
 **§1 Header.** Identity and the headline totals. Lead time = last
 `finishedAt` − first `started` from `initiative.json`. Model mix = the Cost
 Collector's %tokens / %USD per model. Final readiness = the furthest phase's
-`readiness`.
+`readiness`. **Prices row:** show `pricing.capturedAt`; mark ⚠️ STALE with the age
+when the orchestrator could not refresh a table older than `ttlHours` — the USD is
+still shown, but flagged so it is read knowingly.
 
 **§2 Per-phase breakdown.** One row per phase that exists in `initiative.json`.
 Wall-clock from `started → finishedAt`. Tokens/US$/spawns from the Cost Collector,
@@ -51,7 +53,7 @@ and an explicit list of any not-captured metric families with the reason.
 ## roi.json
 
 Write the same content machine-readable: `{ initiative, project, status, leadTime,
-totals:{usd,tokens:{...},modelMix}, phases:[...], drivers, roi:{...,
-valueBreakdown:[...], gateSavings}, open:{owes, parked, notCaptured} }`. Keep it in
-sync with the markdown — sibling runs read `roi.json` for the gate-savings
-baseline.
+pricing:{capturedAt, ttlHours, stale}, totals:{usd,tokens:{...},modelMix},
+phases:[...], drivers, roi:{..., valueBreakdown:[...], gateSavings},
+open:{owes, parked, notCaptured} }`. Keep it in sync with the markdown — sibling
+runs read `roi.json` for the gate-savings baseline.

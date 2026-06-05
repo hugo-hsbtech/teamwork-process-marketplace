@@ -1,6 +1,17 @@
 {
-  "_comment": "USD price per 1,000,000 tokens, used by the cost-capture hook and the analytics skill to turn token counts into dollars. cacheWrite5m = 1.25x input; cacheWrite1h = 2x input; cacheRead = 0.1x input (standard Anthropic prompt-caching multipliers). Update when prices change; mark `asOf`. Unknown models fall back to `_default`.",
-  "asOf": "2026-06-05",
+  "_comment": "USD price per 1,000,000 tokens. cacheWrite5m = 1.25x input; cacheWrite1h = 2x input; cacheRead = 0.1x input (standard Anthropic prompt-caching multipliers). The ledger stores RAW token counts; authoritative USD is computed at REPORT time from this table after a freshness check (see capturedAt/ttlHours below and references/cost-telemetry.md). Unknown models fall back by id-prefix, then to _default.",
+  "capturedAt": "2026-06-05T00:00:00Z",
+  "ttlHours": 48,
+  "refresh": {
+    "_comment": "When (now - capturedAt) > ttlHours the prices are STALE: the analytics skill must fetch a fresh table BEFORE pricing, then rewrite `models`, `capturedAt` (to now), and keep `ttlHours`. ttlHours is the parameterizable lifecycle (default 48h); the human may override it per run.",
+    "source": "claude-api",
+    "sources": [
+      "claude-api skill (canonical, bundled — Current Models pricing table)",
+      "WebFetch https://platform.claude.com/docs/en/pricing.md",
+      "GET /v1/models (capabilities; pricing on the pricing page)"
+    ],
+    "onUnavailable": "proceed with the stale table and flag staleness loudly in the report (capturedAt + age); never block the run"
+  },
   "currency": "USD",
   "unit": "per_1M_tokens",
   "models": {

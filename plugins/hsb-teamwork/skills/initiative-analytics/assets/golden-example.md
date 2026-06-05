@@ -26,6 +26,7 @@ illustrative.
 | **Fases alcançadas** | origination → readiness *(assessment owed · prd não iniciado)* |
 | **Lead time** | 2026-06-03 18:33 → 2026-06-04 11:20 (16h 47m) [artifact] |
 | **Custo total** | **US$ 1.84** [ledger] |
+| **Preços** | captados 2026-06-05T00:00:00Z · fresh (≤ 48h no momento do relatório) |
 | **Tokens totais** | 1.97M (in 0.21M · out 0.06M · cache-read 1.70M) [ledger] |
 | **Mix de modelos** | claude-opus-4-8: 100% tokens / 100% US$ [ledger] |
 | **Readiness final** | 78 / 100 (readiness) [artifact] |

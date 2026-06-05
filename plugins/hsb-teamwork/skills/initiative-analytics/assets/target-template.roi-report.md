@@ -34,6 +34,7 @@ To customize, copy this file and pass it as TEMPLATE.
 | **Phases reached** | origination → readiness → assessment → prd → delivered-to-pm |
 | **Lead time** | `<first started → last finishedAt>` (`<calendar duration>`) [artifact] |
 | **Total cost** | **US$ `<sum>`** [ledger] |
+| **Prices** | captured `<pricing.capturedAt>` · `<fresh ≤ ttlHours \| ⚠️ STALE: <age> old, refresh failed>` |
 | **Total tokens** | `<sum>` (in `<n>` · out `<n>` · cache-read `<n>`) [ledger] |
 | **Model mix** | `<model: %tokens / %USD>` … [ledger] |
 | **Final readiness** | `<furthest phase readiness>` / 100 [artifact] |

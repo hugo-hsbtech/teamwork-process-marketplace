@@ -15,10 +15,17 @@ out (readiness, dispositions, triage decision, feasibility verdict), and the
 
 - **Cost is measured, not estimated.** A cost-capture **hook**
   (`plugins/hsb-teamwork/hooks/`) fires on `Stop` / `SubagentStop`, reads the
-  session transcript's real `usage` (input/output/cache tokens + model), prices it
-  via `assets/pricing.json`, and appends consumption blocks to
+  session transcript's real `usage` (input/output/cache tokens + model), and
+  appends **raw-token** consumption blocks to
   `<initiative>/analytics/cost-ledger.jsonl`. The four upstream skills write a tiny
   **session binding** so the hook knows which initiative/phase a session is in.
+- **Prices are kept fresh by a TTL.** `assets/pricing.json` carries a
+  `capturedAt` datetime and a `ttlHours` lifecycle (default **48h**,
+  parameterizable). Because the ledger stores raw tokens, the **authoritative USD
+  is computed at report time**: the skill checks the price age first and, if older
+  than `ttlHours`, **fetches a fresh table** (via the `claude-api` skill, else the
+  Anthropic pricing page) before pricing — or, if it can't reach a source, prices
+  with the stale table and **flags it** in the report.
 - **Value is extracted from the documents.** No human types a dollar figure: the
   Metrics Analyst scores declared value (reach, impact, objectives, measurability,
   confidence-of-value) from the frozen documents, as a 0–100 **estimate**.

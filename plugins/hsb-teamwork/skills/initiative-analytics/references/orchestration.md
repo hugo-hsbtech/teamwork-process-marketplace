@@ -43,14 +43,37 @@ human pick which initiative to analyze (default: latest, or offer the open list 
 readiness, owes, and the triage/verdict outcomes. There is **no phase folder to
 create** — this skill writes only under `INITIATIVE_DIR/analytics/`.
 
+## Phase 0.5 — Pricing freshness gate (you, before pricing)
+
+Before any cost is computed, check the price lifecycle (`cost-telemetry.md` §
+*Pricing freshness*). Read `PRICING` (`pricing.json`): compute
+`age = now − capturedAt` and compare to `ttlHours` (default 48; the human may
+override per run).
+
+- **Fresh** (`age ≤ ttlHours`) → use `PRICING` as-is.
+- **Stale** (`age > ttlHours`) → **fetch a fresh table first**: invoke the
+  bundled **`claude-api`** skill (canonical Current-Models pricing), else
+  **WebFetch** `https://platform.claude.com/docs/en/pricing.md`. Rewrite
+  `pricing.json`'s `models` with the fresh rates and set `capturedAt` to now (keep
+  `ttlHours`). Then proceed.
+- **Refresh unavailable** (offline / no source) → do **not** block: proceed with
+  the stale table and tell the Reporter to **flag staleness** (show `capturedAt`
+  and age) so the USD is used knowingly.
+
+Because the ledger stores **raw tokens**, re-pricing here makes the report reflect
+*current* rates regardless of when capture happened — that is the whole point of
+the TTL.
+
 ## Phase 1 — Collect (parallel, read-only)
 
 Spawn **in the same turn** (independent → parallel):
 
 - **Cost Collector** (`hsb-cost-collector`) — reads `analytics/cost-ledger.jsonl`
-  (+ `PRICING`) and returns the §A/§B investment aggregates: tokens & USD by
-  phase / agent / model, cache savings, durations, spawn counts. If the ledger is
-  absent, it returns a `notCaptured` verdict with the reason.
+  (+ the freshness-checked `PRICING` from Phase 0.5) and returns the §A/§B
+  investment aggregates: tokens & USD by phase / agent / model, cache savings,
+  durations, spawn counts. **It prices the raw tokens with `PRICING` as the
+  authoritative USD** (the row `usd` is only an at-capture snapshot). If the ledger
+  is absent, it returns a `notCaptured` verdict with the reason.
 - **Metrics Analyst** (`hsb-metrics-analyst`) — reads each phase's `qa-log.md`,
   `contract.lock.md`, the frozen documents, and `initiative.json`, and returns the
   §C/§D process & outcome metrics **and** the §E value score (from the documents,

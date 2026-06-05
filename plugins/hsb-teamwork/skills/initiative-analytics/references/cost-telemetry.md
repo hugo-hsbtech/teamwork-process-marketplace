@@ -115,7 +115,7 @@ writes it except the hook.
 | `model` | the model id from `message.model` (priced via `pricing.json`) |
 | `in` / `out` | input / output tokens |
 | `cacheCreate` / `cacheRead` | prompt-cache write / read tokens |
-| `usd` | computed dollar cost of this block |
+| `usd` | at-capture **snapshot** dollar cost; the report re-prices the raw tokens with a freshness-checked table (see *Pricing freshness* below) |
 | `durationMs` | active compute time for this block, when derivable |
 | `uuid` | transcript message id — the idempotency key (also in the watermark) |
 
@@ -129,9 +129,44 @@ exactly like the rest of the initiative folder. Commit `.teamwork/` (or use
 
 Model → USD-per-1M-tokens, with the standard prompt-caching multipliers baked in
 (`cacheWrite5m` = 1.25× input, `cacheWrite1h` = 2× input, `cacheRead` = 0.1×
-input). Unknown models fall back by id-prefix, then to `_default`. The table
-carries an `asOf` date; update it when Anthropic prices change. The skill reads
+input). Unknown models fall back by id-prefix, then to `_default`. The skill reads
 prices **only** from this file — never hard-code a rate in an agent.
+
+### Raw tokens are authoritative; USD is computed at report time
+
+The ledger stores **raw token counts** (`in`, `out`, `cacheCreate`, `cacheRead`)
+and the `model` — these are the ground truth. The `usd` the hook writes on each
+row is an **at-capture snapshot** (handy if analytics never runs), **not** the
+figure of record. The **authoritative USD is computed at report time** by the Cost
+Collector, multiplying the stored raw tokens by a **freshness-checked** pricing
+table. This is what makes the price TTL meaningful: a run reported today is priced
+with today's rates, regardless of when the tokens were captured.
+
+### Pricing freshness — `capturedAt` + `ttlHours` (the lifecycle)
+
+`pricing.json` carries two fields that make staleness actionable:
+
+- **`capturedAt`** — the ISO-8601 datetime the prices were captured.
+- **`ttlHours`** — the price **lifecycle** in hours (default **48**,
+  parameterizable; the human may override per run).
+
+**The freshness gate (orchestrator, before pricing).** At the start of an
+analytics run, compute `age = now − capturedAt`:
+
+- `age ≤ ttlHours` → prices are **fresh**; use the table as-is.
+- `age > ttlHours` → prices are **stale**; **fetch a fresh table before pricing**
+  from `refresh.source` (in order of preference): the bundled **`claude-api`
+  skill** (canonical Current-Models pricing), else **WebFetch**
+  `https://platform.claude.com/docs/en/pricing.md`. Rewrite `pricing.json`'s
+  `models` and set `capturedAt` to now (keep `ttlHours`). Then price with the fresh
+  table.
+- **Refresh unavailable** (no network / no source) → do **not** block: price with
+  the stale table and **flag staleness loudly in the report** (show `capturedAt`
+  and the age), so the number is used knowingly. (`refresh.onUnavailable`.)
+
+The **hook never fetches** — it stays offline and fast, pricing opportunistically
+into the snapshot `usd`. All freshness logic lives in the orchestrator at report
+time, where network and the `claude-api` skill are available.
 
 ---
 
