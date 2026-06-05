@@ -46,6 +46,31 @@ Read these once, then follow them for the whole run:
 Default target template: `../skills/origination-brainstorm/assets/target-template.origination-record.md` (+ its
 `...guide.md`). Swap it by pointing at a different annotated template.
 
+## Agent model tiers (single source of truth)
+
+Each agent runs on a model sized to its job, in three tiers that mirror the Claude
+side (`agents/*.md` `model:` opus/sonnet/haiku):
+
+| Tier | Codex `model` | `model_reasoning_effort` | Claude | Work |
+|------|---------------|--------------------------|--------|------|
+| high   | `gpt-5.5`       | high   | opus   | deep reasoning, judgment, generation, gates |
+| medium | `gpt-5.3-codex` | medium | sonnet | structured writing bounded by committed inputs |
+| low    | `gpt-5.4-mini`  | low    | haiku  | deterministic I/O, assembly, numeric aggregation |
+
+Codex has no model aliases (the ids are pinned, unlike Claude's auto-latest
+`opus`/`sonnet`/`haiku`), and agents can't reference a config profile — so the
+literal id must live in every `agents/*.toml`. To avoid editing 30 files, the
+tiers are declared once in [`model-tiers.toml`](./model-tiers.toml) and stamped
+into the agent tomls by [`apply-model-tiers.py`](./apply-model-tiers.py):
+
+```bash
+python3 codex/apply-model-tiers.py          # roll a tier / move an agent: edit the map, re-run
+python3 codex/apply-model-tiers.py --check  # CI: fail if any toml drifted from the map
+```
+
+When a model id is retired or a newer one ships, change it in `model-tiers.toml`
+and re-run — that is the only edit needed.
+
 ## Codex execution model (the one real difference from Claude)
 
 Claude Code fans the specialist agents out in parallel. **In Codex, run the same
