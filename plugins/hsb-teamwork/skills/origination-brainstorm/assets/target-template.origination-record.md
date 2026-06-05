@@ -13,11 +13,27 @@ dense line, so a human can scan it without fatigue. The Finalizer relocates thes
 blocks into a "Sources & question log" appendix and turns their Q### / file refs
 into in-document links.
 LOCALIZATION. This template ships in English; when the output language differs the
-Doc Updater localizes the block label and field labels (e.g. pt-BR: Provenance →
+Doc Updater localizes EVERYTHING that is prose and the Humanizer purges any leftover
+leak. "Everything" means: the block label and field labels (e.g. pt-BR: Provenance →
 Proveniencia, Confidence → Confianca, Source → Fonte, Status → Situacao,
-Disposition → Disposicao, Hint → Observacao) and the section headings, and the
-Humanizer purges any leftover untranslated jargon. Field values keep their stable
-identifiers (Q###, numbers, dates).
+Disposition → Disposicao, Hint → Observacao), the section headings, ALL fixed
+scaffolding prose — including the intro blockquotes/callouts on every section (e.g.
+the ⚠️ triage-draft banner) and the Handoff destination bullets — and the
+status/disposition **tokens** in the telemetry. Translate the tokens too, with a
+stable mapping (pt-BR): status open→aberta, answered→respondida, parked→em espera,
+superseded→superada, resolved→resolvida, low_confidence→baixa confianca; disposition
+answered→respondida, inferred→inferida, assumption→premissa, discovery→descoberta,
+deferred→adiada; origin ai_drafted→rascunho IA; the DRAFT flag→RASCUNHO. Only these
+stay verbatim: Q### ids, numbers, dates, proper nouns, and the routing-stage names
+that name a downstream artifact (Product Ready / Discovery / Backlog / Reject). The
+appendix telemetry table and the inline confidence lines MUST use the same localized
+tokens — never pt-BR in one and English in the other.
+
+TELEMETRY LINE BREAK (derived sections). The derived sections (triage, escalation,
+handoff) carry their telemetry as a short header line of its own — `Confidence ·
+Disposition` (localized) — followed by the rationale as a SEPARATE paragraph below
+it (blank line between). Never run the header label and its multi-sentence rationale
+together into one dense paragraph.
 -->
 
 # Origination Record — [Demand name]

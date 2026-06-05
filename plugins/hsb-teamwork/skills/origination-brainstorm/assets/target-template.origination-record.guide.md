@@ -27,6 +27,14 @@ rubrics in the annotations are sufficient).
 
 ## Derived sections (computed, flagged)
 
+**Formatting (all derived sections).** Put the telemetry on its own short header line
+— `Confidence · Disposition` (localized) — and the rationale in a **separate paragraph
+below** it (blank line between), never mashed into one run-on paragraph. When the
+output language is not English, the fixed scaffolding prose (the intro blockquotes /
+⚠️ banners and the Handoff destination bullets) and the status/disposition tokens are
+**translated**, not pasted verbatim from the template; only Q### ids, numbers, dates,
+proper nouns, and the routing-stage names stay in English.
+
 ### `triage` — the routing draft (handle with care)
 
 Triage is normally **human judgment**. The skill brainstorms with the Submitter,

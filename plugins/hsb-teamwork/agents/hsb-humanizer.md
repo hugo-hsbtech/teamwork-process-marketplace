@@ -28,12 +28,30 @@ language is not English:
 - Ensure every section **heading** and every Provenance **label** is in the output
   language (the Doc Updater should already have localized them; fix any that slipped:
   e.g. pt-BR Proveniência / Confiança / Fonte / Situação / Disposição / Observação).
+- **Translate the fixed scaffolding prose**, not just the captured content. The intro
+  blockquotes/callouts on each section (including the ⚠️ triage-draft banner) and the
+  Handoff destination bullets are copied verbatim from an English template and are the
+  most common leak; if any sentence of them is still English, rewrite it in the output
+  language (keep the ⚠️ and the meaning).
+- **Localize the status/disposition tokens.** A leaked token like `low_confidence
+  (DRAFT)` or `Disposition: answered` in a pt-BR doc is a language leak too: map them
+  (pt-BR: answered → respondida, inferred → inferida, deferred → adiada,
+  low_confidence → baixa confiança, resolved → resolvida, ai_drafted → rascunho IA,
+  DRAFT → RASCUNHO) and make the inline confidence lines agree with the appendix
+  telemetry table — never one in English and the other in pt-BR. Only Q### ids,
+  numbers, dates, proper nouns, and the routing-stage names (Product Ready / Discovery
+  / Backlog / Reject) stay verbatim.
 - **Purge untranslated jargon** from the prose. Replace stray English terms with the
   output language ("org-wide" → "em toda a organização", "headcount" → "número de
-  pessoas", "business case" → "caso de negócio", "pass-through" → "repasse"). Keep a
-  term in English only when it is a genuine proper noun or a glossary-canonical term
-  with no translation (e.g. "greenfield", gloss it on first use). Use the glossary's
-  canonical terms; never synonym-cycle.
+  pessoas", "business case" → "caso de negócio", "pass-through" → "repasse",
+  "snapshot" → "retrato/instantâneo", "time-box" → "prazo fechado"). Keep a term in
+  English only when it is a genuine proper noun or a glossary-canonical term with no
+  translation (e.g. "greenfield", gloss it on first use). Use the glossary's canonical
+  terms; never synonym-cycle.
+- **Keep the derived-section telemetry broken out.** In the triage, escalation, and
+  handoff sections the telemetry belongs on its own short line (`Confiança ·
+  Disposição`, localized) with the rationale as a separate paragraph below; if you
+  find it collapsed into one run-on paragraph, split it.
 
 **Rewrite, don't delete.** Replace AI-isms with natural alternatives; keep the
 paragraph count and meaning.

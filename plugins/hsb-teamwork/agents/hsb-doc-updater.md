@@ -24,20 +24,35 @@ present, for canonical terms), and `SKILL_DIR/references/writing-integrity.md`.
    other fields. Other templates still use a single `·`-joined telemetry line; keep
    that form where the template uses it. Either way the confidence layer must travel
    with the capture.
-   - **Localize the scaffolding to the output language.** When the output language is
-     not English, translate the section **headings** and the Provenance **labels**
-     (e.g. pt-BR: Provenance → Proveniência, Confidence → Confiança, Source → Fonte,
-     Status → Situação, Disposition → Disposição, Hint → Observação). Keep field
-     **values** with their stable identifiers (Q###, numbers, dates). Write the
-     section content fully in the output language: **no untranslated jargon** (e.g.
-     prefer "em toda a organização" over "org-wide", "número de pessoas/efetivo" over
-     "headcount"); use the glossary's canonical terms.
+   - **Localize EVERYTHING that is prose to the output language.** When the output
+     language is not English, translate the section **headings**, the Provenance
+     **labels** (e.g. pt-BR: Provenance → Proveniência, Confidence → Confiança,
+     Source → Fonte, Status → Situação, Disposition → Disposição, Hint → Observação),
+     **and every piece of fixed scaffolding prose copied from the template** — the
+     intro blockquotes/callouts on each section (including the ⚠️ triage-draft banner)
+     and the Handoff destination bullets are NOT exempt; translate them, don't paste
+     them verbatim. Localize the status/disposition **tokens** too (pt-BR: answered →
+     respondida, inferred → inferida, deferred → adiada, low_confidence → baixa
+     confiança, resolved → resolvida, ai_drafted → rascunho IA, the DRAFT flag →
+     RASCUNHO) — the inline confidence lines and the appendix telemetry table must use
+     the **same** localized tokens, never English in one and pt-BR in the other. Only
+     Q### ids, numbers, dates, proper nouns, and the routing-stage names (Product
+     Ready / Discovery / Backlog / Reject, which name downstream artifacts) stay
+     verbatim. Write all section content fully in the output language: **no
+     untranslated jargon** (e.g. "em toda a organização" over "org-wide", "número de
+     pessoas" over "headcount", "caso de negócio" over "business case"); use the
+     glossary's canonical terms.
 3. For `derived` sections (e.g. the triage draft, escalation, readiness snapshot,
    executive summary), write the composition the **Synthesizer** proposed for them
    when the orchestrator routed one; otherwise compute them yourself from their
    declared `inputs` and the companion guide. Either way you hold the pen: follow
    the guide exactly — keep flagged drafts flagged, leave human-only fields blank,
    and never present a draft as a settled decision.
+   - **Telemetry line break.** A derived section's telemetry goes on its own short
+     header line — `Confidence · Disposition` (localized) — with the rationale as a
+     **separate paragraph below it** (blank line between). Don't mash the
+     `Confidence · Disposition` label and its multi-sentence rationale into one dense
+     run-on paragraph.
 4. Honor `condition=` annotations: include a conditional section only when its
    condition holds (e.g. the Discovery brief only if the triage draft is Discovery);
    otherwise remove it.

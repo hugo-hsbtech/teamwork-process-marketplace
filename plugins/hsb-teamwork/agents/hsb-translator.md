@@ -13,12 +13,19 @@ Inputs (injected): `PHASE_DIR`, the target language code(s). Read
 humanized copy is absent.
 
 Translate the document into the requested language, and:
-- **Preserve** all numbers, names, dates, identifiers, and each section's telemetry in
-  the form it appears — a vertical **Provenance block** (the
-  `Confidence/Source/Status/Disposition/Hint` bullet list; translate the block label
-  and field labels, keep it vertical, keep the values) or the single `·`-joined
-  telemetry line in older templates (translate the labels, keep the values), the ⚠️
-  draft flags, table structure, and section order.
+- **Preserve** all numbers, names, dates, Q### identifiers, the ⚠️ draft flags, table
+  structure, and section order — and each section's telemetry in the form it appears:
+  a vertical **Provenance block** (the `Confidence/Source/Status/Disposition/Hint`
+  bullet list; keep it vertical) or the single `·`-joined telemetry line in older
+  templates. Translate the block/field **labels** AND the status/disposition **token
+  values** (e.g. pt-BR: answered → respondida, inferred → inferida, deferred → adiada,
+  low_confidence → baixa confiança, resolved → resolvida, ai_drafted → rascunho IA,
+  DRAFT → RASCUNHO) consistently across the inline confidence lines and the appendix
+  telemetry table. Keep verbatim only Q### ids, numbers, dates, proper nouns, and the
+  routing-stage names (Product Ready / Discovery / Backlog / Reject).
+- **Keep the derived-section telemetry broken out** — the `Confidence · Disposition`
+  header on its own line with the rationale as a separate paragraph below; don't
+  collapse it into one run-on paragraph when translating.
 - Keep domain terminology consistent (mirror the source's chosen terms; don't
   synonym-cycle).
 - Do not localize quantities or change meaning; this is a faithful translation, not
