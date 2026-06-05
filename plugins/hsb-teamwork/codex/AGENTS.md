@@ -1,15 +1,17 @@
 # hsb-teamwork — Codex entry point (AGENTS.md)
 
-This adapter covers **three skills**: `origination-brainstorm`, `readiness-package`,
-and `tech-assessment`. All reuse identical method files from `../skills/` — no
+This adapter covers **four skills**: `origination-brainstorm`, `readiness-package`,
+`tech-assessment`, and `prd-generation`. All reuse identical method files from `../skills/` — no
 duplicated logic. Claude Code and Codex read the same specs; only the harness differs.
 
 This is the **Codex** adapter for the skills described in
-`../skills/origination-brainstorm/SKILL.md`, `../skills/readiness-package/SKILL.md`, and
-`../skills/tech-assessment/SKILL.md`. It reuses the identical method files —
-`../skills/origination-brainstorm/references/`, `../skills/origination-brainstorm/assets/`,
-`../skills/readiness-package/references/`, `../skills/readiness-package/assets/`,
-`../skills/tech-assessment/references/`, and `../skills/tech-assessment/assets/` — so there
+`../skills/origination-brainstorm/SKILL.md`, `../skills/readiness-package/SKILL.md`,
+`../skills/tech-assessment/SKILL.md`, and `../skills/prd-generation/SKILL.md`. It reuses the
+identical method files — `../skills/origination-brainstorm/references/`,
+`../skills/origination-brainstorm/assets/`, `../skills/readiness-package/references/`,
+`../skills/readiness-package/assets/`, `../skills/tech-assessment/references/`,
+`../skills/tech-assessment/assets/`, `../skills/prd-generation/references/`, and
+`../skills/prd-generation/assets/` — so there
 is **no duplicated logic**: Claude Code and Codex read the same specs, they just
 spawn work differently.
 
@@ -19,7 +21,8 @@ spawn work differently.
   the repo root down to the working directory), **or**
 - Install it as a custom prompt: copy a prompt from `prompts/` to `~/.codex/prompts/`
   to get the matching slash command — `hsb-teamwork-origination-brainstorm`,
-  `hsb-teamwork-readiness-package`, or `hsb-teamwork-tech-assessment`.
+  `hsb-teamwork-readiness-package`, `hsb-teamwork-tech-assessment`, or
+  `hsb-teamwork-prd-generation`.
 
 Either way, keep the `origination-brainstorm/` skill folder (its `references/` and
 `assets/`) reachable from where you run Codex, since this entry points at those
@@ -258,3 +261,94 @@ them sequentially (Codex is single-agent).
 Same three modes: Fresh (default), Revisit (re-run after a veto + revised RP, bumping the
 TA version; or resume an unfrozen assessment), Batch/headless (propose the verdict under
 honest dispositions — output is always "draft for CTO sign-off").
+
+---
+
+## prd-generation
+
+For prd-generation runs (the PRD merge), follow the skill at
+`../skills/prd-generation/SKILL.md` and its references under
+`../skills/prd-generation/references/`. Start with
+`../skills/prd-generation/references/orchestration.md`. The origination-brainstorm
+references (especially `initiatives.md` and `writing-integrity.md`) and the
+readiness-package `escalation.md` (the RP↔TA bridge) also apply.
+
+### Your role: prd-generation orchestrator
+
+You **merge** the initiative's **frozen Readiness Package** (product, PO) and **signed
+Technical Assessment** (technical, CTO) into the **PRD** — the single artifact that opens the
+downstream and is delivered to the PM (`PRD = RP + TA`). The PRD is a **merge, not a
+capture**: it stitches the two frozen halves, **invents no facts**, and **preserves
+authorship** (the PO does not rewrite the technical half; the CTO does not rewrite the
+product). You are the only layer that talks to the PO (and, for the technical-half sign-off,
+the CTO).
+
+Read these once, then follow them for the whole run:
+- `../skills/prd-generation/references/orchestration.md` — phases, agent roles (all reused), phase gates, folder layout.
+- `../skills/prd-generation/references/merge.md` — preserve authorship, invent nothing, inherit-then-synthesize, the two paths.
+- `../skills/prd-generation/references/reconciliation.md` — scope reconciliation, consolidated risk, the no-escalation path, the veto halt.
+- `../skills/prd-generation/references/inheritance.md` — RP/TA → PRD section mapping.
+- `../skills/prd-generation/references/handoff.md` — dual sign-off, the handoffReady gate, the PM acceptance/rejection loop.
+- `../skills/origination-brainstorm/references/initiatives.md` — initiative resolve-or-select + phase folders.
+- `../skills/origination-brainstorm/references/writing-integrity.md` — no-truncation + merge rules (critical).
+
+### Codex execution model for prd-generation
+
+Run the phases **sequentially** — either as Codex subagents or by performing each role
+yourself as a step, in this order:
+
+1. **Setup:** resolve-or-select the initiative; **read `initiative.json`** and find the
+   **frozen RP** (the phase that `produces` a `readiness-package`) and resolve the
+   **escalation state**: a signed TA (the phase that `produces` a `technical-assessment`) →
+   escalated; `tech-assessment-ref: not_requested` → RP alone (Part B N/A); TA owed but
+   unwritten → stop (run tech-assessment first); TA **vetoed** → **halt** (signal the PO to
+   re-scope and re-escalate — no PRD on a veto). Pick mode and output language (default en-US;
+   mirror the PO's language); resolve-or-resume the `prd/` phase (`INITIATIVE_DIR/prd/`) and
+   register it (`consumes: ["readiness-package","technical-assessment","intake-record"]` —
+   drop `technical-assessment` on the no-escalation path; `produces: "prd"`); validate the PRD
+   template and derive `contract.lock.md`; index the RP + TA + intake-record into `sources/`.
+2. **Inherit both halves:** Inheritor role (`hsb-stage-inheritor`) carries the RP forward into
+   Part A (`PART: A`) and the TA into Part B (`PART: B`, or the honest-N/A dispositions when
+   not escalated); also carry `effort-cost` (firm from TA / preliminary from RP) and
+   `success-metrics` (from the RP). Origin=inherited; summaries, not copies.
+3. **Synthesize & reconcile:** Reconciler role (`hsb-reconciler`) produces
+   `scope-reconciliation` + the reconciled `a-scope`; Synthesizer role (`hsb-synthesizer`)
+   composes `consolidated-risk`, `inherited-readiness`, and `exec-summary` (last — after Part
+   A/B + effort exist); Section Drafter role (`hsb-section-drafter`) drafts `handoff-gate`.
+   Origin=synthesized.
+4. **Confirm loop + dual sign-off:** present the pre-filled PRD; Confidence Auditor role
+   (`hsb-confidence-auditor`) re-scores and **flags A↔B contradictions** (an A.7 NFR with no
+   B.4 answer; an `a-scope` item the TA constrained but left unchanged) — route conflicts to
+   the Reconciler; questions are a fallback only. The PO confirms the product half; the CTO
+   co-signs the technical half and the carried verdict. Loop until `handoffReady` (dual
+   sign-off committed + every blocksFreeze section resolved or honestly disposed + scope
+   reconciled + the handoff checklist checkable).
+5. **Production:** write the humanized copy, the translation, and the enriched copy; then
+   **externalize the printable final** (Finalizer role, `hsb-finalizer`) to
+   `final/<project>-NNN.md` — same strip-and-count rules as origination.
+6. **Wrap:** write `output/manifest.md` (sign-off status + escalation flag + carried verdict +
+   the `final/` deliverable), then update the `prd/` entry in `initiative.json` — `state:
+   frozen`, final `artifacts`, `produces: prd`, the escalation flag, and a `delivered-to-pm` /
+   `downstream-ready` signal so the next front (PM execution planning) reads that the PRD is
+   the open artifact. A PM rejection (Revisit) adds a `revisions` row, bumps the version, and
+   re-opens only the named gaps.
+
+### The three stage-agnostic subagents this skill drives
+
+| Subagent TOML | Role here |
+|---|---|
+| `agents/hsb-stage-inheritor.toml` | carries the frozen RP into Part A and the TA into Part B (Origin=inherited) |
+| `agents/hsb-synthesizer.toml` | composes the `derived` sections — exec summary, consolidated risk, inherited readiness (Origin=synthesized) |
+| `agents/hsb-reconciler.toml` | produces the scope reconciliation + the reconciled scope; resolves A↔B conflicts |
+
+It also reuses `hsb-section-drafter` (the handoff gate) and `hsb-confidence-auditor` (the
+A↔B consistency check). **No new agents.** Each reads its full role spec from
+`../agents/<role>.md` and the shared references. Run them sequentially (Codex is
+single-agent).
+
+### Modes
+
+Same three modes: Fresh (default), Revisit (re-run after a PM rejection addressing only the
+named gaps and bumping the version; after an upstream half changed; or resume an unfrozen
+PRD), Batch/headless (inherit + synthesize + reconcile under honest dispositions — output is
+always "draft PRD for PO+CTO sign-off").

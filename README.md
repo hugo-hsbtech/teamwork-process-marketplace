@@ -6,7 +6,7 @@
 |                 |                                             |
 |-----------------|---------------------------------------------|
 | **Marketplace** | `hsb-tech`                                  |
-| **Plugin**      | `hsb-teamwork` (v0.1.0)                     |
+| **Plugin**      | `hsb-teamwork` (v0.4.0)                     |
 | **Author**      | Hugo Seabra                                 |
 | **Repo**        | `hugo-hsbtech/teamwork-process-marketplace` |
 
@@ -28,18 +28,19 @@ form — missing the problem framing, the people it affects, the reach, the impa
 Whoever picks it up either guesses or starts a long back-and-forth.
 
 `hsb-teamwork` closes that gap as a **pipeline**, not a single step. A raw signal
-becomes a triaged, product-ready definition with a technical verdict behind it —
-through a sequence of guided, multi-agent conversations, each owned by the person
-who should own it (Submitter → Product Owner → CTO). Every step asks only the
-gaps, grounds answers in evidence, marks what is still unknown honestly (rather
-than blocking on it), and hands the next step a structured, confidence-graded
-artefact instead of a fresh interpretation.
+becomes a triaged, product-ready definition with a technical verdict behind it, merged
+into the **PRD** a delivery team can plan against — through a sequence of guided,
+multi-agent conversations, each owned by the person who should own it (Submitter →
+Product Owner → CTO → back to PO+CTO, delivered to the PM). Every step asks only the
+gaps, grounds answers in evidence, marks what is still unknown honestly (rather than
+blocking on it), and hands the next step a structured, confidence-graded artefact
+instead of a fresh interpretation.
 
-It is the upstream half of a larger **demand-to-delivery** model whose lineage runs
-through Stage-Gate (Cooper), Dual-Track / Continuous Discovery (Cagan, Torres),
-Theory of Constraints (Goldratt), Lean Software Development (Poppendieck), Product
-Development Flow (Reinertsen), and Team Topologies (Skelton & Pais). The plugin is
-where that model becomes a tool you can run.
+It is the upstream half of a larger **demand-to-delivery** model — from raw signal to
+the PRD that opens the downstream — whose lineage runs through Stage-Gate (Cooper),
+Dual-Track / Continuous Discovery (Cagan, Torres), Theory of Constraints (Goldratt),
+Lean Software Development (Poppendieck), Product Development Flow (Reinertsen), and Team
+Topologies (Skelton & Pais). The plugin is where that model becomes a tool you can run.
 
 ---
 
@@ -54,9 +55,9 @@ persona and **hands its frozen artefact to the next** through a shared initiativ
 | Origination     | **`origination-brainstorm`** | Submitter     | origination-record   | ✅ available |
 | Readiness       | **`readiness-package`**      | Product Owner | Readiness Package    | ✅ available |
 | Tech assessment | **`tech-assessment`**        | CTO           | Technical Assessment | ✅ available |
-| PRD             | `prd-generation`             | PO + CTO      | PRD (RP + TA merged) | 🔜 planned  |
+| PRD             | **`prd-generation`**         | PO + CTO → PM | PRD (RP + TA merged) | ✅ available |
 
-Every step reuses the **same engine** — the same orchestration model, the same
+All four steps reuse the **same engine** — the same orchestration model, the same
 single-writer discipline, the same shared agent roster and reference files — so the
 mechanics described below carry across the whole toolkit. The deep dive for any one
 step lives in that skill's own README (linked per step).
@@ -91,15 +92,18 @@ flowchart LR
         FE --> TAD[("Technical Assessment")]
     end
 
-    subgraph PRDP["4 · prd-generation · planned"]
-        PRDD[("PRD")]
+    subgraph PRDP["4 · prd-generation · PO + CTO"]
+        MERGE{"merge<br/>RP + TA"}
+        MERGE -->|" TA vetoed "| HALT["halt · re-scope"]
+        MERGE -->|" signed (or RP-only) "| PRDD[("PRD")]
     end
 
     OR --> TRI
     RPD -->|" if a TA is owed "| CL
     FE -. " veto · revise scope " .-> RAT
-    RPD --> PRDD
-    TAD --> PRDD
+    RPD --> MERGE
+    TAD --> MERGE
+    PRDD -->|" dual sign-off "| PM(["PM · downstream"])
 
     INIT[("initiative.json<br/>glossary · decisions")]
     INIT -. "ties every phase" .- OB
@@ -111,8 +115,9 @@ flowchart LR
 > This is the flow *between* skills — each node is one step's frozen hand-off, not
 > its internals. Every skill runs its **own internal pipeline** (origination's
 > capture loop, readiness's triage-then-rationalize, tech-assessment's
-> classify-then-confirm), documented in that skill's own README. What they share is
-> the [engine](#the-shared-engine), not the phases.
+> classify-then-confirm, prd-generation's inherit-then-merge), documented in that
+> skill's own README. What they share is the [engine](#the-shared-engine), not the
+> phases.
 
 1. **Origination — the Submitter.** A raw statement (+ files) becomes a fully-filled,
    confidence-graded **origination-record** through a brainstorming loop that asks
@@ -132,15 +137,20 @@ flowchart LR
    **veto** path that sends scope back to the PO), architectural impact, integrations
    and NFR feasibility, risks, ADRs, and firm effort. Signing **discharges** the RP's
    owed assessment.
-4. **PRD — planned.** Merges the Readiness Package and the Technical Assessment into
-   the single **PRD** that opens downstream. Without escalation, the PRD forms from
-   the RP alone.
+4. **PRD — the PO and CTO, to the PM.** A **merge, not a capture**: it inherits Part A
+   from the frozen RP and Part B from the signed TA, composes the combined executive
+   summary, **reconciles** the scope against the CTO's constraints, and consolidates
+   product + technical risks into one view. It **invents no facts** and preserves each
+   half's author, closing with a **dual PO + CTO sign-off** before delivery to the PM
+   (who may accept or reject with specific gaps). Without escalation, the PRD forms from
+   the RP alone (Part B is an honest N/A); a **vetoed** TA **halts** the merge until the
+   PO re-scopes and re-escalates.
 
 The **gates are the point.** Triage keeps the expensive rationalization from running
 on demands that should not be product yet; the feasibility verdict keeps scope from
-freezing on terrain that cannot carry it. Uncertainty never blocks a gate — it gets
-recorded as an honest disposition (`assumption` / `discovery` / `deferred`) and carried
-forward.
+freezing on terrain that cannot carry it; the PRD merge halts on a vetoed assessment
+rather than papering over it. Uncertainty never blocks a gate — it gets recorded as an
+honest disposition (`assumption` / `discovery` / `deferred`) and carried forward.
 
 ---
 
@@ -160,11 +170,11 @@ once explains all of them.
   takes an honest disposition. *"I don't know, and here's the plan"* is valid readiness
   — uncertainty never blocks; it gets recorded.
 - **Draft-then-confirm.** Origination builds from zero through a confidence-driven
-  capture loop; readiness and tech-assessment **pre-fill every section before the
-  persona sees the document** — inherited from upstream, AI-drafted, or honestly
-  disposed — so the screen looks like the system already did the work and is asking
-  for the persona's judgment, not like a blank form. Questions are the fallback, not
-  the primary mode.
+  capture loop; readiness, tech-assessment, and prd-generation **pre-fill every section
+  before the persona sees the document** — inherited from upstream, AI-drafted,
+  synthesized, or honestly disposed — so the screen looks like the system already did
+  the work and is asking for the persona's judgment, not like a blank form. Questions
+  are the fallback, not the primary mode.
 - **One writer per file.** Every mutable artefact has exactly one writer agent; every
   other agent is read-only and returns *proposals* the orchestrator routes to that
   single writer. Writes are serialized, queued, and merged (read-modify-write), so
@@ -186,7 +196,7 @@ Work is organized into **initiatives**. A run resolves an initiative at
 `<TEAMWORK_ROOT>/<YYYYMMDD>-<HHMM>-<project>-<hash6>/` (e.g.
 `20260603-1833-pokerplan-a8432a`), where `TEAMWORK_ROOT` is `$TEAMWORK_HOME` or your
 project's git root + `/.teamwork`. **Each step runs as a phase subfolder of the same
-initiative**, so origination, readiness, and assessment sit side by side:
+initiative**, so origination, readiness, assessment, and prd sit side by side:
 
 ```
 <TEAMWORK_ROOT>/<YYYYMMDD>-<HHMM>-<project>-<hash6>/
@@ -195,7 +205,8 @@ initiative**, so origination, readiness, and assessment sit side by side:
 ├── decisions.md        # shared cross-phase decisions ledger
 ├── origination/        # the origination phase  → target-document.md, sources/, output/, final/
 ├── readiness/          # the readiness phase    → intake-record.md, readiness-document.md
-└── assessment/         # the tech-assessment phase → technical-assessment.md, tech-landscape-*.md
+├── assessment/         # the tech-assessment phase → technical-assessment.md, tech-landscape-*.md
+└── prd/                # the prd-generation phase → prd.md (RP + TA merged), delivered to the PM
 ```
 
 `initiative.json` is an *index of definitions and works*: per phase it records what was
@@ -258,6 +269,20 @@ ADRs, and firm effort/cost. Signing discharges the RP's owed assessment.
 > Deep dive: [`skills/tech-assessment/README.md`](plugins/hsb-teamwork/skills/tech-assessment/README.md)
 > · spec: [`SKILL.md`](plugins/hsb-teamwork/skills/tech-assessment/SKILL.md)
 
+### `prd-generation` — PO + CTO → PM
+
+Runs the **PRD merge** — the final assembly. It **inherits** Part A from the frozen RP
+and Part B from the signed TA (fanned out in parallel), **synthesizes** the bridge (the
+combined executive summary, the consolidated risk view), and **reconciles** the scope
+against the CTO's constraints. It is a *merge, not a capture*: it re-authors neither half
+and invents no facts. It closes with a **dual PO + CTO sign-off** and a PM acceptance
+gate, handles the RP-alone path when there was no escalation (Part B is an honest N/A),
+and **halts** on a vetoed TA. No new agents — it maps onto the engine's Inheritor,
+Synthesizer, and Reconciler.
+
+> Deep dive: [`skills/prd-generation/README.md`](plugins/hsb-teamwork/skills/prd-generation/README.md)
+> · spec: [`SKILL.md`](plugins/hsb-teamwork/skills/prd-generation/SKILL.md)
+
 ---
 
 ## Install & use
@@ -276,10 +301,12 @@ next:
 /hsb-teamwork:origination-brainstorm   # Submitter — capture the demand
 /hsb-teamwork:readiness-package        # PO — triage, then rationalize
 /hsb-teamwork:tech-assessment          # CTO — feasibility verdict (if escalated)
+/hsb-teamwork:prd-generation           # PO + CTO — merge RP + TA into the PRD, deliver to PM
 ```
 
 You can also just describe a demand in normal chat — the skills trigger on the matching
-request (origination/capture/triage, "write the RP for…", "assess feasibility of…").
+request (origination/capture/triage, "write the RP for…", "assess feasibility of…",
+"generate the PRD for…").
 
 ### Codex
 
@@ -329,12 +356,14 @@ teamwork-process-marketplace/
 │       ├── skills/                   # one folder per step: SKILL.md, README, references/, assets/
 │       │   ├── origination-brainstorm/
 │       │   ├── readiness-package/
-│       │   └── tech-assessment/
+│       │   ├── tech-assessment/
+│       │   └── prd-generation/
 │       ├── agents/hsb-*.md           # shared subagent roster (phase-agnostic specialists)
-│       └── codex/                    # Codex adapter (AGENTS.md, prompt, *.toml agents)
+│       └── codex/                    # Codex adapter (AGENTS.md, prompts, *.toml agents)
 ├── evals/                            # repo-level eval suite (dev/CI only)
-│   └── origination-brainstorm/       # assertions.py, evals.json, rubric.md, run.sh, fixtures, golden
-└── .claude/skills/                   # symlink into the plugin for local discoverability
+│   ├── origination-brainstorm/       # assertions.py, evals.json, rubric.md, run.sh, fixtures, golden
+│   └── prd-generation/               # per-skill eval harness (assertions, fixtures, golden)
+└── .claude/skills/                   # symlinks into the plugin for local discoverability
 ```
 
 The plugin is **self-contained** — each skill's template, companion guide, and golden
@@ -349,7 +378,7 @@ without a second copy.
 - [x] `origination-brainstorm` — origination → filled, confidence-graded document + variants
 - [x] `readiness-package` — the PO's two-act journey: triage → frozen Readiness Package
 - [x] `tech-assessment` — the CTO's journey: feasibility verdict + Technical Assessment (the technical half of the PRD)
-- [ ] `prd-generation` — PRD from the accumulated context (RP + TA)
+- [x] `prd-generation` — the PRD merge: RP + TA → the PRD (dual PO+CTO sign-off) delivered to the PM
 
 ---
 

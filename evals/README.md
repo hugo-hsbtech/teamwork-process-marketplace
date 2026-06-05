@@ -31,12 +31,30 @@ evals/
     ├── golden/         # seat-management.readiness-document.md (reference output)
     ├── fixtures/       # origination-record input + underfilled RP seed for revisit case
     └── runs/           # per-iteration outputs + scorecard (gitignored)
+└── prd-generation/
+    ├── evals.json      # test cases: RP + TA -> PRD (escalated merge) + RP-alone -> PRD (no escalation)
+    ├── rubric.md       # grading: Layer 1 structural (auto) + Layer 2 qualitative (LLM)
+    ├── assertions.py   # deterministic structural grader (the PRD contract: merge sections, dual sign-off)
+    ├── fanout.py       # fan-out detector: did the merge orchestrate (reconciler + Part A∥B inheritor)?
+    ├── run.sh          # runner: self-test + (with claude CLI) live cases -> scorecard + viewer layout
+    ├── view.sh         # launch the eval-viewer on an iteration's runs
+    ├── golden/         # rbac.prd-document.md (reference output — escalated merge, Feasible with caveats)
+    ├── fixtures/       # frozen RP + signed TA (escalated) and a not_requested RP (no-escalation) inputs
+    └── runs/           # per-iteration outputs + scorecard (gitignored)
 ```
 
 `readiness-package/` grades the `origination-record → RP` pipeline: structural checks
 via `assertions.py` (sentinel, annotations, blocking sections, Origin tags,
 tech-assessment-ref resolution), a fan-out check via `fanout.py` (the orchestrator
 actually spawned its subagents, in parallel), and qualitative scoring via `rubric.md`.
+
+`prd-generation/` grades the `RP + TA → PRD` **merge**: structural checks via
+`assertions.py` (sentinel, ≥ 20 annotations, the 22 blocking capture+derived sections
+resolved-or-disposed, valid Origins from `{inherited, synthesized, po_authored,
+cto_authored, decided}`, the merge sections present, and a dual PO+CTO sign-off), a
+fan-out check via `fanout.py` (the Reconciler ran and the Inheritor fanned out Part A ∥
+Part B), and qualitative scoring via `rubric.md`. Two cases: an escalated merge (RP + TA,
+graded against the golden) and the no-escalation path (RP alone, Part B honestly N/A).
 
 ## How it works (mirrors skill-creator's loop)
 
@@ -67,7 +85,7 @@ python3 assertions.py golden/queue-voting.target-document.md
 
 ## Review runs in the eval-viewer
 
-Both skills feed the **shared** `eval-viewer/`. Each `run.sh` writes its runs in
+All three skill suites feed the **shared** `eval-viewer/`. Each `run.sh` writes its runs in
 the layout the viewer reads (`runs/iteration-N/.../outputs/` + `eval_metadata.json`
 + `grading.json`, plus a workspace `benchmark.json` built by
 `eval-viewer/make_benchmark.py`). Launch the UI from either skill dir:
