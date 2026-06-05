@@ -194,10 +194,16 @@ and produced, instead of crawling each phase's documents or hard-coding paths.
 
 **Maintaining it (orchestrator).** Write it on initiative creation. Update the
 phase entry when a front **starts** (register `started`, `state: active`,
-`consumes`, `templateHash`) and when it **freezes** (set `state: frozen`, final
-`readiness`, the `artifacts` paths, and any `owes`). Flip `status` to `closed` only
-when the human says the whole demand is done. All updates are read-modify-write,
-keyed by phase name — never clobber a sibling phase's entry.
+`consumes`, `templateHash`) and when it **freezes** (set `state: frozen`,
+`finishedAt` — the freeze timestamp, final `readiness`, the `artifacts` paths, and
+any `owes`). Flip `status` to `closed` only when the human says the whole demand is
+done. All updates are read-modify-write, keyed by phase name — never clobber a
+sibling phase's entry.
+
+> **`finishedAt` (analytics).** Recording the freeze timestamp alongside `started`
+> is what lets `initiative-analytics` compute each phase's wall-clock and the
+> initiative's end-to-end lead time. It costs nothing to write and is purely
+> additive — set it whenever you set `state: frozen`.
 
 ## The initiative as the index a new front reads
 
@@ -299,6 +305,21 @@ agent:
    reader.
 
 Resuming is always safe because of the idempotency rules below.
+
+6. **Write the session binding (analytics).** Right after you resolve the
+   initiative and phase, write a tiny binding so the cost-capture hook can
+   attribute this session's token usage to the right place:
+
+   ```
+   <TEAMWORK_ROOT>/.sessions/<session_id>.json
+     { "initiative": "<INITIATIVE_DIR name>", "phase": "<phase>", "updated": "<ISO ts>" }
+   ```
+
+   `<session_id>` is the current Claude Code / Codex session id. This is the only
+   initiative-level write the binding needs; it is harmless if analytics is never
+   run, and it is what lets `initiative-analytics` measure cost per phase. Overwrite
+   it on resume (the latest phase the session touched wins). See
+   [`../../initiative-analytics/references/cost-telemetry.md`](../../initiative-analytics/references/cost-telemetry.md).
 
 ## Why re-running never duplicates (within a phase)
 
