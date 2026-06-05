@@ -18,10 +18,12 @@ computed — so ROI is a defensible metric, not a vibe.
 ## The investment index
 
 A single normalized **investment** figure feeds the composites, alongside the raw
-USD. It is built from the ledger:
+USD. It is built from the ledger's **raw tokens**, priced at **report time** with
+the freshness-checked table (the row `usd` is only an at-capture snapshot — see
+`cost-telemetry.md` § *Pricing freshness*):
 
 ```
-investment_usd      = Σ usd                      (exact, headline)
+investment_usd      = Σ (raw tokens × freshness-checked rates)   (exact, headline)
 investment_tokens   = Σ (in + out + cacheCreate + cacheRead)
 investment_minutes  = active compute minutes  (Σ durationMs / 60000)
 ```
