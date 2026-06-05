@@ -21,7 +21,7 @@ upstream artefact already covers, propose an entry that:
 4. carries forward any open disposition (assumption/discovery/deferred) verbatim, so
    the RP's "Prontidão herdada" section can list them.
 
-Also carry forward the **demand nature** (Greenfield / Brownfield / Híbrido) and the
+Also carry forward the **demand nature** (Greenfield / Brownfield / Hybrid) and the
 **Knowledge Base** reference (`tech-landscape-[system].md`) from the **Intake Record**
 into the target `meta` / classification fields, verbatim — the PO classified them at
 triage; do not re-derive or re-classify. (In a **tech-assessment** run the upstream

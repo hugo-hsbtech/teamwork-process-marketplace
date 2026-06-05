@@ -5,7 +5,7 @@ description: >-
   Assessment (TA), the technical half that merges with the Readiness Package into the
   PRD. The TA RESPONDS to a frozen RP and is authored ALONE by the CTO; it never edits
   the RP. It classifies the demand nature under the technical lens (Greenfield → DEFINE
-  the foundation; Brownfield → DISCOVER the current system; Híbrido → both), resolves
+  the foundation; Brownfield → DISCOVER the current system; Hybrid → both), resolves
   the Knowledge Base (tech-landscape), then delivers: the feasibility verdict (the
   CTO's first-class decision — feasible / feasible-with-caveats / infeasible-as-scoped,
   with a veto path), architectural impact, integrations feasibility, NFR feasibility
@@ -18,7 +18,7 @@ description: >-
   confidence and the CTO reviews, edits, approves, and signs (or vetoes). It seeds
   (greenfield) or references/updates (brownfield) the persistent tech-landscape KB, and
   discharges the RP's TechAssessmentRef debt on sign-off. Template-driven and portable;
-  works in pt-BR by default and mirrors the requested language.
+  works in en-US by default and mirrors / translates to the requested language (e.g. pt-BR).
 user-invocable: true
 ---
 
@@ -163,7 +163,7 @@ output is then "draft for CTO sign-off," never a real sign-off).
 - [`assets/target-template.technical-assessment.guide.md`](assets/target-template.technical-assessment.guide.md) —
   companion filling guide; inject alongside the template when spawning agents.
 - [`assets/golden-example.md`](assets/golden-example.md) — self-contained calibration
-  exemplar (a brownfield TA ending in `viável-com-ressalvas`).
+  exemplar (a brownfield TA ending in `Feasible with caveats`).
 
 ## The principle that makes parallelism safe
 
@@ -294,12 +294,14 @@ These runs are embarrassingly parallel.
 
 ## Language
 
-Default **pt-BR** for the conversation and the captured document. Detect the language of
-the CTO's opening statement and mirror it. The `hsb-translator` produces any additional
-requested languages as separate `output/` files. Keep section structure identical across
-languages. Machine-readable field labels, enum values (`Origin`, `disposition`,
-feasibility `verdict`), and `origination:` annotation markers stay in the engine's
-canonical form regardless of output language.
+Detect the language of the CTO's opening statement and mirror it for the conversation and
+the captured document. **Default en-US when ambiguous** (consistent with the
+origination-brainstorm engine). The `hsb-translator` produces any additional requested
+languages (e.g. pt-BR) as separate `output/` files. Keep section structure identical
+across languages. Machine-readable field labels, the `Origin` / `disposition` enum
+*labels*, and `origination:` annotation markers stay in the engine's canonical form
+regardless of output language; the human-readable feasibility `verdict` and `Status`
+values are rendered in the document's language (e.g. en-US "Feasible with caveats").
 
 ## The boundary — what the TA is and is not
 
@@ -311,7 +313,7 @@ testability/observability, hard constraints, technical risks, ADRs, and firm cos
 two **merge in the PRD** (`PRD = RP + TA`) — it is the PRD, not the TA, that opens the
 downstream (`personas/02-po.md` §2/§10, `templates/README.md`).
 
-If the CTO vetoes (`inviável-como-escopado`), the TA freezes as a signed veto and the
+If the CTO vetoes (`Infeasible as scoped`), the TA freezes as a signed veto and the
 orchestrator signals the PO to revise the RP scope — the CTO does not redefine the
 product.
 

@@ -17,7 +17,7 @@ The TA's relationship to it depends on the **demand nature** (see
 - **Brownfield** → the TA is a **consumer** of the KB. The `current-state` path
   **references** the existing `tech-landscape`, and records back into it anything new
   this demand discovered (updates, not a rewrite).
-- **Híbrido** → both: seed the new module's section, update the existing system's.
+- **Hybrid** → both: seed the new module's section, update the existing system's.
 
 `hsb-landscape-keeper` is the **sole writer** of `tech-landscape-<system>.md` (a
 persistent, initiative/repo-level file — distinct from the per-phase
@@ -29,15 +29,15 @@ file, and it never touches `technical-assessment.md` or `qa-log.md`.
 | Nature / KB state | When | What it does |
 |---|---|---|
 | Greenfield (KB N/A) | Phase 5 (or Phase 4 once ADRs are confirmed) | **Creates** `tech-landscape-<system>.md`, seeding it from the confirmed foundational ADRs, stack selection, and structure conventions. |
-| Brownfield, KB `Existe` | Phase 4 | **References** it (no write needed) unless the demand revealed something new; then a small **update**. |
-| Brownfield/Híbrido, KB `Não existe` | Phase 4 (the Discovery spike) | **Creates** the KB by documenting the current system — this is the prerequisite that unblocks the feasibility verdict (feasibility cannot be signed on unknown terrain). |
-| Brownfield/Híbrido, KB `Parcial` | Phase 4 | **Updates** it — fills the gaps `tech-classification` named. |
+| Brownfield, KB `Exists` | Phase 4 | **References** it (no write needed) unless the demand revealed something new; then a small **update**. |
+| Brownfield/Hybrid, KB `Does not exist` | Phase 4 (the Discovery spike) | **Creates** the KB by documenting the current system — this is the prerequisite that unblocks the feasibility verdict (feasibility cannot be signed on unknown terrain). |
+| Brownfield/Hybrid, KB `Partial` | Phase 4 | **Updates** it — fills the gaps `tech-classification` named. |
 
 ## Inputs (injected)
 
 `PHASE_DIR`, `SKILL_DIR`, `LANDSCAPE_PATH` (the `tech-landscape-<system>.md` to seed or
 update — resolved by the orchestrator at the initiative/repo level), `NATURE`
-(Greenfield / Brownfield / Híbrido), and the confirmed TA sections it draws from
+(Greenfield / Brownfield / Hybrid), and the confirmed TA sections it draws from
 (`tech-foundation` / `current-state`, `adrs`, `architectural-impact`).
 
 ## What it writes

@@ -31,13 +31,13 @@ CTO confirms). The promotion path is `inherited` / `ai_drafted` → **CTO review
 
 - **`tech-classification`** (blocks, min-conf 80) — **the decision that governs the
   rest of the document.** `hsb-tech-classifier` inherits the demand nature
-  (Greenfield / Brownfield / Híbrido) and the KB reference from the **Intake Record**,
+  (Greenfield / Brownfield / Hybrid) and the KB reference from the **Intake Record**,
   confirms them under the technical lens, and sets the **path to fill**:
   - **Greenfield** → the `tech-foundation` path is required; `current-state` is N/A.
   - **Brownfield** → the `current-state` path is required; `tech-foundation` is N/A.
-  - **Híbrido** → **both** paths are required.
-  Resolve the KB: `Existe` (reference the `tech-landscape-[system].md`), `Parcial`
-  (reference + name the gaps), or `Não existe` (route documenting the current system as
+  - **Hybrid** → **both** paths are required.
+  Resolve the KB: `Exists` (reference the `tech-landscape-[system].md`), `Partial`
+  (reference + name the gaps), or `Does not exist` (route documenting the current system as
   a **Discovery spike** in `discovery-path`, and have `hsb-landscape-keeper` create/seed
   the `tech-landscape`). Feasibility cannot be judged on unknown terrain. If the CTO
   cannot settle the nature, it becomes a CTO-priority question — do not guess.
@@ -48,17 +48,17 @@ CTO confirms). The promotion path is `inherited` / `ai_drafted` → **CTO review
 
 - **`feasibility-verdict`** (blocks, min-conf 85) — the **CTO's first-class model is
   feasibility** (`personas/03-cto.md` §3 — *feasibility is first class*).
-  `hsb-feasibility-assessor` proposes one verdict — `viável` / `viável-com-ressalvas` /
-  `inviável-como-escopado` — carrying the full feasibility model: `verdict` + `rationale`
+  `hsb-feasibility-assessor` proposes one verdict — `Feasible` / `Feasible with caveats` /
+  `Infeasible as scoped` — carrying the full feasibility model: `verdict` + `rationale`
   + **`terrain`** + `confidence` + `source` + `generates`. A defensible rationale (never a
   rubber stamp), the **terrain** it rests on (the `tech-landscape` KB, or an honest
-  "não documentado → Discovery" — *"feasibility cannot be assessed on unknown terrain"*,
-  the CTO's golden rule, `03-cto.md` §3), and, when "com ressalvas", what must be true for
+  "undocumented → Discovery" — *"feasibility cannot be assessed on unknown terrain"*,
+  the CTO's golden rule, `03-cto.md` §3), and, when "with caveats", what must be true for
   it to hold. The **`generates`** field names what the verdict creates downstream —
   `hard_constraint` / `adr` / `discovery_spike` / `kb_update` — so the judgment links to
   the sections it drives. High threshold by design: this is the central CTO judgment, so
   it resolves only at high confidence and is always `cto_authored` (the CTO commits it).
-  - **`inviável-como-escopado` is the veto path:** the verdict carries the veto +
+  - **`Infeasible as scoped` is the veto path:** the verdict carries the veto +
     rationale; the TA still freezes (the CTO's decision is complete and signed), and the
     orchestrator signals the PO to revise the RP scope and re-escalate. The CTO does not
     redefine the product. See references/feasibility.md § The veto path.
@@ -82,21 +82,21 @@ CTO confirms). The promotion path is `inherited` / `ai_drafted` → **CTO review
 
 ## The two paths (only the path the classification requires is in force)
 
-- **`current-state`** (BROWNFIELD path; blocks when nature ∈ {Brownfield, Híbrido}) —
+- **`current-state`** (BROWNFIELD path; blocks when nature ∈ {Brownfield, Hybrid}) —
   **document the system before changing it.** Existing patterns/conventions to respect,
   integration points touched (with coupling nature + risk), and technical debt /
   regression risk (with current test coverage). The equivalent of BMAD's
   *document-project*. When an up-to-date `tech-landscape` exists, **reference it** and
   record only what is specific to this demand. **If greenfield:** dispose
-  `Disposition: decided`, content "N/A — greenfield (ver Classificação Técnica)".
+  `Disposition: decided`, content "N/A — greenfield (see Technical classification)".
 
-- **`tech-foundation`** (GREENFIELD path; blocks when nature ∈ {Greenfield, Híbrido}) —
+- **`tech-foundation`** (GREENFIELD path; blocks when nature ∈ {Greenfield, Hybrid}) —
   **decide the foundation with criteria, not by reflex.** Stack selection (each layer:
   choice + decision criterion + discarded alternative), target architecture (C4-style
   context/container, only the levels that add value), and structure / repo conventions.
   These foundational choices **seed** a new `tech-landscape` via `hsb-landscape-keeper`.
-  **If brownfield:** dispose `Disposition: decided`, content "N/A — brownfield (ver
-  Classificação Técnica)".
+  **If brownfield:** dispose `Disposition: decided`, content "N/A — brownfield (see
+  Technical classification)".
 
 > The non-applicable path's `Disposition: decided` N/A entry is an **honest disposition**
 > that clears the freeze gate — it is not a gap. See references/classification.md.
@@ -120,19 +120,19 @@ each entry becomes `Origin: cto_authored`.
 
 - **`integrations`** (blocks, min-conf 70) — the RP's required integrations under the
   **technical feasibility** lens (migrated from old RP §7): type, protocol, and
-  feasibility / known third-party risks per system. "Nenhuma" with `Disposition: decided`
+  feasibility / known third-party risks per system. "None" with `Disposition: decided`
   if the demand has no integrations.
 
 - **`build-vs-buy`** (non-blocking, min-conf 0) — for each non-trivial capability:
   Build / Buy / Reuse, with rationale and the effect on cost/timeline. Skip with
-  `Disposition: decided` ("sem decisão make-or-buy relevante") if there is none.
+  `Disposition: decided` ("no relevant make-or-buy decision") if there is none.
 
 - **`alternatives`** (blocks, min-conf 70) — **the rationale, not just the conclusion**
   (design-doc standard). One row per significant alternative: pros, cons, and **why it
   was NOT chosen** — so the downstream does not re-litigate it.
 
 - **`nfr-feasibility`** (blocks, min-conf 75) — **closes the product ↔ technical loop.**
-  One row per NFR the RP declared in §8: feasible? (Sim / Com ressalvas / Não), how it
+  One row per NFR the RP declared in §8: feasible? (Yes / With caveats / No), how it
   will be achieved, and the risk/caveat. An infeasible NFR is a veto or re-scoping
   signal, not a detail — surface it and reflect it in `feasibility-verdict`.
 
@@ -143,7 +143,7 @@ each entry becomes `Origin: cto_authored`.
 
 - **`hard-constraints`** (blocks, min-conf 75) — non-negotiable conditions that limit the
   solution space, with type, detail, and effect on scope. The PO does not soften these;
-  if they disagree they escalate explicitly. "Nenhuma" with `Disposition: decided` if
+  if they disagree they escalate explicitly. "None" with `Disposition: decided` if
   there are none.
 
 - **`tech-risks`** (blocks, min-conf 75) — **technical** risks only (product/business
@@ -175,11 +175,11 @@ each entry becomes `Origin: cto_authored`.
 ## Meta sections
 
 - **`meta`** (non-blocking) — stable IDs (TA-AAAA-NNN, linked RP-AAAA-NNN vX,
-  INT-AAAA-NNN), the responsible CTO, status (Requisitado / Em andamento / Assinado /
-  Vetado), the feasibility verdict mirror, sign-off date, and output language. Filled by
+  INT-AAAA-NNN), the responsible CTO, status (Requested / In progress / Signed off /
+  Vetoed), the feasibility verdict mirror, sign-off date, and output language. Filled by
   the engine from context; the CTO confirms IDs and sign-off date.
 - **`revisions`** (non-blocking) — version, date, author, status, and change summary per
-  revision. Initialised v1 / Em andamento; updated each confirmed edit cycle.
+  revision. Initialised v1 / In progress; updated each confirmed edit cycle.
 
 ---
 
@@ -189,7 +189,7 @@ A good TA reads like a CTO's signed feasibility judgment *that an engineer who h
 seen the code could act on*: the demand nature is confirmed and governs the document; the
 applicable path is filled and the other is honestly N/A; every NFR the RP declared has a
 feasibility answer; alternatives record *why not*; ADRs carry the CTO's sign-off; the
-effort/cost is firm; and the feasibility verdict is defensible — a clear `viável` /
-`viável-com-ressalvas`, or an honest `inviável-como-escopado` veto with rationale. The TA
+effort/cost is firm; and the feasibility verdict is defensible — a clear `Feasible` /
+`Feasible with caveats`, or an honest `Infeasible as scoped` veto with rationale. The TA
 contains **no product authorship** — it responds to the RP and never edits it. It is the
 technical half that merges with the RP into the PRD.

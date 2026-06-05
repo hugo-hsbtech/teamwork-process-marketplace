@@ -206,7 +206,7 @@ yourself as a step, in this order:
    `readiness-package`, via its `artifacts.canonical` / `final`) plus the **Intake
    Record** and the owed `TechAssessmentRef` debt. Confirm a TA is actually owed (RP
    escalation requested/deferred — if `not_requested`, stop: no TA needed). Pick mode and
-   output language (default pt-BR); resolve-or-resume the `assessment/` phase
+   output language (default en-US; mirror the CTO's language); resolve-or-resume the `assessment/` phase
    (`INITIATIVE_DIR/assessment/`) and register it (`consumes:
    ["readiness-package","intake-record"]`, `produces: "technical-assessment"`); validate
    the TA template and derive `contract.lock.md`; index the RP + intake-record +
