@@ -1,0 +1,27 @@
+{
+  "skill": "hsb-teamwork:prd-generation",
+  "notes": "Repo-level evals (dev/CI only; not shipped in the plugin). Each case runs the skill headlessly (no live PO/CTO: sign-off stays 'draft for PO+CTO sign-off', gaps become honest dispositions, synthesized sections stay confirmed-or-disposed) and is graded by assertions.py (structural, on the PRD: sentinel, annotations, the 22 blocking sections, valid Origins, the merge sections, the dual sign-off) + fanout.py (process: reconciler_present, inheritor_fanout_in_turn, synthesizer_fanout_in_turn, fanout_pass) + rubric.md (qualitative, vs the golden). The PRD is a MERGE: Part A is inherited from the RP, Part B from the TA (or honestly N/A when not escalated).",
+  "evals": [
+    {
+      "id": 0,
+      "name": "escalated-merge-rbac",
+      "prompt": "Run the hsb-teamwork prd-generation skill in non-interactive mode to MERGE a frozen Readiness Package and a signed Technical Assessment into a PRD. The frozen RP (product half) is evals/prd-generation/fixtures/sources/02-readiness-package-rbac.md and the signed TA (technical half, verdict 'Feasible with caveats') is evals/prd-generation/fixtures/sources/03-technical-assessment-rbac.md — index both as the merge sources. Inherit Part A (a-objectives, a-scope, a-personas, a-journey, a-business-rules, a-user-stories, a-nfrs, a-edge-cases) from the RP and Part B (b-feasibility, b-nature-landscape, b-arch-impact, b-nfr-feasibility, b-alternatives, b-hard-constraints, b-adrs) from the TA, fanning out one hsb-stage-inheritor per PART (A and B) in parallel, tagged Origin=inherited at preserved confidence — summaries, not copies. The feasibility verdict is INHERITED from the TA, never re-decided. Then synthesize the derived sections (exec-summary, consolidated-risk, inherited-readiness) with hsb-synthesizer and reconcile the scope with hsb-reconciler: the TA's hard constraint deferred automated SSO/SCIM provisioning, so scope-reconciliation records that and a-scope reflects the reconciled (deferred) result. Consolidate the RP product/business risks with the TA technical risks into one tagged table. Carry the firm effort from the TA. Close with the dual sign-off (PO: RP frozen; CTO: Feasible with caveats) and a checkable handoff-gate. For any genuine gap use an honest disposition rather than asking. Write the merged PRD to {OUT}/prd-document.md (keep the section annotations and the END OF DOCUMENT sentinel). Do not ask questions.",
+      "files": [
+        "evals/prd-generation/fixtures/sources/02-readiness-package-rbac.md",
+        "evals/prd-generation/fixtures/sources/03-technical-assessment-rbac.md"
+      ],
+      "golden": "golden/rbac.prd-document.md",
+      "expected_output": "A merged PRD: Part A inherited from the RP and Part B from the TA (all blocking sections at/above threshold or honestly disposed), every section tagged with a valid Origin (inherited / synthesized / po_authored / cto_authored / decided), the feasibility verdict carried from the TA (not re-decided), scope reconciliation recording the SSO/SCIM deferral with a-scope reflecting it, a consolidated risk table tagging RP vs TA rows, the firm 21-day effort, a dual PO+CTO sign-off, a checkable handoff gate, and the sentinel present. The trace shows the inheritor fanned out Part A ∥ Part B and the reconciler ran."
+    },
+    {
+      "id": 1,
+      "name": "no-escalation-merge-session-timer",
+      "prompt": "Run the hsb-teamwork prd-generation skill in non-interactive mode to assemble a PRD from a frozen Readiness Package that was NOT escalated to the CTO. The frozen RP is evals/prd-generation/fixtures/sources/02-readiness-package-session-timer.md (tech-assessment-ref: not_requested — no architectural impact). There is NO Technical Assessment, so the PRD forms from the RP alone: inherit Part A from the RP (Origin=inherited), and dispose EVERY Part B section (b-feasibility, b-nature-landscape, b-arch-impact, b-nfr-feasibility, b-alternatives, b-hard-constraints, b-adrs) as Disposition=decided with content 'N/A — no architectural escalation' (an honest disposition that clears the gate). The CTO sign-off row is an honest N/A; only the PO signs. Carry the RP's preliminary estimate into effort-cost (labeled preliminary). Scope reconciliation is 'RP scope maintained in full'. Synthesize the exec-summary, consolidated-risk, and inherited-readiness from the RP alone, and produce a checkable handoff-gate. For any genuine gap use an honest disposition rather than asking. Write the PRD to {OUT}/prd-document.md (keep the section annotations and the END OF DOCUMENT sentinel). Do not ask questions.",
+      "files": [
+        "evals/prd-generation/fixtures/sources/02-readiness-package-session-timer.md"
+      ],
+      "golden": null,
+      "expected_output": "A PRD from the RP alone: Part A inherited and resolved; every Part B section Disposition=decided 'N/A — no architectural escalation'; the CTO sign-off row an honest N/A; effort-cost carrying the RP preliminary estimate; scope reconciliation = 'RP scope maintained in full'; the merge sections present; the dual sign-off row present (PO signs, CTO N/A); and the sentinel present."
+    }
+  ]
+}
