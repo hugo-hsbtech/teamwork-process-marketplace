@@ -56,9 +56,13 @@ override per run).
   **WebFetch** `https://platform.claude.com/docs/en/pricing.md`. Rewrite
   `pricing.json`'s `models` with the fresh rates and set `capturedAt` to now (keep
   `ttlHours`). Then proceed.
-- **Refresh unavailable** (offline / no source) → do **not** block: proceed with
-  the stale table and tell the Reporter to **flag staleness** (show `capturedAt`
-  and age) so the USD is used knowingly.
+- **Refresh unavailable** (offline / no source) → **HARD BLOCK**: stop here, do
+  **not** run the collectors or write a report. Tell the human the prices are stale
+  and could not be refreshed, and offer the three ways forward: restore a source,
+  edit `pricing.json` by hand, or **re-run with `allowStalePricing`** (per-run
+  override or the `pricing.json` flag) — only then proceed, with the Reporter
+  flagging ⚠️ STALE (`capturedAt` + age). Default is to halt so a stale USD never
+  ships silently.
 
 Because the ledger stores **raw tokens**, re-pricing here makes the report reflect
 *current* rates regardless of when capture happened — that is the whole point of

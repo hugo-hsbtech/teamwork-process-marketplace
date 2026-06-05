@@ -160,9 +160,15 @@ analytics run, compute `age = now − capturedAt`:
   `https://platform.claude.com/docs/en/pricing.md`. Rewrite `pricing.json`'s
   `models` and set `capturedAt` to now (keep `ttlHours`). Then price with the fresh
   table.
-- **Refresh unavailable** (no network / no source) → do **not** block: price with
-  the stale table and **flag staleness loudly in the report** (show `capturedAt`
-  and the age), so the number is used knowingly. (`refresh.onUnavailable`.)
+- **Refresh unavailable** (no network / no source) → **HARD BLOCK**: do **not**
+  price and do **not** produce the report. Tell the human the prices are stale and
+  could not be refreshed, and offer the three ways forward: restore a source,
+  update `pricing.json`'s `models` + `capturedAt` by hand, or **explicitly
+  re-run with `allowStalePricing`** (a per-run override, or the
+  `pricing.json` flag) to price with the stale table — in which case the report is
+  produced but flagged ⚠️ STALE (`capturedAt` + age). The default
+  (`refresh.onUnavailable`, `allowStalePricing: false`) is to halt, so a stale USD
+  never ships silently.
 
 The **hook never fetches** — it stays offline and fast, pricing opportunistically
 into the snapshot `usd`. All freshness logic lives in the orchestrator at report

@@ -19,13 +19,15 @@ out (readiness, dispositions, triage decision, feasibility verdict), and the
   appends **raw-token** consumption blocks to
   `<initiative>/analytics/cost-ledger.jsonl`. The four upstream skills write a tiny
   **session binding** so the hook knows which initiative/phase a session is in.
-- **Prices are kept fresh by a TTL.** `assets/pricing.json` carries a
+- **Prices are kept fresh by a TTL, enforced.** `assets/pricing.json` carries a
   `capturedAt` datetime and a `ttlHours` lifecycle (default **48h**,
   parameterizable). Because the ledger stores raw tokens, the **authoritative USD
   is computed at report time**: the skill checks the price age first and, if older
   than `ttlHours`, **fetches a fresh table** (via the `claude-api` skill, else the
-  Anthropic pricing page) before pricing — or, if it can't reach a source, prices
-  with the stale table and **flags it** in the report.
+  Anthropic pricing page) before pricing. If it **can't** reach a source, it does
+  **not** ship a stale number — it **hard-blocks** the report and asks the human to
+  restore a source, edit `pricing.json`, or re-run with `allowStalePricing` (which
+  then prices with the stale table, flagged ⚠️ in the report).
 - **Value is extracted from the documents.** No human types a dollar figure: the
   Metrics Analyst scores declared value (reach, impact, objectives, measurability,
   confidence-of-value) from the frozen documents, as a 0–100 **estimate**.

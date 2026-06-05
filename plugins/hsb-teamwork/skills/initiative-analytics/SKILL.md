@@ -82,8 +82,11 @@ read-only and returns proposals you route to the writer.
    lifecycle — `age = now − capturedAt` vs `ttlHours` (default 48, the human may
    override). If **stale**, fetch a fresh table **before pricing** (invoke the
    `claude-api` skill, else WebFetch the Anthropic pricing page), rewrite
-   `pricing.json`'s `models` + `capturedAt`, then proceed. If refresh is
-   unavailable, proceed with the stale table and tell the Reporter to flag it.
+   `pricing.json`'s `models` + `capturedAt`, then proceed. If the refresh is
+   **unavailable**, **HARD BLOCK** — stop and do not produce a report; offer to
+   restore a source, edit `pricing.json` by hand, or re-run with
+   `allowStalePricing` (then proceed, flagged ⚠️ STALE). A stale USD never ships
+   silently.
 3. **Phase 1 — Collect (parallel, same turn):** spawn `hsb-cost-collector`
    (ledger → investment §A/§B) ∥ `hsb-metrics-analyst` (qa-logs + documents +
    `initiative.json` → process/outcome §C/§D + the document-derived value score
@@ -126,7 +129,7 @@ they execute in parallel.
 ### The phase checklist (TodoWrite this before Phase 1)
 
 - [ ] Resolve-or-select the initiative (closed allowed); read `initiative.json`
-- [ ] Phase 0.5 · pricing freshness: if `now − capturedAt > ttlHours`, refresh the table before pricing (else flag stale)
+- [ ] Phase 0.5 · pricing freshness: if `now − capturedAt > ttlHours`, refresh before pricing; if refresh fails → HARD BLOCK (unless `allowStalePricing`)
 - [ ] Phase 1 · **same message:** `hsb-cost-collector` ∥ `hsb-metrics-analyst`
 - [ ] Phase 2 · compose the ROI composites (gate savings via sibling baselines)
 - [ ] Phase 3 · spawn `hsb-roi-reporter`; report the headline to the human
