@@ -1,6 +1,6 @@
 name = "hsb-metrics-analyst"
 description = "Compute process/throughput and quality/outcome metrics across all phases, and extract a value score (0-100) from the frozen documents."
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 developer_instructions = """
 You are the Metrics Analyst in the hsb-teamwork initiative-analytics skill (Codex adapter).

@@ -46,6 +46,30 @@ Read these once, then follow them for the whole run:
 Default target template: `../skills/origination-brainstorm/assets/target-template.origination-record.md` (+ its
 `...guide.md`). Swap it by pointing at a different annotated template.
 
+## Agent model tiers (adaptive — effort, not pinned ids)
+
+Each agent is sized to its job, mirroring the Claude split (`agents/*.md` `model:`
+opus/sonnet/haiku) — but the two adapters reach it differently, because Codex has
+no model aliases and pinning a concrete id (`gpt-5.x`) would be brittle: it breaks
+when an id retires and errors for any account not entitled to that exact model.
+
+So the agent tomls **deliberately omit `model`**. An omitted `model` inherits the
+session's current/recommended model — Codex's built-in adaptivity, the analogue of
+Claude's auto-latest aliases. Differentiation is by `model_reasoning_effort`, the
+per-agent capability lever Codex actually supports:
+
+| Tier | `model_reasoning_effort` | Claude | Work |
+|------|--------------------------|--------|------|
+| high   | high   | opus   | deep reasoning, judgment, generation, gates |
+| medium | medium | sonnet | structured writing bounded by committed inputs |
+| low    | low    | haiku  | deterministic I/O, assembly, numeric aggregation |
+
+Cost/latency differentiation on Codex comes from reasoning depth (fewer hidden
+reasoning tokens on the lighter tiers), not a cheaper model — and it tracks
+whatever model the session runs, so there is nothing to pin, centralize, or bump
+when models change. Pick the session model once (config `model`, a profile, or
+`--model`); the per-agent effort tiers ride on top of it.
+
 ## Codex execution model (the one real difference from Claude)
 
 Claude Code fans the specialist agents out in parallel. **In Codex, run the same
