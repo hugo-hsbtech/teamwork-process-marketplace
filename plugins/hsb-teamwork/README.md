@@ -12,17 +12,25 @@ A demand-to-delivery toolkit for **Claude Code** and **Codex**. Skills so far:
 - **`readiness-package`** — takes a Product Ready origination-record and produces a
   frozen Readiness Package (RP) via a draft-then-confirm flow, with automatic
   CTO-escalation detection.
+- **`tech-assessment`** — runs the CTO's journey on an escalated, frozen RP and
+  produces the signed Technical Assessment (TA): the feasibility verdict (with a veto
+  path), architectural impact, NFR feasibility, suggested ADRs, and firm cost — the
+  technical half that merges with the RP into the PRD.
+- **`prd-generation`** — **merges** the frozen RP (product) and the signed TA
+  (technical) into the **PRD**, the single artifact that opens the downstream and is
+  delivered to the PM: it stitches the two halves, reconciles the scope, consolidates
+  the risks, and closes with a dual PO+CTO sign-off — inventing no facts.
 
 This page is the **install-and-use guide**; pick your tool below.
 
 - Marketplace: **`hsb-tech`** · Plugin: **`hsb-teamwork`**
 - Author: Hugo Seabra · Dedicated repo: `hugo-hsbtech/teamwork-process-marketplace`
 
-**`hsb-teamwork` is a multi-step toolkit.** Today it ships two skills,
-`origination-brainstorm` and `readiness-package`. Planned siblings in the same plugin:
-`tech-assessment`, `prd-generation` — each invoked as `/hsb-teamwork:<skill>`
-(Claude) or `/hsb-teamwork-<skill>` (Codex). They share this plugin's agents and
-reference files, so the pipeline mechanics carry across every step.
+**`hsb-teamwork` is a multi-step toolkit.** It ships four skills —
+`origination-brainstorm`, `readiness-package`, `tech-assessment`, and `prd-generation` —
+each invoked as `/hsb-teamwork:<skill>` (Claude) or `/hsb-teamwork-<skill>` (Codex).
+They share this plugin's agents and reference files, so the pipeline mechanics carry
+across every step.
 
 ---
 
