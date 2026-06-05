@@ -6,6 +6,18 @@ and a self-sufficient rubric. The Template Analyst derives contract.lock.md from
 these. To use a different document type, copy this file, re-annotate, and pass it
 as TEMPLATE. See references/contract-and-template.md.
 Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
+
+PROVENANCE BLOCK. Each graded section carries a vertical **Provenance** block
+(Confidence/Source/Status/Disposition/Hint, one bullet each) instead of a single
+dense line, so a human can scan it without fatigue. The Finalizer relocates these
+blocks into a "Sources & question log" appendix and turns their Q### / file refs
+into in-document links.
+LOCALIZATION. This template ships in English; when the output language differs the
+Doc Updater localizes the block label and field labels (e.g. pt-BR: Provenance →
+Proveniencia, Confidence → Confianca, Source → Fonte, Status → Situacao,
+Disposition → Disposicao, Hint → Observacao) and the section headings, and the
+Humanizer purges any leftover untranslated jargon. Field values keep their stable
+identifiers (Q###, numbers, dates).
 -->
 
 # Origination Record — [Demand name]
@@ -63,7 +75,12 @@ Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 
 [fill]
 
-`Confidence:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
+**Provenance**
+- **Confidence:** __
+- **Source:** __
+- **Status:** __
+- **Disposition:** __
+- **Hint:** __
 
 ### Originator & context
 <!-- origination: id=originator; blocks=true; min-confidence=70; kind=capture -->
@@ -72,7 +89,12 @@ Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 
 [fill]
 
-`Confidence:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
+**Provenance**
+- **Confidence:** __
+- **Source:** __
+- **Status:** __
+- **Disposition:** __
+- **Hint:** __
 
 ### Who is impacted (reach)
 <!-- origination: id=reach; blocks=true; min-confidence=70; kind=capture -->
@@ -81,7 +103,12 @@ Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 
 [fill]
 
-`Confidence:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
+**Provenance**
+- **Confidence:** __
+- **Source:** __
+- **Status:** __
+- **Disposition:** __
+- **Hint:** __
 
 ### Business impact
 <!-- origination: id=impact; blocks=true; min-confidence=70; kind=capture -->
@@ -91,7 +118,12 @@ Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 
 [fill]
 
-`Confidence:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
+**Provenance**
+- **Confidence:** __
+- **Source:** __
+- **Status:** __
+- **Disposition:** __
+- **Hint:** __
 
 ### Urgency — why now
 <!-- origination: id=urgency; blocks=false; min-confidence=70; kind=capture -->
@@ -100,7 +132,12 @@ Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 
 [fill]
 
-`Confidence:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
+**Provenance**
+- **Confidence:** __
+- **Source:** __
+- **Status:** __
+- **Disposition:** __
+- **Hint:** __
 
 ### Declared priority
 <!-- origination: id=priority; blocks=false; min-confidence=0; kind=capture -->
@@ -121,7 +158,12 @@ Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 
 **Touches:** New capability / Existing software / Not sure — [optional one-line note]
 
-`Confidence:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
+**Provenance**
+- **Confidence:** __
+- **Source:** __
+- **Status:** __
+- **Disposition:** __
+- **Hint:** __
 
 ---
 
@@ -187,7 +229,12 @@ Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 |---|---|---|
 | [constraint] | Time / Budget / Legal / Technical / Scope / External | [note] |
 
-`Confidence:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
+**Provenance**
+- **Confidence:** __
+- **Source:** __
+- **Status:** __
+- **Disposition:** __
+- **Hint:** __
 
 ---
 

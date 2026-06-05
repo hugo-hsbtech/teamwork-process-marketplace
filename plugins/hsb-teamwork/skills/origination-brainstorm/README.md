@@ -75,7 +75,10 @@ flowchart TD
     CA -->|"gate open · re-ask"| QS
     CA -->|"conflict"| RC
     CA --> RR
-    CA -->|"gate clear"| HU
+    CA -->|"gate clear"| CHK{"Readiness checkpoint<br/>close gaps? / ship draft?"}
+    CHK -->|"close gaps now"| QS
+    CHK -->|"ship / proceed"| HU
+    CHK -->|"ship / proceed"| EA
 
     LEDGER --> GK
     DOC --> GK
@@ -83,12 +86,17 @@ flowchart TD
     GLOSS -.terms.-> HU
     GLOSS -.terms.-> TR
 
-    subgraph P3["Phase 3 · Production (isolated, parallel variants)"]
+    subgraph P3["Phase 3 · Production (chain into the deliverable)"]
         HU["Humanizer"] --> HMD[("humanized.md")]
+        EA["Enrichment Analyst"] --> EPL[("enrichment-plan.md")]
         TR["Translator"] --> TMD[("translated.lang.md")]
         VE["Visual Enricher"] --> EMD[("enriched.md")]
+        CR["Citation Resolver"] -.appendix + links.-> FN
+        FN["Finalizer"] --> FMD[("final/&lt;project&gt;-NNN.md")]
         HMD --> TR
         HMD --> VE
+        EPL --> VE
+        EMD --> FN
     end
 
     subgraph P4["Phase 4 · Wrap"]
@@ -97,6 +105,7 @@ flowchart TD
 
     TMD --> PK
     EMD --> PK
+    FMD --> PK
     PK --> O
     O -->|"report + readiness"| H
 ```
@@ -115,11 +124,19 @@ flowchart TD
   Reconciler; the Gap Reporter shows the live gap map; the Glossary Keeper
   keeps terms consistent. The loop ends when every blocking section is ≥ X or
   honestly disposed.
-- **Phase 3 — Production:** the Humanizer writes the clean canonical copy; then the
-  Translator, Visual Enricher, and Finalizer run in parallel as independent
-  variants. The Finalizer externalizes the clearly-final, printable deliverable
-  under `final/<project>-NNN.md`, stripping every authoring scaffold so it is clean
-  to print and naming it after the initiative with a counter suffix.
+- **Phase 2.5 — Readiness checkpoint:** the gate clearing is not "the human is
+  done." The orchestrator classifies each residual (Submitter-closeable vs
+  downstream-owner) and asks the human whether to close the gaps now (recommended),
+  pick specific items, or ship as draft, before producing.
+- **Phase 3 — Production (a chain):** the Humanizer writes the clean canonical copy
+  (localizing labels/headings and purging untranslated jargon) while the Enrichment
+  Analyst catalogs sourced visual opportunities into `enrichment-plan.md`. Then the
+  Visual Enricher renders that plan into `enriched.md` (Mermaid-native charts) and the
+  Translator and Citation Resolver run alongside. The Finalizer runs **last**,
+  consuming the **enriched** copy so the visuals survive, relocating each Provenance
+  block into a navigable "Sources & question log" appendix and linking the in-text
+  references. The result under `final/<project>-NNN.md` is clean **and** enriched,
+  with traceable provenance, named after the initiative with a counter suffix.
 - **Phase 4 — Wrap:** the Packager writes a manifest indexing every artifact,
   including the printable final deliverable.
 
@@ -165,10 +182,12 @@ same roster is reused by `readiness-package` and the planned stages.
 | 2 | `hsb-glossary-keeper` | writes the initiative's shared `glossary.md` + `decisions.md` |
 | 2 | `hsb-gap-reporter` | writes `readiness-report.md` |
 | 2 | `hsb-confidence-auditor` | re-scores + gate verdict (read-only) |
-| 3 | `hsb-humanizer` | writes `output/humanized.md` |
+| 3 | `hsb-humanizer` | writes `output/humanized.md` (localizes labels/headings, purges jargon) |
+| 3 | `hsb-enrichment-analyst` | writes `output/enrichment-plan.md` (sourced visual catalog; read-only on `DOC`) |
 | 3 | `hsb-translator` | writes `output/translated.<lang>.md` |
-| 3 | `hsb-visual-enricher` | writes `output/enriched.md` |
-| 3 | `hsb-finalizer` | writes `final/<project>-NNN.md` (clean, printable final) |
+| 3 | `hsb-visual-enricher` | renders the plan into `output/enriched.md` |
+| 3 | `hsb-citation-resolver` | proposes the Sources & question log appendix + link map (read-only) |
+| 3 | `hsb-finalizer` | writes `final/<project>-NNN.md` (clean **and** enriched, linked provenance) |
 | 4 | `hsb-packager` | writes `output/manifest.md` |
 
 Agent definitions live in `agents/hsb-*.md`.
@@ -190,8 +209,8 @@ A run resolves an **initiative** and writes into its `origination/` **phase** fo
     ├── target-document.md  # the document being filled
     ├── glossary.md         # brokered read-only copy of the shared glossary
     ├── readiness-report.md # live gap map
-    ├── output/             # humanized · translated · enriched · manifest
-    └── final/              # the clean, printable final deliverable(s): <project>-NNN.md
+    ├── output/             # humanized · enrichment-plan · translated · enriched · manifest
+    └── final/              # the clean, enriched, printable final deliverable(s): <project>-NNN.md
 ```
 
 The three initiative-level files (`initiative.json`, `glossary.md`, `decisions.md`)

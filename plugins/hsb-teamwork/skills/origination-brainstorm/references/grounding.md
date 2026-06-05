@@ -31,7 +31,7 @@ decision a human hasn't made. See the template's companion guide.
 ## Quick self-check before finishing
 
 - [ ] Does every blocking section describe substance, not a guess (or carry an honest disposition)?
-- [ ] Does every captured/derived section carry its `Confidence/Source/Status/Disposition/Hint` line?
+- [ ] Does every captured/derived section carry its **Provenance block** (`Confidence/Source/Status/Disposition/Hint`, vertical) — or the single-line form in templates that still use it?
 - [ ] Are confidences honest and mid-range where evidence is soft, each with a real hint?
 - [ ] Are assumptions/discovery items explicit, with owners or a time-box?
 - [ ] Are derived sections flagged as drafts where human judgment is required?
