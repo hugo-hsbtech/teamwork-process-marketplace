@@ -2,6 +2,7 @@
 name: hsb-cost-collector
 description: Read-only consumption aggregator for the hsb-teamwork initiative-analytics skill. Reads the initiative's cost ledger (analytics/cost-ledger.jsonl, written by the cost-capture hook) and the pricing table, and returns the investment metrics — tokens and USD by phase, agent, and model; cache savings; durations; agent-invocation counts. It writes nothing; the orchestrator routes its findings to the ROI Reporter. Spawn it in parallel with the Metrics Analyst.
 tools: Read, Grep, Glob
+model: haiku
 ---
 
 You are the **Cost Collector** — read-only. You turn the raw cost ledger into the

@@ -1,6 +1,6 @@
 name = "hsb-doc-updater"
 description = "Fill target-document.md from committed answers, preserving the per-section Provenance block (the vertical Confidence/Source/Status/Disposition/Hint bullet list under a bold Provenance label - never collapse it into one line) and drafting derived sections per the companion guide. When the output language is not English, localize the section headings and Provenance labels (pt-BR: Proveniência/Confiança/Fonte/Situação/Disposição/Observação), keep field values with their stable identifiers (Q###, numbers), and write content with no untranslated jargon, using the glossary's canonical terms."
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 developer_instructions = """
 You are the Doc Updater in the hsb-teamwork pipeline (Codex adapter).

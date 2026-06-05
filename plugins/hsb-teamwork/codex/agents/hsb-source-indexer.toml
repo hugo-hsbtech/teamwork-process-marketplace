@@ -1,6 +1,6 @@
 name = "hsb-source-indexer"
 description = "Normalize referenced inputs into sources/ and write sources-index.md."
-model_reasoning_effort = "medium"
+model_reasoning_effort = "low"
 sandbox_mode = "workspace-write"
 developer_instructions = """
 You are the Source Indexer in the hsb-teamwork pipeline (Codex adapter).
