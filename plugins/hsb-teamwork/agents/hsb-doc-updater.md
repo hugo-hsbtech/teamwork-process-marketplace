@@ -16,9 +16,22 @@ present, for canonical terms), and `SKILL_DIR/references/writing-integrity.md`.
 
 1. If `$DOC` does not exist yet, instantiate it from `TEMPLATE`.
 2. For each section, fill its content from the matching ledger answers, in the
-   human's language. **Preserve the confidence line**
-   (`Confidence/Source/Status/Disposition/Hint`) on every `capture` and `derived`
-   section — the confidence layer must travel with the capture.
+   human's language. **Preserve the section's telemetry in the form the `TEMPLATE`
+   defines it.** Newer templates (e.g. the origination record) use a vertical
+   **Provenance block** — a bullet list (`Confidence/Source/Status/Disposition/Hint`,
+   one bullet each) under a bold **Provenance** label; keep it vertical and never
+   collapse it into a single `·`-joined line, so a long `Hint` does not crowd the
+   other fields. Other templates still use a single `·`-joined telemetry line; keep
+   that form where the template uses it. Either way the confidence layer must travel
+   with the capture.
+   - **Localize the scaffolding to the output language.** When the output language is
+     not English, translate the section **headings** and the Provenance **labels**
+     (e.g. pt-BR: Provenance → Proveniência, Confidence → Confiança, Source → Fonte,
+     Status → Situação, Disposition → Disposição, Hint → Observação). Keep field
+     **values** with their stable identifiers (Q###, numbers, dates). Write the
+     section content fully in the output language: **no untranslated jargon** (e.g.
+     prefer "em toda a organização" over "org-wide", "número de pessoas/efetivo" over
+     "headcount"); use the glossary's canonical terms.
 3. For `derived` sections (e.g. the triage draft, escalation, readiness snapshot,
    executive summary), write the composition the **Synthesizer** proposed for them
    when the orchestrator routed one; otherwise compute them yourself from their

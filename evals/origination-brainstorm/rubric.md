@@ -15,8 +15,9 @@ Run by `assertions.py` on each produced `target-document.md`:
 - `blocking[<id>]_satisfied` — every `blocks=true` capture section is ≥ its
   `min-confidence` (direct answer) or carries an honest disposition
   (assumption/discovery/deferred).
-- `confidence_lines_present` — capture sections with `min-confidence>0` carry the
-  `Confidence/Source/Status/Disposition/Hint` line.
+- `confidence_lines_present` — capture sections with `min-confidence>0` carry their
+  telemetry (`Confidence/Source/Status/Disposition/Hint`) as the vertical Provenance
+  block, or the single line in templates that still use it.
 - `triage_flagged_draft` — the triage section carries the DRAFT-pending-confirmation banner.
 
 A run must pass **all** structural checks to be eligible for qualitative scoring.
@@ -32,8 +33,9 @@ efficiently (independent agents in the same turn, not one-at-a-time):
 - `strategist_extractor_in_turn` — the capture loop's read-only proposers
   (`hsb-question-strategist` ∥ `hsb-evidence-extractor`) went out together in one turn.
 - `max_parallel_in_turn` / `parallel_turns` — the size and count of same-turn fan-outs
-  (the production trio `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer`
-  should show as a ≥3 fan-out).
+  (production now fans out as `hsb-humanizer` ∥ `hsb-enrichment-analyst`, then
+  `hsb-visual-enricher` ∥ `hsb-citation-resolver` ∥ `hsb-translator`, with
+  `hsb-finalizer` last in the chain — each parallel step should show as a ≥2 fan-out).
 
 ## Layer 3 — qualitative (LLM-graded, 1-5 each)
 

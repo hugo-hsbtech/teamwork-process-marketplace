@@ -61,17 +61,31 @@ by performing each role yourself as a step, in this order:
    Resolve conflicts (Reconciler role) and keep terms consistent (Glossary role) by
    writing the initiative's shared `glossary.md` + `decisions.md`. Loop until every
    blocking section is at or above its `min-confidence` or has an honest disposition.
-3. **Production:** write `output/humanized.md`, then `output/translated.<lang>.md`
-   and `output/enriched.md`, then **externalize the printable final** (Finalizer
-   role, `hsb-finalizer`): read `output/humanized.md`, strip every authoring
-   scaffold (HTML comments + `origination:` annotations, the rev/END markers,
-   rubric/guidance blockquotes, and the per-section
-   `Confidence/Source/Status/Disposition/Hint` lines), keep all content and ⚠️
-   warnings, and write `final/<project>-NNN.md` (zero-padded per-phase counter,
-   `<project>` from `initiative.json.project`; reuse the latest file instead of
-   minting a new counter when the cleaned output is unchanged). This file omits the
+   Telemetry is a vertical **Provenance block** in the origination template (localize
+   its labels and the headings when the output language is not English).
+2b. **Readiness checkpoint:** the gate clearing is not "the human is done." Refresh
+   the gap map (Gap Reporter role), **classify each residual** (Submitter-closeable vs
+   downstream-owner), and **ask the human** whether to close the gaps now (recommended;
+   re-enter the loop on Submitter-closeable residuals), pick specific items, or ship as
+   draft. Only then produce.
+3. **Production (a chain, not siblings):** write `output/humanized.md` (Humanizer
+   role: localize headings/labels, purge untranslated jargon) and, in parallel, the
+   **enrichment plan** `output/enrichment-plan.md` (Enrichment Analyst role: catalog
+   every sourced visual opportunity). Then render the plan into `output/enriched.md`
+   (Visual Enricher role: Mermaid-native charts, DRAFT-marked where low-confidence)
+   and, in parallel, the translation `output/translated.<lang>.md` and the citation
+   proposal (Citation Resolver role: a "Sources & question log" appendix + a
+   reference-link map). Then **externalize the printable final** (Finalizer role,
+   `hsb-finalizer`) LAST: read `output/enriched.md` (so visuals survive), strip
+   authoring scaffold (HTML comments + `origination:` annotations, the rev/END
+   markers, rubric/guidance blockquotes, the `<!-- VISUAL ... -->` comments) but KEEP
+   every Mermaid block and table, **relocate** each Provenance block into the
+   appendix and apply the reference links (rather than deleting telemetry), keep all
+   content and ⚠️ warnings, and write `final/<project>-NNN.md` (zero-padded per-phase
+   counter, `<project>` from `initiative.json.project`; reuse the latest file instead
+   of minting a new counter when the cleaned output is unchanged). This file omits the
    `<!-- END OF DOCUMENT -->` sentinel by design — verify completeness against the
-   source humanized copy instead.
+   enriched source instead (every Mermaid block must survive).
 4. **Wrap:** write `output/manifest.md` (index the `final/` deliverable too), then
    update the front's entry in `initiative.json` (the works + definitions index):
    `state: frozen`, final `readiness`, `artifacts` (incl. the `final` deliverable),

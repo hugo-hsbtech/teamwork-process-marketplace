@@ -20,8 +20,20 @@ its heading. It is invisible in rendered Markdown and survives editing:
 
 [fill here]
 
-`Confidence:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
+**Provenance**
+- **Confidence:** __
+- **Source:** __
+- **Status:** __
+- **Disposition:** __
+- **Hint:** __
 ```
+
+The **Provenance block** replaces the older single-line
+`` `Confidence:` __ · `Source:` __ · … `` form: it is a vertical bullet list under a
+bold **Provenance** label, so a reader can scan it without the dense `·`-joined line.
+Consumers recognize a field by its label (the English token or its localized synonym,
+see the localization map in `target-template.origination-record.md`); the Finalizer
+relocates the block into a provenance appendix rather than deleting it.
 
 Annotation fields:
 
@@ -70,7 +82,8 @@ A template is "ready to drive the pipeline" only if **every** fillable section:
 
 - [ ] has an annotation with `id`, `blocks`, `min-confidence`, `kind`;
 - [ ] has a rubric that states what a confident answer contains (not just a label);
-- [ ] carries the confidence line (`Confidence/Source/Status/Disposition/Hint`)
+- [ ] carries the **Provenance block** (`Confidence/Source/Status/Disposition/Hint`
+      as a vertical bullet list under a bold **Provenance** label)
       on every `capture` section whose `min-confidence` > 0 (the ones graded for
       readiness). `min-confidence=0` capture sections (e.g. a simple priority or a
       list) and `derived` sections do **not** require it — a `derived` section

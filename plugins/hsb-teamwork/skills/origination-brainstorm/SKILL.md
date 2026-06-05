@@ -66,7 +66,10 @@ one at a time and awaiting each, which is what makes a run drag. Bind yourself t
    parallel pairs are: Phase 1 `hsb-source-indexer` ∥ `hsb-template-analyst`;
    Phase 2 `hsb-question-strategist` ∥ `hsb-evidence-extractor`, and
    `hsb-gap-reporter` ∥ `hsb-glossary-keeper` when both are due;
-   Phase 3 `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer`.
+   Phase 3 `hsb-humanizer` ∥ `hsb-enrichment-analyst`, then `hsb-visual-enricher` ∥
+   `hsb-citation-resolver` ∥ `hsb-translator`. The `hsb-finalizer` runs **last**,
+   alone: it consumes the enriched copy and the Citation Resolver's appendix, so it
+   is a chain, not a sibling of the variants.
 3. **Audit incrementally.** After the first full audit, spawn the
    `hsb-confidence-auditor` with `SECTIONS` = the ids touched since the last pass, so
    it re-scores only those and carries the rest forward. Re-grading a settled
@@ -80,8 +83,10 @@ one at a time and awaiting each, which is what makes a run drag. Bind yourself t
 - [ ] Phase 1 · spawn `hsb-template-validator`; gate on pass
 - [ ] Phase 1 · **same message:** `hsb-source-indexer` ∥ `hsb-template-analyst`
 - [ ] Phase 2 · loop: **same message** `hsb-question-strategist` ∥ `hsb-evidence-extractor` → `hsb-ledger-writer` → ask human → `hsb-ledger-writer` → `hsb-doc-updater` (+ `hsb-synthesizer` for derived) → `hsb-confidence-auditor` (incremental `SECTIONS`) until the gate clears
-- [ ] Phase 3 · spawn `hsb-humanizer` (await — it writes the copy the rest read)
-- [ ] Phase 3 · **same message:** `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer`
+- [ ] Phase 2.5 · refresh `hsb-gap-reporter`; classify residuals; **ask the human** (close gaps now / pick items / ship as draft) before producing
+- [ ] Phase 3 · **same message:** `hsb-humanizer` ∥ `hsb-enrichment-analyst` (await — they write what the rest read)
+- [ ] Phase 3 · **same message:** `hsb-visual-enricher` (reads plan) ∥ `hsb-citation-resolver` ∥ `hsb-translator`
+- [ ] Phase 3 · then `hsb-finalizer` (reads `enriched.md` + Citation Resolver appendix/links; last in the chain)
 - [ ] Phase 4 · spawn `hsb-packager`; record the front in `initiative.json`; report to the human
 
 ## The agents you spawn (`subagent_type`)
@@ -100,10 +105,12 @@ one at a time and awaiting each, which is what makes a run drag. Bind yourself t
 | 2 | `hsb-glossary-keeper` | maintain the initiative's shared `glossary.md` + `decisions.md` (sole writer) |
 | 2 | `hsb-gap-reporter` | write the live gap map `readiness-report.md` |
 | 2 | `hsb-confidence-auditor` | re-score + gate verdict (read-only) |
-| 3 | `hsb-humanizer` | write `output/humanized.md` |
+| 3 | `hsb-humanizer` | write `output/humanized.md` (localizes labels/headings, purges untranslated jargon) |
+| 3 | `hsb-enrichment-analyst` | catalog visual/analytics opportunities into `output/enrichment-plan.md` (read-only proposer) |
 | 3 | `hsb-translator` | write `output/translated.<lang>.md` |
-| 3 | `hsb-visual-enricher` | write `output/enriched.md` |
-| 3 | `hsb-finalizer` | externalize the clean, printable final `final/<project>-NNN.md` |
+| 3 | `hsb-visual-enricher` | render the plan's visuals into `output/enriched.md` |
+| 3 | `hsb-citation-resolver` | propose the "Sources & question log" appendix + reference-link map (read-only) |
+| 3 | `hsb-finalizer` | externalize the clean, **enriched**, link-traceable final `final/<project>-NNN.md` |
 | 4 | `hsb-packager` | write `output/manifest.md` |
 
 When spawning, inject the paths each agent needs: `SKILL_DIR` (this skill's base
@@ -112,8 +119,9 @@ target document's filename — `target-document.md` for this skill), and the
 template's companion guide if one exists. The **Finalizer** also needs
 `PROJECT_SLUG` (from `initiative.json.project`) to name the externalized
 deliverable. **Run independent agents in the same turn** so they execute in
-parallel (Indexer ∥ Analyst; Strategist ∥ Extraction; Translator ∥ Enricher ∥
-Finalizer).
+parallel (Indexer ∥ Analyst; Strategist ∥ Extraction; Humanizer ∥ Enrichment
+Analyst; then Enricher ∥ Citation Resolver ∥ Translator). The Finalizer runs last,
+alone, consuming the enriched copy + the Citation Resolver's appendix.
 
 **You are the broker for everything above `PHASE_DIR`.** The three initiative-level
 files — `initiative.json` (the works + definitions index), `glossary.md`, and
@@ -167,15 +175,26 @@ any additional requested languages as separate `output/` files. Keep section
    answers (answers may spawn follow-ups) → Doc Updater fills → Auditor scores
    (full on the first pass, then only the touched `SECTIONS`). Loop until every
    blocking section is ≥ its `min-confidence` or honestly disposed.
-4. **Phase 3 (isolated, parallel variants):** Humanizer writes the canonical clean
-   copy; then Translator ∥ Enricher ∥ Finalizer each read it and write their own
-   file. The **Finalizer** externalizes the **printable final deliverable** under
-   `final/<project>-NNN.md`: it strips every authoring scaffold (HTML comments and
-   `origination:` annotations, the rev/END markers, rubric/guidance blockquotes,
-   and the per-section confidence/disposition lines), keeps all content and ⚠️
-   warnings, and counter-suffixes the name (idempotency guard skips a new counter
-   when unchanged).
-5. **Phase 4:** Packager writes the manifest (indexing the `final/` deliverable
+4. **Phase 2.5 (checkpoint, you + human):** the gate clearing is not "the human is
+   done." Refresh the Gap Reporter, **classify each residual** as Submitter-closeable
+   vs downstream-owner, and **ask the human** what to do — *close the gaps now*
+   (recommended; re-enter the loop on Submitter-closeable residuals to maximize
+   readiness), *pick specific items*, or *ship as draft for review*. Only then
+   produce. Never silently ship residual drafts the human never chose to keep.
+5. **Phase 3 (isolated, a chain into the deliverable):** Humanizer ∥ Enrichment
+   Analyst run first (the Humanizer writes the canonical clean copy and localizes
+   labels/headings + purges untranslated jargon; the Analyst writes
+   `output/enrichment-plan.md`, the sourced catalog of visuals). Then Visual Enricher
+   (renders the plan into `output/enriched.md`) ∥ Citation Resolver (proposes the
+   provenance appendix + reference-link map) ∥ Translator. Finally the **Finalizer**
+   externalizes the **printable final deliverable** under `final/<project>-NNN.md`:
+   it reads the **enriched** copy (so visuals survive), strips authoring scaffold
+   (HTML comments and `origination:` annotations, the rev/END markers, rubric/guidance
+   blockquotes, and the `<!-- VISUAL ... -->` comments) **but keeps every Mermaid
+   block and summary table**, **relocates** each Provenance block into the appendix
+   and applies the reference links, keeps all content and ⚠️ warnings, and
+   counter-suffixes the name (idempotency guard skips a new counter when unchanged).
+6. **Phase 4:** Packager writes the manifest (indexing the `final/` deliverable
    too); then **you record the front in the initiative index** — set its
    `initiative.json` entry to `state: frozen` with the final `readiness`, the
    `artifacts` paths (incl. the canonical humanized copy and the printable

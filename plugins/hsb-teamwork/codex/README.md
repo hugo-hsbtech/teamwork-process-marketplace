@@ -18,6 +18,8 @@ This adapter covers **four skills**: `origination-brainstorm`, `readiness-packag
 | `agents/hsb-stage-inheritor.toml` | proposes carry-forward entries from an upstream stage (Origin=inherited); role spec at `../agents/hsb-stage-inheritor.md` |
 | `agents/hsb-section-drafter.toml` | proposes first-draft content for the sections a stage introduces (Origin=ai_drafted); role spec at `../agents/hsb-section-drafter.md` |
 | `agents/hsb-escalation-flagger.toml` | decides whether the demand owes a downstream specialist assessment (CTO TA today); role spec at `../agents/hsb-escalation-flagger.md` |
+| `agents/hsb-enrichment-analyst.toml` | catalogs sourced visual/analytics opportunities into `output/enrichment-plan.md` (the insumo the Visual Enricher renders); role spec at `../agents/hsb-enrichment-analyst.md` |
+| `agents/hsb-citation-resolver.toml` | proposes the navigable "Sources & question log" appendix + reference-link map for the Finalizer; role spec at `../agents/hsb-citation-resolver.md` |
 
 > **Naming:** every agent is named for the specialty it performs, not the phase it
 > runs in, so one roster serves origination-brainstorm, readiness-package, and the planned
