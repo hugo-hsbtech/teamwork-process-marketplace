@@ -1,9 +1,9 @@
 {
   "name": "hsb-teamwork",
-  "version": "0.2.0",
-  "description": "HSB Teamwork — a demand-to-delivery toolkit. Each step is a skill invoked as /hsb-teamwork:<skill>. Available: origination-brainstorm (raw demand -> a fully-filled, confidence-graded document via a multi-agent pipeline, plus humanized/translated/enriched variants); readiness-package (the Product Owner's two-act journey: Act 1 triages an origination-record into a routing decision recorded as an Intake Record — only Product Ready proceeds — then Act 2 turns it into a frozen Readiness Package via draft-then-confirm with parallel section drafting and CTO-escalation detection). Planned: tech-assessment, prd-generation. Template-driven and portable; includes a Codex adapter.",
+  "version": "0.3.0",
+  "description": "HSB Teamwork — a demand-to-delivery toolkit. Each step is a skill invoked as /hsb-teamwork:<skill>. Available: origination-brainstorm (raw demand -> a fully-filled, confidence-graded document via a multi-agent pipeline, plus humanized/translated/enriched variants); readiness-package (the Product Owner's two-act journey: Act 1 triages an origination-record into a routing decision recorded as an Intake Record — only Product Ready proceeds — then Act 2 turns it into a frozen Readiness Package via draft-then-confirm with parallel section drafting and CTO-escalation detection); tech-assessment (the CTO's journey: respond to an escalated, frozen RP with a Technical Assessment — classify the demand nature greenfield/brownfield, judge feasibility as the first-class decision with a veto path, draft architectural impact, NFR feasibility, suggested ADRs and firm cost, and seed/reference the persistent tech-landscape KB — discharging the RP's TechAssessmentRef debt; the technical half that merges with the RP into the PRD). Planned: prd-generation. Template-driven and portable; includes a Codex adapter.",
   "author": { "name": "Hugo Seabra", "email": "contato.hsbtec@gmail.com" },
   "homepage": "https://github.com/hugo-hsbtech/teamwork-process-marketplace",
   "repository": "https://github.com/hugo-hsbtech/teamwork-process-marketplace",
-  "keywords": ["origination", "brainstorm", "requirements", "triage", "product", "multi-agent", "codex", "readiness", "product-owner"]
+  "keywords": ["origination", "brainstorm", "requirements", "triage", "product", "multi-agent", "codex", "readiness", "product-owner", "tech-assessment", "feasibility", "cto", "architecture", "adr"]
 }

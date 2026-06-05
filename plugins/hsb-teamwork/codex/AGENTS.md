@@ -1,12 +1,15 @@
 # hsb-teamwork — Codex entry point (AGENTS.md)
 
-This adapter covers **two skills**: `origination-brainstorm` and `readiness-package`.
-Both reuse identical method files from `../skills/` — no duplicated logic. Claude
-Code and Codex read the same specs; only the harness differs.
+This adapter covers **three skills**: `origination-brainstorm`, `readiness-package`,
+and `tech-assessment`. All reuse identical method files from `../skills/` — no
+duplicated logic. Claude Code and Codex read the same specs; only the harness differs.
 
 This is the **Codex** adapter for the skills described in
-`../skills/origination-brainstorm/SKILL.md` and `../skills/readiness-package/SKILL.md`. It
-reuses the identical method files — `../skills/origination-brainstorm/references/`, `../skills/origination-brainstorm/assets/`, `../skills/readiness-package/references/`, and `../skills/readiness-package/assets/` — so there
+`../skills/origination-brainstorm/SKILL.md`, `../skills/readiness-package/SKILL.md`, and
+`../skills/tech-assessment/SKILL.md`. It reuses the identical method files —
+`../skills/origination-brainstorm/references/`, `../skills/origination-brainstorm/assets/`,
+`../skills/readiness-package/references/`, `../skills/readiness-package/assets/`,
+`../skills/tech-assessment/references/`, and `../skills/tech-assessment/assets/` — so there
 is **no duplicated logic**: Claude Code and Codex read the same specs, they just
 spawn work differently.
 
@@ -14,8 +17,9 @@ spawn work differently.
 
 - Drop this file in a project as `AGENTS.md` (Codex reads it automatically from
   the repo root down to the working directory), **or**
-- Install it as a custom prompt: copy `prompts/hsb-teamwork-origination-brainstorm.md` to
-  `~/.codex/prompts/` to get an `/hsb-teamwork-origination-brainstorm` slash command.
+- Install it as a custom prompt: copy a prompt from `prompts/` to `~/.codex/prompts/`
+  to get the matching slash command — `hsb-teamwork-origination-brainstorm`,
+  `hsb-teamwork-readiness-package`, or `hsb-teamwork-tech-assessment`.
 
 Either way, keep the `origination-brainstorm/` skill folder (its `references/` and
 `assets/`) reachable from where you run Codex, since this entry points at those
@@ -165,3 +169,92 @@ Each reads its full role spec from `../agents/<role>.md` (e.g.
 ### Modes
 
 Same three modes as origination-brainstorm: Fresh (default), Revisit, Batch/headless.
+
+---
+
+## tech-assessment
+
+For tech-assessment runs (the CTO's journey), follow the skill at
+`../skills/tech-assessment/SKILL.md` and its references under
+`../skills/tech-assessment/references/`. Start with
+`../skills/tech-assessment/references/orchestration.md`. The origination-brainstorm
+references (especially `initiatives.md` and `writing-integrity.md`) and the
+readiness-package `escalation.md` (the RP↔TA bridge) also apply.
+
+### Your role: tech-assessment orchestrator
+
+You turn a **frozen, escalated Readiness Package** into a fully-filled **Technical
+Assessment** — the CTO's own artefact that **responds** to the RP (and **never edits**
+it) and merges with it into the PRD. You are the only layer that talks to the CTO.
+
+Read these once, then follow them for the whole run:
+- `../skills/tech-assessment/references/orchestration.md` — phases, agent roles, phase gates, folder layout.
+- `../skills/tech-assessment/references/classification.md` — the governing decision (nature → path; honest-N/A; KB).
+- `../skills/tech-assessment/references/feasibility.md` — the CTO's first-class decision (verdict, veto path, signReady gate).
+- `../skills/tech-assessment/references/inheritance.md` — RP/Intake → TA section mapping.
+- `../skills/tech-assessment/references/landscape.md` — seed/reference the persistent tech-landscape KB.
+- `../skills/origination-brainstorm/references/initiatives.md` — initiative resolve-or-select + phase folders.
+- `../skills/origination-brainstorm/references/writing-integrity.md` — no-truncation + merge rules (critical).
+
+### Codex execution model for tech-assessment
+
+Run the phases **sequentially** — either as Codex subagents or by performing each role
+yourself as a step, in this order:
+
+1. **Setup:** resolve-or-select the initiative; **read `initiative.json`** and find the
+   linked **frozen RP** from the works index (the phase that `produces` a
+   `readiness-package`, via its `artifacts.canonical` / `final`) plus the **Intake
+   Record** and the owed `TechAssessmentRef` debt. Confirm a TA is actually owed (RP
+   escalation requested/deferred — if `not_requested`, stop: no TA needed). Pick mode and
+   output language (default pt-BR); resolve-or-resume the `assessment/` phase
+   (`INITIATIVE_DIR/assessment/`) and register it (`consumes:
+   ["readiness-package","intake-record"]`, `produces: "technical-assessment"`); validate
+   the TA template and derive `contract.lock.md`; index the RP + intake-record +
+   tech-landscape into `sources/`.
+2. **Classify & inherit:** Classifier role (`hsb-tech-classifier`) confirms the demand
+   nature under the technical lens and sets which path is in force (this governs the
+   draft pass); ask the CTO only what it could not settle. Inheritor role
+   (`hsb-stage-inheritor`) carries the RP/Intake material forward (Origin=inherited).
+3. **Draft pass + verdict:** Drafter role (`hsb-section-drafter`) drafts the **in-force**
+   technical sections (Origin=ai_drafted; dispose the non-applicable path
+   `Disposition: decided` N/A); ADR Proposer role (`hsb-adr-proposer`) arrives with
+   suggested ADRs (reused_from_KB where one applies); Effort Estimator role
+   (`hsb-effort-estimator`) proposes the firm cost; then Feasibility Assessor role
+   (`hsb-feasibility-assessor`) proposes the verdict.
+4. **Confirm loop:** present the pre-filled TA to the CTO; the CTO judges, edits, approves
+   ADRs, firms the estimate, and **commits the feasibility verdict**; questions are a
+   fallback only. If the KB had to be created/updated, run Landscape Keeper role
+   (`hsb-landscape-keeper`). Loop until `signReady` (verdict committed + every blocksFreeze
+   section resolved or honestly disposed; a veto freezes as a signed veto).
+5. **Production:** write the humanized copy, the translation, and the enriched copy; for
+   greenfield, seed the new `tech-landscape-<system>.md` (Landscape Keeper); then
+   **externalize the printable final** (Finalizer role, `hsb-finalizer`) to
+   `final/<project>-NNN.md` — same strip-and-count rules as origination (see step 3 there).
+6. **Wrap:** write `output/manifest.md` (verdict + sign-off status + the seeded/updated
+   tech-landscape + the `final/` deliverable), then update the `assessment/` entry in
+   `initiative.json` — `state: frozen`, final `artifacts`, `produces:
+   technical-assessment`, the feasibility `verdict`, and — crucially — **discharge the
+   RP's `TechAssessmentRef` debt** (resolve the `owes` entry: `status: signed` / `vetoed`
+   + link). If vetoed, push a scope-revision note back to the `readiness/` phase so the PO
+   re-escalates.
+
+### The CTO-specific subagents this skill drives
+
+| Subagent TOML | Role here |
+|---|---|
+| `agents/hsb-tech-classifier.toml` | confirms demand nature + KB, sets which path is in force (governing decision) |
+| `agents/hsb-stage-inheritor.toml` | carries the frozen RP + Intake forward (Origin=inherited) |
+| `agents/hsb-section-drafter.toml` | drafts the in-force technical sections (Origin=ai_drafted) |
+| `agents/hsb-adr-proposer.toml` | suggests architectural ADRs (reused_from_KB where one applies) |
+| `agents/hsb-effort-estimator.toml` | proposes the firm effort/cost decomposition |
+| `agents/hsb-feasibility-assessor.toml` | proposes the feasibility verdict + veto path (gate proposer) |
+| `agents/hsb-landscape-keeper.toml` | sole writer of the persistent tech-landscape KB (seed greenfield / update brownfield) |
+
+Each reads its full role spec from `../agents/<role>.md` and the shared references. Run
+them sequentially (Codex is single-agent).
+
+### Modes
+
+Same three modes: Fresh (default), Revisit (re-run after a veto + revised RP, bumping the
+TA version; or resume an unfrozen assessment), Batch/headless (propose the verdict under
+honest dispositions — output is always "draft for CTO sign-off").
