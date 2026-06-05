@@ -45,6 +45,9 @@ For every section in scope (`capture` and `derived`):
    elision is a hard finding — the document was truncated and must be rewritten
    before it can pass.
 
-Return a structured verdict: `gate = clear | open`; the list of failing blocking
-sections with *why* and *what would close them*; conflict recommendations; and any
-quality findings. Do not edit any file.
+Return a structured verdict: `gate = clear | open`; a single **canonical readiness
+value** (`readiness = NN%`) stamped with the document rev it was scored against
+(`as-of-rev: N`), so downstream writers quote it instead of recomputing the score;
+the list of failing blocking sections with *why* and *what would close them*; conflict
+recommendations; and any quality findings. Your verdict is the **single source** of the
+readiness number — no other agent recomputes it. Do not edit any file.

@@ -189,7 +189,10 @@ Repeats until the freeze gate clears:
 
 1. **`hsb-confidence-auditor`** (read-only) re-scores against the rubric, flags
    conflicts, returns the gap verdict. First pass scores every section; later passes
-   take `SECTIONS` (ids touched since the last audit) and re-score only those.
+   take `SECTIONS` (ids touched since the last audit) and re-score only those. Its
+   verdict is the **single source** of the readiness number (`readiness` + `as-of-rev`):
+   `hsb-ledger-writer` persists it in the qa-log header and `hsb-packager` quotes it —
+   no other agent recomputes the score.
    - On a flagged conflict: spawn **`hsb-reconciler`** (read-only); route to
      `hsb-ledger-writer`.
    - Optional: spawn **`hsb-gap-reporter`** for a live gap map.
@@ -212,6 +215,13 @@ Repeats until the freeze gate clears:
    - if the verdict is `Infeasible as scoped`, the **veto rationale** is recorded
      (the TA freezes as a signed veto; see [`feasibility.md`](feasibility.md) § The
      veto path).
+
+**Verdict reconciliation (on a veto).** `effort-cost` and `adrs` are drafted in Phase 3
+in parallel, **before** the verdict exists, so a committed `Infeasible as scoped` can
+leave them holding a confident estimate / ADR set for a scope ruled unbuildable. Before
+freeze, route both through `hsb-doc-updater` to be re-dispositioned `Disposition: decided`,
+content "N/A — vetoed (see feasibility-verdict)". A signed veto carries no confident
+effort or ADRs.
 
 See [`feasibility.md`](feasibility.md) for the full gate and the Discovery exit.
 
@@ -244,6 +254,10 @@ Once `signOffReady`:
    debt**: resolve the `owes` entry the RP pushed (set its `status` to `signed` or
    `vetoed`, and link this TA). If the verdict is a veto, also push a
    `scope-revision-owed` note back to the `readiness/` phase so the PO re-escalates.
+   If the Tech Classifier **overrode** the demand nature (a `nature-override` signal),
+   write the corrected `nature`/`kbStatus` into this front's `initiative.json` and push
+   a `nature-corrected` note to the `readiness/` front — the frozen RP/Intake keep the
+   triage value, but the index carries the correction the next front reads.
 5. Report to the CTO: the verdict, the artifacts produced, the `tech-landscape`
    seeded/updated, every item parked as `discovery`, and (if vetoed) the scope-revision
    signal to the PO.

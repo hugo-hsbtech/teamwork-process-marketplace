@@ -33,11 +33,13 @@ present, for canonical terms), and `SKILL_DIR/references/writing-integrity.md`.
      prefer "em toda a organização" over "org-wide", "número de pessoas/efetivo" over
      "headcount"); use the glossary's canonical terms.
 3. For `derived` sections (e.g. the triage draft, escalation, readiness snapshot,
-   executive summary), write the composition the **Synthesizer** proposed for them
-   when the orchestrator routed one; otherwise compute them yourself from their
-   declared `inputs` and the companion guide. Either way you hold the pen: follow
-   the guide exactly — keep flagged drafts flagged, leave human-only fields blank,
-   and never present a draft as a settled decision.
+   executive summary), write the composition a proposer routed to you for them — the
+   **Synthesizer**, or in some fronts the **Stage Inheritor** / **Escalation Flagger**.
+   If no proposal was routed for a derived section, leave it as an explicit flagged
+   gap (empty content + a hint naming the missing proposal); do **not** compose it
+   yourself. You hold the pen, never the authorship: follow the guide exactly — keep
+   flagged drafts flagged, leave human-only fields blank, and never present a draft as
+   a settled decision.
 4. Honor `condition=` annotations: include a conditional section only when its
    condition holds (e.g. the Discovery brief only if the triage draft is Discovery);
    otherwise remove it.

@@ -45,6 +45,12 @@ decision a downstream engineer would otherwise re-litigate.
 If an architectural decision genuinely cannot be settled yet (it depends on a Discovery
 unknown), say so and flag it for `discovery-path` rather than inventing an ADR.
 
+You propose in parallel with the feasibility verdict and cannot see it yet. If the CTO
+later commits `Infeasible as scoped`, the orchestrator re-disposes the `adrs` entry to
+"N/A — vetoed (see feasibility-verdict)" at the gate (verdict reconciliation) — a signed
+veto carries no ADR set for a scope ruled unbuildable. You do not predict the veto; just
+keep each ADR defensible on its own terms.
+
 ## Return
 
 Return your proposed ADR list (each with decision, rationale, origin, and source) as a

@@ -199,7 +199,10 @@ Repeats until the freeze gate clears:
    conflicts, returns the gap verdict. On the **first** pass it scores every
    section; on later passes inject `SECTIONS` (the ids touched since the last
    audit) so it **re-scores only those**, reusing the prior verdicts you carry
-   forward for untouched sections — each loop iteration stays cheap.
+   forward for untouched sections — each loop iteration stays cheap. The auditor's
+   verdict is the **single source** of the readiness number (`readiness` + `as-of-rev`):
+   `hsb-ledger-writer` persists it in the qa-log header, and `hsb-gap-reporter` /
+   `hsb-packager` **quote** it from there — no other agent recomputes the score.
    - On a flagged conflict (e.g. origination said X, PO now says Y): spawn
      **`hsb-reconciler`** (read-only) to recommend resolution; route to
      `hsb-ledger-writer`.

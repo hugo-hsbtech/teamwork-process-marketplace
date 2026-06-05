@@ -92,9 +92,13 @@ resolved, the terrain documented, and any Discovery spike defined*) requires:
 4. **Verdict-conditioned closure:**
    - `Feasible` → all in-force technical sections resolved.
    - `Feasible with caveats` → the caveats are recorded as `hard-constraints`.
-   - `Infeasible as scoped` → the veto rationale is recorded; downstream sections that
-     depend on a buildable scope (e.g. `effort-cost`, `adrs`) may be `Disposition: decided`
-     ("N/A — scope vetoed, see Verdict") rather than fully drafted.
+   - `Infeasible as scoped` → the veto rationale is recorded, **and** the draft-pass
+     sections that depend on a buildable scope (`effort-cost`, `adrs`) are reconciled to
+     `Disposition: decided` ("N/A — scope vetoed, see Verdict") rather than left fully
+     drafted. Because those two run in parallel **before** the verdict exists (see
+     [`orchestration.md`](orchestration.md) Phase 3/4), this is an explicit gate step,
+     not a guess the proposers make: the orchestrator routes the re-disposition through
+     `hsb-doc-updater` so a signed veto never carries a confident estimate or ADR set.
 
 When `signOffReady`, the TA freezes (`Status: Signed off` or `Status: Vetoed`) and the
 orchestrator discharges the RP's `TechAssessmentRef` debt in the initiative index

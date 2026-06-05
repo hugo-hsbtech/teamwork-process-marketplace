@@ -104,3 +104,8 @@ verdict, because such a verdict has no downstream to open. See
 - It does **not** re-decide feasibility — the verdict is the CTO's, carried as-is.
 - It does **not** invent risks, scope, or mitigations absent from both halves — a fact
   that belongs to neither source belongs upstream.
+- It does **not** reconcile the **demand nature**: when the CTO overrode the triage
+  nature, the TA's `tech-classification` is authoritative and `b-nature-landscape`
+  inherits it — the PRD shows the corrected nature, never the superseded RP-metadata
+  value (the correction was already recorded to `initiative.json` at TA wrap; see the
+  tech-assessment skill's `references/classification.md` § On an override).
