@@ -1,8 +1,12 @@
 # Scheduling — the declarative pipeline graph (hybrid model)
 
-Ordering in this skill is **declared as data**, not hard-coded in prose. The source of
-truth is [`../pipeline.yaml`](../pipeline.yaml); `tools/pipeline_graph.py` validates it
-and computes the schedule. This file explains the model the orchestrator follows.
+Ordering is **declared as data**, not hard-coded in prose. The source of truth is the
+per-skill `pipeline.yaml` (this skill's is [`../pipeline.yaml`](../pipeline.yaml));
+`tools/pipeline_graph.py` validates it and computes the schedule. This file is the
+**shared model doc** every skill's graph points to — origination-brainstorm,
+readiness-package (two acts: `pipeline.intake.yaml` + `pipeline.readiness.yaml`),
+tech-assessment, prd-generation, and initiative-analytics each ship a graph under the
+same schema. `tools/check_pipelines.sh` validates all of them.
 
 ## Why declarative
 
@@ -86,3 +90,28 @@ Add `--quiet` for a CI gate (prints nothing on pass, exits non-zero on any viola
 The graph does not replace the orchestration prose; it makes the prose's ordering
 claims checkable. When the two disagree, the graph is authoritative and the prose is the
 bug.
+
+## Loops and multi-act skills
+
+A `pipeline.yaml` is a **single-pass dependency skeleton**, not an execution trace. Two
+caveats follow:
+
+- **Capture / confirm loops** (origination's capture phase, the RP/TA/PRD confirm loops)
+  are repeated by the orchestrator until the gate clears. The graph does not draw the
+  back-edges that the iteration implies, because a strict DAG cannot carry them and they
+  are an orchestrator construct, not a data dependency. Nodes in a looped phase are
+  tagged with that `phase`.
+- **Multi-act skills** ship one graph per act. readiness-package has
+  `pipeline.intake.yaml` (Act 1, triage — the routing gate) and `pipeline.readiness.yaml`
+  (Act 2, the RP, which runs only on a `Product Ready` decision). Each act produces a
+  different document and is validated independently.
+
+## Modeling choices worth knowing
+
+- **Datum granularity is a choice.** Some sections are modeled individually (the TA's
+  in-force sections) and some are bundled (origination's `capture-content`, the RP's
+  `inherited-sections`) when the per-section detail adds nothing to ordering. Bundle when
+  one node decides the whole group; split when different nodes decide different members.
+- **Logical decider ≠ physical writer.** A datum's `decides` names who settles its value;
+  `persists` / `file_writers` name who writes the file. Derived sections are excluded from
+  `section_datums` so a node with `reads_all_sections` never reads its own output.

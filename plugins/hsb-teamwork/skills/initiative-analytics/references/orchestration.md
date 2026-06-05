@@ -5,7 +5,10 @@ adds nothing to the demand; it **measures** an initiative that the four upstream
 skills already produced. You (the orchestrator, Layer 0) resolve the initiative,
 spawn read-only collectors that propose findings, and route them to one writer
 that emits the report. Same engine, same single-writer discipline as the rest of
-the toolkit.
+the toolkit. The validated ordering and the single-writer/single-decider invariants are
+declared in [`../pipeline.yaml`](../pipeline.yaml) and checked by
+`tools/pipeline_graph.py` (see
+[`../../tech-assessment/references/scheduling.md`](../../tech-assessment/references/scheduling.md)).
 
 ## The one rule that still holds
 

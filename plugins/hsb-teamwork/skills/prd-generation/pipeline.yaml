@@ -1,0 +1,174 @@
+# Declarative dependency graph — prd-generation (the RP + TA merge).
+# Models the ESCALATED path (TA present). On the no-escalation path, Part B is N/A-disposed
+# and the TA external input is absent — the same nodes run, Part B carries decided/N-A.
+# The confirm phase is a LOOP the orchestrator repeats; this graph is the single-pass
+# skeleton. Validated by tools/pipeline_graph.py. See ../tech-assessment/references/scheduling.md.
+
+version: 1
+skill: prd-generation
+
+external_inputs:
+  - prd-template
+  - rp            # frozen Readiness Package (Part A source)
+  - ta            # signed Technical Assessment (Part B source; absent if no escalation)
+  - intake-record
+
+# Inherited (Part A + Part B) + carried datums. Derived sections (scope-reconciliation,
+# consolidated-risk, inherited-readiness, exec-summary, handoff-gate) are NOT listed here,
+# so reads_all_sections never makes the Synthesizer/Drafter read their own output.
+section_datums:
+  - a-objectives
+  - a-scope
+  - a-personas
+  - a-journey
+  - a-business-rules
+  - a-user-stories
+  - a-nfrs
+  - a-edge-cases
+  - b-feasibility
+  - b-nature-landscape
+  - b-arch-impact
+  - b-nfr-feasibility
+  - b-alternatives
+  - b-hard-constraints
+  - b-adrs
+  - effort-cost
+  - success-metrics
+
+file_writers:
+  contract.lock.md: hsb-template-analyst
+  sources/: hsb-source-indexer
+  sources-index.md: hsb-source-indexer
+  qa-log.md: hsb-ledger-writer
+  prd.md: hsb-doc-updater
+  glossary.md: hsb-glossary-keeper
+  decisions.md: hsb-glossary-keeper
+  prd-report.md: hsb-gap-reporter
+  output/humanized.md: hsb-humanizer
+  output/translated.md: hsb-translator
+  output/enriched.md: hsb-visual-enricher
+  final/: hsb-finalizer
+  output/manifest.md: hsb-packager
+
+nodes:
+  # ---- Setup -------------------------------------------------------------------
+  hsb-template-validator:
+    phase: setup
+    reads: [prd-template]
+    decides: [prd-template-valid]
+  hsb-template-analyst:
+    phase: setup
+    reads: [prd-template, prd-template-valid]
+    decides: [contract]
+    persists: contract.lock.md
+  hsb-source-indexer:
+    phase: setup
+    reads: [rp, ta, intake-record]
+    decides: [sources]
+    persists: [sources/, sources-index.md]
+
+  # ---- Inherit both halves (fan-out per PART) ----------------------------------
+  hsb-stage-inheritor:
+    phase: inherit
+    fanout: per-part
+    reads: [contract, sources]
+    decides:
+      - a-objectives
+      - a-scope
+      - a-personas
+      - a-journey
+      - a-business-rules
+      - a-user-stories
+      - a-nfrs
+      - a-edge-cases
+      - b-feasibility
+      - b-nature-landscape
+      - b-arch-impact
+      - b-nfr-feasibility
+      - b-alternatives
+      - b-hard-constraints
+      - b-adrs
+      - effort-cost
+      - success-metrics
+
+  # ---- Synthesize & reconcile (the PRD's own work) -----------------------------
+  hsb-reconciler:
+    phase: synthesize
+    reads: [a-scope, b-feasibility, b-hard-constraints]
+    decides: [scope-reconciliation]
+  hsb-synthesizer:
+    phase: synthesize
+    fanout: per-section
+    reads: [contract]
+    reads_all_sections: true            # composes from the inherited halves
+    decides: [consolidated-risk, inherited-readiness, exec-summary]
+  hsb-section-drafter:
+    phase: synthesize
+    reads: [contract]
+    reads_all_sections: true
+    decides: [handoff-gate]
+
+  # ---- Confirm loop (orchestrator repeats) -------------------------------------
+  hsb-ledger-writer:
+    phase: confirm
+    reads: [contract]
+    decides: [qa-log]
+    persists: qa-log.md
+  hsb-doc-updater:
+    phase: confirm
+    reads: [contract, scope-reconciliation, consolidated-risk, inherited-readiness, exec-summary, handoff-gate]
+    reads_all_sections: true
+    decides: [prd-document]
+    persists: prd.md
+  hsb-confidence-auditor:
+    phase: confirm
+    reads: [contract, scope-reconciliation, consolidated-risk, inherited-readiness, exec-summary, handoff-gate]
+    reads_all_sections: true
+    decides: [readiness-verdict]
+  hsb-question-strategist:
+    phase: confirm
+    reads: [contract]
+    decides: [questions]
+  hsb-evidence-extractor:
+    phase: confirm
+    reads: [contract, sources]
+    decides: [evidence]
+  hsb-glossary-keeper:
+    phase: confirm
+    reads: [qa-log, prd-document]
+    decides: [glossary]
+    persists: [glossary.md, decisions.md]
+  hsb-gap-reporter:
+    phase: confirm
+    reads: [readiness-verdict]
+    decides: [prd-report]
+    persists: prd-report.md
+
+  # ---- Production & wrap -------------------------------------------------------
+  hsb-humanizer:
+    phase: production
+    reads: [prd-document]
+    decides: [humanized]
+    persists: output/humanized.md
+  hsb-translator:
+    phase: production
+    reads: [humanized]
+    decides: [translated]
+    persists: output/translated.md
+  hsb-visual-enricher:
+    phase: production
+    reads: [humanized]
+    decides: [enriched]
+    persists: output/enriched.md
+  hsb-finalizer:
+    phase: production
+    reads: [humanized, enriched]
+    decides: [final]
+    persists: final/
+  hsb-packager:
+    phase: production
+    reads: [final, humanized, translated, readiness-verdict, b-feasibility]
+    decides: [manifest]
+    persists: output/manifest.md
+
+reconciliations: []

@@ -8,7 +8,7 @@ plugin_root="$(dirname "$here")"
 validator="$here/pipeline_graph.py"
 
 shopt -s nullglob
-graphs=("$plugin_root"/skills/*/pipeline.yaml)
+graphs=("$plugin_root"/skills/*/pipeline*.yaml)
 
 if [ ${#graphs[@]} -eq 0 ]; then
   echo "no pipeline.yaml graphs found under $plugin_root/skills/"

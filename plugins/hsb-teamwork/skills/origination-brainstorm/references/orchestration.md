@@ -3,8 +3,12 @@
 This skill is a **multi-agent pipeline**. The conversation you (the orchestrator)
 run is **Layer 0** — the only layer that talks to the human. Everything else is a
 **specialized subagent** you spawn with a focused prompt and tear down. This file
-is the authoritative spec for *who runs when, who may write what, and what runs
-in parallel*.
+is the **narrative** view of *who runs when, who may write what, and what runs
+in parallel*; the **machine** view — the validated ordering, the single-writer and
+single-decider invariants — is declared in [`../pipeline.yaml`](../pipeline.yaml) and
+checked by `tools/pipeline_graph.py` (see
+[`../../tech-assessment/references/scheduling.md`](../../tech-assessment/references/scheduling.md)).
+When the prose and the graph disagree, the graph wins.
 
 ## The one rule that makes parallelism safe
 

@@ -55,6 +55,14 @@ def reads_of(node: dict, sections: list[str]) -> list[str]:
     return reads
 
 
+def persists_of(node: dict) -> list[str]:
+    """A node may persist one file (str) or several (list)."""
+    p = node.get("persists")
+    if not p:
+        return []
+    return [p] if isinstance(p, str) else list(p)
+
+
 def validate(g: dict) -> list[str]:
     """Return the list of invariant violations (empty = valid)."""
     errors: list[str] = []
@@ -82,18 +90,18 @@ def validate(g: dict) -> list[str]:
         if owner not in nodes:
             errors.append(f"[single-writer] file '{f}' owned by unknown node '{owner}'")
             continue
-        if nodes[owner].get("persists") != f:
+        if f not in persists_of(nodes[owner]):
             errors.append(
                 f"[single-writer] file '{f}' lists owner '{owner}', but that node does "
                 f"not declare `persists: {f}`"
             )
     for name, node in nodes.items():
-        pf = node.get("persists")
-        if pf and file_writers.get(pf) != name:
-            errors.append(
-                f"[single-writer] node '{name}' persists '{pf}' but file_writers does "
-                f"not name it the owner"
-            )
+        for pf in persists_of(node):
+            if file_writers.get(pf) != name:
+                errors.append(
+                    f"[single-writer] node '{name}' persists '{pf}' but file_writers does "
+                    f"not name it the owner"
+                )
 
     # --- 3. no dangling reads -----------------------------------------------------
     known = decided | externals | set(sections)

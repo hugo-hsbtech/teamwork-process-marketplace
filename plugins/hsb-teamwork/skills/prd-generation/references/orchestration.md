@@ -5,8 +5,12 @@ origination-brainstorm, readiness-package, and tech-assessment. The conversation
 (the orchestrator) run is Layer 0 — the only layer that talks to the **PO** (owner of
 the PRD) and, for the technical-half sign-off, the **CTO**. Everything else is a
 specialized subagent you spawn with a focused prompt and tear down. This file is the
-authoritative spec for *who runs when, who may write what, and what runs in parallel* in
-the PRD flow.
+**narrative** view of *who runs when, who may write what, and what runs in parallel* in
+the PRD flow; the **machine** view — validated ordering + the single-writer/single-decider
+invariants — is declared in [`../pipeline.yaml`](../pipeline.yaml) and checked by
+`tools/pipeline_graph.py` (see
+[`../../tech-assessment/references/scheduling.md`](../../tech-assessment/references/scheduling.md)).
+When the prose and the graph disagree, the graph wins.
 
 The PRD is the **merge** of two frozen upstream artifacts: the **Readiness Package**
 (product, PO) and the **Technical Assessment** (technical, CTO). It **stitches,

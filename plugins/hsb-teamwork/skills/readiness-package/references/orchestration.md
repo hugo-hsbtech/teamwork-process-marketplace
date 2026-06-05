@@ -3,8 +3,14 @@
 This skill is a **multi-agent pipeline** that extends the origination engine. The
 conversation you (the orchestrator) run is Layer 0 — the only layer that talks
 to the PO. Everything else is a specialized subagent you spawn with a focused
-prompt and tear down. This file is the authoritative spec for *who runs when,
-who may write what, and what runs in parallel* in the readiness-package flow.
+prompt and tear down. This file is the **narrative** view of *who runs when,
+who may write what, and what runs in parallel* in the readiness-package flow. The
+**machine** view — validated ordering + the single-writer/single-decider invariants —
+is declared per act in [`../pipeline.intake.yaml`](../pipeline.intake.yaml) (Act 1) and
+[`../pipeline.readiness.yaml`](../pipeline.readiness.yaml) (Act 2), checked by
+`tools/pipeline_graph.py` (see
+[`../../tech-assessment/references/scheduling.md`](../../tech-assessment/references/scheduling.md)).
+When the prose and the graph disagree, the graph wins.
 
 ## What this reuses (no duplication)
 

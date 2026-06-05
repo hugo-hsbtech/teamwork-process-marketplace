@@ -1,0 +1,63 @@
+# Declarative dependency graph — readiness-package, ACT 1 (triage / Intake Record).
+# This act is the routing gate; only a `Product Ready` decision opens Act 2 (the RP),
+# modeled in pipeline.readiness.yaml. Validated by tools/pipeline_graph.py.
+# See ../tech-assessment/references/scheduling.md for the model.
+
+version: 1
+skill: readiness-package
+act: intake
+
+external_inputs:
+  - intake-template
+  - origination-record    # the upstream artifact being triaged
+
+section_datums:
+  - intake-content        # the recorded triage criteria + routing decision content
+
+file_writers:
+  contract.lock.md: hsb-template-analyst
+  sources/: hsb-source-indexer
+  sources-index.md: hsb-source-indexer
+  qa-log.md: hsb-ledger-writer
+  intake-record.md: hsb-doc-updater
+  glossary.md: hsb-glossary-keeper
+  decisions.md: hsb-glossary-keeper
+
+nodes:
+  hsb-template-validator:
+    phase: setup
+    reads: [intake-template]
+    decides: [intake-template-valid]
+  hsb-template-analyst:
+    phase: setup
+    reads: [intake-template, intake-template-valid]
+    decides: [contract]
+    persists: contract.lock.md
+  hsb-source-indexer:
+    phase: setup
+    reads: [origination-record]
+    decides: [sources]
+    persists: [sources/, sources-index.md]
+
+  hsb-triage-assessor:
+    phase: triage
+    governs: true                       # routing decision gates whether Act 2 runs
+    reads: [contract, sources]
+    decides: [triage-decision, demand-nature]   # demand-nature is BORN here (seeds the TA)
+  hsb-ledger-writer:
+    phase: triage
+    reads: [contract, triage-decision, demand-nature]
+    decides: [qa-log, intake-content]
+    persists: qa-log.md
+  hsb-doc-updater:
+    phase: triage
+    reads: [contract, intake-content]
+    decides: [intake-record]
+    persists: intake-record.md
+  hsb-glossary-keeper:
+    phase: triage
+    reads: [qa-log, intake-record]
+    decides: [glossary]
+    persists: [glossary.md, decisions.md]
+
+reconciliations: []

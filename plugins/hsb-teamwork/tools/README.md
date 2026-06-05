@@ -36,7 +36,16 @@ Requires Python 3 and PyYAML.
 
 ## Status
 
-Prototype. `tech-assessment` is modeled first because it carries the
-provisional-before-the-verdict case. The other skills (origination-brainstorm,
-readiness-package, prd-generation, initiative-analytics) can adopt the same `pipeline.yaml`
-shape; `check_pipelines.sh` picks them up automatically.
+All five skills are modeled:
+
+| Skill | Graph(s) |
+|---|---|
+| origination-brainstorm | `pipeline.yaml` |
+| readiness-package | `pipeline.intake.yaml` (Act 1) + `pipeline.readiness.yaml` (Act 2) |
+| tech-assessment | `pipeline.yaml` (carries the provisional-before-the-verdict case) |
+| prd-generation | `pipeline.yaml` |
+| initiative-analytics | `pipeline.yaml` |
+
+`check_pipelines.sh` globs `skills/*/pipeline*.yaml`, so new graphs are picked up
+automatically. The shared model doc is
+`skills/tech-assessment/references/scheduling.md`.
