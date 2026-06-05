@@ -1,6 +1,5 @@
 name = "hsb-escalation-flagger"
 description = "Decide whether the demand owes a CTO Technical Assessment and record the tech-assessment-ref disposition (deferred when out of scope)."
-model = "gpt-5.3-codex"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 developer_instructions = """

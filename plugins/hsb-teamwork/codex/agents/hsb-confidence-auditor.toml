@@ -1,6 +1,5 @@
 name = "hsb-confidence-auditor"
 description = "Re-score each section against its rubric, check for truncation, flag conflicts, and return the gate verdict + readiness score."
-model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

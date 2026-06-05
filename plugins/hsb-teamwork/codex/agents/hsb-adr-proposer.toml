@@ -1,6 +1,5 @@
 name = "hsb-adr-proposer"
 description = "Arrive with suggested architectural-level ADRs (reused from the tech-landscape KB where one applies, Origin=reused_from_KB) for the CTO to approve/adjust — the 'AI arrives with suggested ADRs' WOW moment of the Technical Assessment."
-model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

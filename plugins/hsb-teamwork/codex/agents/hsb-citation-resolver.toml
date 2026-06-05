@@ -1,6 +1,5 @@
 name = "hsb-citation-resolver"
 description = "Turn the document's internal references (Q### ids, file/section refs) into a navigable citation system: a reader-facing Sources & question log appendix plus a reference-rewrite map of in-text links, for the Finalizer to apply."
-model = "gpt-5.3-codex"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 developer_instructions = """

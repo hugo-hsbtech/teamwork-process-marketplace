@@ -1,6 +1,5 @@
 name = "hsb-effort-estimator"
 description = "Propose the CTO's FIRM effort/cost decomposition (dev effort by area+seniority, infra, third-party, recurring opex, TCO) that replaces the PO's preliminary RP §13 estimate — internal-only, refined later by the Tech Lead."
-model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

@@ -1,6 +1,5 @@
 name = "hsb-packager"
 description = "Assemble output/ and write manifest.md indexing artifacts, readiness, open dispositions, and the template hash."
-model = "gpt-5.4-mini"
 model_reasoning_effort = "low"
 sandbox_mode = "workspace-write"
 developer_instructions = """

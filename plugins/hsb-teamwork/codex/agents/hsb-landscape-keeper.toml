@@ -1,6 +1,5 @@
 name = "hsb-landscape-keeper"
 description = "Sole writer of the persistent tech-landscape-<system>.md knowledge base: greenfield → CREATE/seed it from the TA's confirmed foundational ADRs and stack; brownfield → UPDATE it (or create it when the KB did not exist — the Discovery prerequisite that unblocks the feasibility verdict)."
-model = "gpt-5.3-codex"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 developer_instructions = """

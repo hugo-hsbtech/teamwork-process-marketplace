@@ -1,6 +1,5 @@
 name = "hsb-section-drafter"
 description = "Propose first-draft content for the sections a stage introduces, at partial confidence with Origin=ai_drafted, for the human to confirm — RP product sections (business rules, user stories + acceptance criteria, NFRs, edge cases) or TA technical sections (the in-force greenfield/brownfield path, architectural-impact, integrations feasibility, NFR feasibility, testability/observability, hard-constraints, tech-risks, build-vs-buy)."
-model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

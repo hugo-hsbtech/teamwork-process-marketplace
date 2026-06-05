@@ -1,6 +1,5 @@
 name = "hsb-visual-enricher"
 description = "Render the Enrichment Analyst's plan (output/enrichment-plan.md) into Mermaid diagrams and quantitative charts on the humanized document, without altering its facts."
-model = "gpt-5.3-codex"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 developer_instructions = """

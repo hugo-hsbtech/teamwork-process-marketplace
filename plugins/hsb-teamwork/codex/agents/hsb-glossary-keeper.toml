@@ -1,6 +1,5 @@
 name = "hsb-glossary-keeper"
 description = "Sole writer of the initiative's shared definitions store — glossary.md (canonical terms) and decisions.md (cross-phase decisions) — so every front and the Doc Updater, Humanizer, and Translator stay consistent."
-model = "gpt-5.3-codex"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 developer_instructions = """

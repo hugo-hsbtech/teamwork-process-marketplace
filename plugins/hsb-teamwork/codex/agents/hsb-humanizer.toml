@@ -1,6 +1,5 @@
 name = "hsb-humanizer"
 description = "Rewrite the finished document to read naturally, removing AI-writing tells (zero em/en dashes), localizing scaffolding to the output language and purging untranslated jargon, preserving every fact and the Provenance block."
-model = "gpt-5.3-codex"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 developer_instructions = """

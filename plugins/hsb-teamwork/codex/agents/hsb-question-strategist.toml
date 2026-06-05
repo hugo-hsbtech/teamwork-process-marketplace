@@ -1,6 +1,5 @@
 name = "hsb-question-strategist"
 description = "Propose the next small batch of business-language questions aimed at the lowest-confidence blocking gaps."
-model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

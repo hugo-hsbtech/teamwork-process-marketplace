@@ -46,30 +46,29 @@ Read these once, then follow them for the whole run:
 Default target template: `../skills/origination-brainstorm/assets/target-template.origination-record.md` (+ its
 `...guide.md`). Swap it by pointing at a different annotated template.
 
-## Agent model tiers (single source of truth)
+## Agent model tiers (adaptive — effort, not pinned ids)
 
-Each agent runs on a model sized to its job, in three tiers that mirror the Claude
-side (`agents/*.md` `model:` opus/sonnet/haiku):
+Each agent is sized to its job, mirroring the Claude split (`agents/*.md` `model:`
+opus/sonnet/haiku) — but the two adapters reach it differently, because Codex has
+no model aliases and pinning a concrete id (`gpt-5.x`) would be brittle: it breaks
+when an id retires and errors for any account not entitled to that exact model.
 
-| Tier | Codex `model` | `model_reasoning_effort` | Claude | Work |
-|------|---------------|--------------------------|--------|------|
-| high   | `gpt-5.5`       | high   | opus   | deep reasoning, judgment, generation, gates |
-| medium | `gpt-5.3-codex` | medium | sonnet | structured writing bounded by committed inputs |
-| low    | `gpt-5.4-mini`  | low    | haiku  | deterministic I/O, assembly, numeric aggregation |
+So the agent tomls **deliberately omit `model`**. An omitted `model` inherits the
+session's current/recommended model — Codex's built-in adaptivity, the analogue of
+Claude's auto-latest aliases. Differentiation is by `model_reasoning_effort`, the
+per-agent capability lever Codex actually supports:
 
-Codex has no model aliases (the ids are pinned, unlike Claude's auto-latest
-`opus`/`sonnet`/`haiku`), and agents can't reference a config profile — so the
-literal id must live in every `agents/*.toml`. To avoid editing 30 files, the
-tiers are declared once in [`model-tiers.toml`](./model-tiers.toml) and stamped
-into the agent tomls by [`apply-model-tiers.py`](./apply-model-tiers.py):
+| Tier | `model_reasoning_effort` | Claude | Work |
+|------|--------------------------|--------|------|
+| high   | high   | opus   | deep reasoning, judgment, generation, gates |
+| medium | medium | sonnet | structured writing bounded by committed inputs |
+| low    | low    | haiku  | deterministic I/O, assembly, numeric aggregation |
 
-```bash
-python3 codex/apply-model-tiers.py          # roll a tier / move an agent: edit the map, re-run
-python3 codex/apply-model-tiers.py --check  # CI: fail if any toml drifted from the map
-```
-
-When a model id is retired or a newer one ships, change it in `model-tiers.toml`
-and re-run — that is the only edit needed.
+Cost/latency differentiation on Codex comes from reasoning depth (fewer hidden
+reasoning tokens on the lighter tiers), not a cheaper model — and it tracks
+whatever model the session runs, so there is nothing to pin, centralize, or bump
+when models change. Pick the session model once (config `model`, a profile, or
+`--model`); the per-agent effort tiers ride on top of it.
 
 ## Codex execution model (the one real difference from Claude)
 

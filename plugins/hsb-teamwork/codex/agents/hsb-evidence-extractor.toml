@@ -1,6 +1,5 @@
 name = "hsb-evidence-extractor"
 description = "Propose answers to open questions from the indexed source files (inferred, with precise source and confidence)."
-model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

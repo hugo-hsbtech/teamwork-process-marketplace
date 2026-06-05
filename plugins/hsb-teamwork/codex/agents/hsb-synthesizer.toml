@@ -1,6 +1,5 @@
 name = "hsb-synthesizer"
 description = "Compose the document's derived sections (executive summary, triage/escalation/readiness snapshot) from their declared input sections, at a confidence bounded by those inputs, for the Doc Updater to write."
-model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """
