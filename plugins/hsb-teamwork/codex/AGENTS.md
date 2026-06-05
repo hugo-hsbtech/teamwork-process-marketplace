@@ -1,8 +1,9 @@
 # hsb-teamwork — Codex entry point (AGENTS.md)
 
-This adapter covers **four skills**: `origination-brainstorm`, `readiness-package`,
-`tech-assessment`, and `prd-generation`. All reuse identical method files from `../skills/` — no
-duplicated logic. Claude Code and Codex read the same specs; only the harness differs.
+This adapter covers **five skills**: `origination-brainstorm`, `readiness-package`,
+`tech-assessment`, `prd-generation`, and `initiative-analytics`. All reuse identical method files
+from `../skills/` — no duplicated logic. Claude Code and Codex read the same specs; only the
+harness differs.
 
 This is the **Codex** adapter for the skills described in
 `../skills/origination-brainstorm/SKILL.md`, `../skills/readiness-package/SKILL.md`,
@@ -21,8 +22,8 @@ spawn work differently.
   the repo root down to the working directory), **or**
 - Install it as a custom prompt: copy a prompt from `prompts/` to `~/.codex/prompts/`
   to get the matching slash command — `hsb-teamwork-origination-brainstorm`,
-  `hsb-teamwork-readiness-package`, `hsb-teamwork-tech-assessment`, or
-  `hsb-teamwork-prd-generation`.
+  `hsb-teamwork-readiness-package`, `hsb-teamwork-tech-assessment`,
+  `hsb-teamwork-prd-generation`, or `hsb-teamwork-initiative-analytics`.
 
 Either way, keep the `origination-brainstorm/` skill folder (its `references/` and
 `assets/`) reachable from where you run Codex, since this entry points at those
@@ -61,17 +62,31 @@ by performing each role yourself as a step, in this order:
    Resolve conflicts (Reconciler role) and keep terms consistent (Glossary role) by
    writing the initiative's shared `glossary.md` + `decisions.md`. Loop until every
    blocking section is at or above its `min-confidence` or has an honest disposition.
-3. **Production:** write `output/humanized.md`, then `output/translated.<lang>.md`
-   and `output/enriched.md`, then **externalize the printable final** (Finalizer
-   role, `hsb-finalizer`): read `output/humanized.md`, strip every authoring
-   scaffold (HTML comments + `origination:` annotations, the rev/END markers,
-   rubric/guidance blockquotes, and the per-section
-   `Confidence/Source/Status/Disposition/Hint` lines), keep all content and ⚠️
-   warnings, and write `final/<project>-NNN.md` (zero-padded per-phase counter,
-   `<project>` from `initiative.json.project`; reuse the latest file instead of
-   minting a new counter when the cleaned output is unchanged). This file omits the
+   Telemetry is a vertical **Provenance block** in the origination template (localize
+   its labels and the headings when the output language is not English).
+2b. **Readiness checkpoint:** the gate clearing is not "the human is done." Refresh
+   the gap map (Gap Reporter role), **classify each residual** (Submitter-closeable vs
+   downstream-owner), and **ask the human** whether to close the gaps now (recommended;
+   re-enter the loop on Submitter-closeable residuals), pick specific items, or ship as
+   draft. Only then produce.
+3. **Production (a chain, not siblings):** write `output/humanized.md` (Humanizer
+   role: localize headings/labels, purge untranslated jargon) and, in parallel, the
+   **enrichment plan** `output/enrichment-plan.md` (Enrichment Analyst role: catalog
+   every sourced visual opportunity). Then render the plan into `output/enriched.md`
+   (Visual Enricher role: Mermaid-native charts, DRAFT-marked where low-confidence)
+   and, in parallel, the translation `output/translated.<lang>.md` and the citation
+   proposal (Citation Resolver role: a "Sources & question log" appendix + a
+   reference-link map). Then **externalize the printable final** (Finalizer role,
+   `hsb-finalizer`) LAST: read `output/enriched.md` (so visuals survive), strip
+   authoring scaffold (HTML comments + `origination:` annotations, the rev/END
+   markers, rubric/guidance blockquotes, the `<!-- VISUAL ... -->` comments) but KEEP
+   every Mermaid block and table, **relocate** each Provenance block into the
+   appendix and apply the reference links (rather than deleting telemetry), keep all
+   content and ⚠️ warnings, and write `final/<project>-NNN.md` (zero-padded per-phase
+   counter, `<project>` from `initiative.json.project`; reuse the latest file instead
+   of minting a new counter when the cleaned output is unchanged). This file omits the
    `<!-- END OF DOCUMENT -->` sentinel by design — verify completeness against the
-   source humanized copy instead.
+   enriched source instead (every Mermaid block must survive).
 4. **Wrap:** write `output/manifest.md` (index the `final/` deliverable too), then
    update the front's entry in `initiative.json` (the works + definitions index):
    `state: frozen`, final `readiness`, `artifacts` (incl. the `final` deliverable),
@@ -352,3 +367,75 @@ Same three modes: Fresh (default), Revisit (re-run after a PM rejection addressi
 named gaps and bumping the version; after an upstream half changed; or resume an unfrozen
 PRD), Batch/headless (inherit + synthesize + reconcile under honest dispositions — output is
 always "draft PRD for PO+CTO sign-off").
+
+---
+
+## initiative-analytics
+
+For initiative-analytics runs (the ROI of an initiative), follow the skill at
+`../skills/initiative-analytics/SKILL.md` and its references under
+`../skills/initiative-analytics/references/`. Start with
+`../skills/initiative-analytics/references/orchestration.md`. The origination-brainstorm
+`initiatives.md` (resolve-or-select, the session binding, `finishedAt`) and
+`writing-integrity.md` also apply.
+
+### Your role: initiative-analytics orchestrator
+
+You **measure** an initiative the four upstream skills already produced — you add nothing to
+the demand. You resolve the initiative, run read-only collectors, compose the ROI composites,
+and have one writer emit the report. You are the only layer that talks to the human.
+
+Read these once, then follow them for the whole run:
+- `../skills/initiative-analytics/references/orchestration.md` — pipeline, roster, single-writer rule.
+- `../skills/initiative-analytics/references/metrics-catalog.md` — the metric catalog (five families).
+- `../skills/initiative-analytics/references/cost-telemetry.md` — the hook, the session binding, the cost-ledger schema, pricing.
+- `../skills/initiative-analytics/references/roi-model.md` — ROI computation + the document-extracted value score.
+- `../skills/origination-brainstorm/references/initiatives.md` — resolve-or-select + the session binding (step 6) + `finishedAt`.
+- `../skills/origination-brainstorm/references/writing-integrity.md` — no-truncation + merge rules (critical).
+
+### How cost is captured (the hook)
+
+Token/model/time data is **measured**, not estimated: a plugin hook
+(`../hooks/teamwork-cost-capture.py`, registered in `../hooks/hooks.json`) fires on
+`Stop`/`SubagentStop`, reads the session transcript's real `usage` + model, prices it via
+`../skills/initiative-analytics/assets/pricing.json`, and appends consumption blocks to
+`<INITIATIVE_DIR>/analytics/cost-ledger.jsonl`. The four upstream skills write the **session
+binding** the hook needs (`initiatives.md` § resolve-or-select step 6). In a Codex harness that
+does not run Claude Code hooks, the cost families render as "not captured" and the report still
+delivers the artifact-derived half (process/quality/outcome + the document-extracted value).
+
+### Codex execution model for initiative-analytics
+
+Run the phases **sequentially** — either as Codex subagents or by performing each role yourself
+as a step, in this order:
+
+1. **Setup:** resolve-or-select the initiative to analyze (closed allowed); read
+   `initiative.json` (phases, artifacts, readiness, owes, triage decision, feasibility verdict).
+   Write only under `INITIATIVE_DIR/analytics/`. Mirror the initiative's language.
+2. **Collect:** Cost Collector role (`hsb-cost-collector`) aggregates the cost ledger →
+   investment metrics (or `notCaptured`); Metrics Analyst role (`hsb-metrics-analyst`) reads the
+   qa-logs + documents + `initiative.json` → process/outcome metrics + the document-extracted
+   value score (each dimension cited).
+3. **Compose:** the ROI composites (`roi-model.md`) — cost-to-readiness, throughput per
+   dollar/hour/token, value-anchored ROI (estimate), gate savings (only on a real early stop),
+   automation leverage, cache discipline.
+4. **Report:** ROI Reporter role (`hsb-roi-reporter`, sole writer) renders
+   `analytics/roi-report.md` (from `assets/target-template.roi-report.md`) and
+   `analytics/roi.json`. Then report the headline to the human.
+
+### The three subagents this skill drives
+
+| Subagent TOML | Role here |
+|---|---|
+| `agents/hsb-cost-collector.toml` | aggregate the cost ledger → investment metrics (read-only) |
+| `agents/hsb-metrics-analyst.toml` | process/outcome metrics + document-extracted value score (read-only) |
+| `agents/hsb-roi-reporter.toml` | sole writer of `analytics/roi-report.md` + `analytics/roi.json` |
+
+Each reads its full role spec from `../agents/<role>.md` and the shared references. Run them
+sequentially (Codex is single-agent).
+
+### Modes
+
+Single initiative (default) and Re-run (idempotent — re-reading the ledger and re-rendering the
+report merges into the existing `analytics/` files; the hook's watermark keeps the ledger
+duplicate-free).

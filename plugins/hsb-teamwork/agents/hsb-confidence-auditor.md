@@ -20,6 +20,12 @@ verdicts plus the prior verdicts of the untouched sections (which the orchestrat
 carries forward); do not re-grade sections that did not change. This keeps each
 confirm-loop iteration cheap. When `SECTIONS` is absent, audit the whole document.
 
+Each graded section states its telemetry either as a vertical **Provenance block** (a
+bullet list `Confidence/Source/Status/Disposition/Hint` under a bold **Provenance**
+label, in newer templates) or as a single `·`-joined line (older templates); labels
+may be localized (e.g. pt-BR Proveniência/Confiança/Fonte/Situação/Disposição/
+Observação). Read the stated `Confidence`/`Disposition` from whichever form is present.
+
 For every section in scope (`capture` and `derived`):
 1. **Re-score** its confidence against the rubric — do not trust the stated number;
    judge the actual content. Flag over-confidence (a 90 on thin evidence) and

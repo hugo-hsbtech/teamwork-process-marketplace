@@ -56,6 +56,12 @@ persona and **hands its frozen artefact to the next** through a shared initiativ
 | Readiness       | **`readiness-package`**      | Product Owner | Readiness Package    | ✅ available |
 | Tech assessment | **`tech-assessment`**        | CTO           | Technical Assessment | ✅ available |
 | PRD             | **`prd-generation`**         | PO + CTO → PM | PRD (RP + TA merged) | ✅ available |
+| Analytics       | **`initiative-analytics`**   | Any / Lead    | per-initiative ROI report | ✅ available |
+
+The first four steps form the **demand-to-delivery chain**; **`initiative-analytics`**
+is a **cross-cutting measurement** of any initiative that chain produced — what it
+cost (tokens/models/USD/time, captured automatically by a plugin hook) and the ROI
+it carries.
 
 All four steps reuse the **same engine** — the same orchestration model, the same
 single-writer discipline, the same shared agent roster and reference files — so the
@@ -283,6 +289,27 @@ Synthesizer, and Reconciler.
 > Deep dive: [`skills/prd-generation/README.md`](plugins/hsb-teamwork/skills/prd-generation/README.md)
 > · spec: [`SKILL.md`](plugins/hsb-teamwork/skills/prd-generation/SKILL.md)
 
+### `initiative-analytics` — the ROI of an initiative
+
+A **cross-cutting measurement**, not a step in the chain. It answers *what did this
+initiative cost end-to-end, and what's the ROI?* A **cost-capture hook** (shipped
+with the plugin) fires on `Stop`/`SubagentStop`, reads the session transcript's real
+token `usage` and model, prices it via a bundled `pricing.json`, and appends
+consumption blocks to `<initiative>/analytics/cost-ledger.jsonl` — **per phase and
+per agent**. The four upstream skills write a tiny **session binding** so the hook
+knows which initiative/phase a session is in. The skill then pairs that **measured
+investment** (tokens, models, USD, time) with the **structured artifacts** (readiness,
+disposition mix, triage decision, feasibility verdict, debts) and a **value score
+extracted from the documents** to render a per-initiative ROI report: investment,
+process/throughput, quality/outcome, and ROI composites — cost-to-readiness, **gate
+savings**, throughput per dollar/hour/token, and a value-anchored ROI. **Cost is
+measured; value is estimate-grade; anything uncaptured says so** — it invents no
+numbers.
+
+> Deep dive: [`skills/initiative-analytics/README.md`](plugins/hsb-teamwork/skills/initiative-analytics/README.md)
+> · spec: [`SKILL.md`](plugins/hsb-teamwork/skills/initiative-analytics/SKILL.md)
+> · metric catalog: [`references/metrics-catalog.md`](plugins/hsb-teamwork/skills/initiative-analytics/references/metrics-catalog.md)
+
 ---
 
 ## Install & use
@@ -302,6 +329,7 @@ next:
 /hsb-teamwork:readiness-package        # PO — triage, then rationalize
 /hsb-teamwork:tech-assessment          # CTO — feasibility verdict (if escalated)
 /hsb-teamwork:prd-generation           # PO + CTO — merge RP + TA into the PRD, deliver to PM
+/hsb-teamwork:initiative-analytics     # Any — ROI of the initiative (cost × value), any time
 ```
 
 You can also just describe a demand in normal chat — the skills trigger on the matching
@@ -357,8 +385,10 @@ teamwork-process-marketplace/
 │       │   ├── origination-brainstorm/
 │       │   ├── readiness-package/
 │       │   ├── tech-assessment/
-│       │   └── prd-generation/
+│       │   ├── prd-generation/
+│       │   └── initiative-analytics/ # cross-cutting ROI measurement
 │       ├── agents/hsb-*.md           # shared subagent roster (phase-agnostic specialists)
+│       ├── hooks/                    # cost-capture hook (hooks.json + teamwork-cost-capture.py)
 │       └── codex/                    # Codex adapter (AGENTS.md, prompts, *.toml agents)
 ├── evals/                            # repo-level eval suite (dev/CI only)
 │   ├── origination-brainstorm/       # assertions.py, evals.json, rubric.md, run.sh, fixtures, golden
@@ -379,6 +409,8 @@ without a second copy.
 - [x] `readiness-package` — the PO's two-act journey: triage → frozen Readiness Package
 - [x] `tech-assessment` — the CTO's journey: feasibility verdict + Technical Assessment (the technical half of the PRD)
 - [x] `prd-generation` — the PRD merge: RP + TA → the PRD (dual PO+CTO sign-off) delivered to the PM
+- [x] `initiative-analytics` — per-initiative ROI: a cost-capture hook measures tokens/models/USD/time per phase & agent, paired with the structured artifacts and a document-extracted value score into a ROI report
+- [ ] portfolio roll-up — compare/rank ROI across many initiatives (future)
 
 ---
 

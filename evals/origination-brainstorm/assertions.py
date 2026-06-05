@@ -48,8 +48,10 @@ def split_sections(text):
     return [(h, a, "\n".join(b)) for h, a, b in secs]
 
 def conf_line(body):
-    c = re.search(r"`?Confidence:`?\s*([0-9]{1,3}|__)", body)
-    disp = re.search(r"`?Disposition:`?\s*([A-Za-z_]+|__)", body)
+    # Tolerate both telemetry forms: the single `·`-joined line (`Confidence:` 85)
+    # and the vertical Provenance block bullet (- **Confidence:** 85).
+    c = re.search(r"`?\*{0,2}Confidence:`?\*{0,2}\s*([0-9]{1,3}|__)", body)
+    disp = re.search(r"`?\*{0,2}Disposition:`?\*{0,2}\s*([A-Za-z_]+|__)", body)
     conf = c.group(1) if c else None
     return (None if conf in (None, "__") else int(conf)), (disp.group(1).lower() if disp else None)
 

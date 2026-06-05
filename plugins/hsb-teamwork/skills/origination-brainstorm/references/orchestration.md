@@ -22,6 +22,7 @@ the pen on the same file, so concurrent writes are impossible by construction.
 | `<initiative>/glossary.md`, `<initiative>/decisions.md` | Glossary Keeper | read-only |
 | `readiness-report.md` | Gap Reporter | read-only |
 | `output/humanized.md` | Humanizer | read-only |
+| `output/enrichment-plan.md` | Enrichment Analyst | read-only |
 | `output/translated.<lang>.md` | Translator | read-only |
 | `output/enriched.md` | Visual Enricher | read-only |
 | `final/<project>-NNN.md` | Finalizer | read-only |
@@ -80,7 +81,8 @@ already exists you **resume** it rather than creating a duplicate.
     ├── target-document.md    # Doc Updater
     ├── glossary.md           # brokered read-only copy of the initiative glossary
     ├── readiness-report.md   # Gap Reporter
-    ├── output/               # Humanizer · Translator · Enricher · Packager
+    ├── output/               # Humanizer · Enrichment Analyst · Translator · Enricher · Packager
+    │   └── enrichment-plan.md # Enrichment Analyst — the visual/analytics plan (insumo for the Enricher)
     └── final/                # Finalizer — the clean, printable final deliverable(s)
         └── <project>-NNN.md  # externalized, scaffolding-stripped, counter-suffixed
 ```
@@ -179,30 +181,75 @@ are due. Ledger Writer → Doc Updater run **serially** (each is a single-writer
 The Auditor is read-only after, and re-scores only the touched `SECTIONS` once the
 document has settled — so later iterations cost a fraction of the first.
 
-## Phase 3 — Production (isolated context, parallel variants)
+## Phase 2.5 — Readiness checkpoint (you + the human)
 
-Once the gate clears, hand off to isolated agents that need only the final doc —
-this keeps your context lean ("isolate when satisfied"):
+The gate clearing means *blocking sections are resolved or honestly disposed* — it
+does **not** mean the human is done. Before producing, **make the choice explicit**
+instead of silently shipping residual drafts. Spawn (or reuse) the **Gap Reporter**
+so `readiness-report.md` is fresh, then present the open items and ask the human what
+to do with them. First **classify each residual** by who can actually close it:
 
-1. **Humanizer** writes `output/humanized.md` (must finish first — it is the
-   canonical clean copy the others read).
-2. Then spawn **in the same turn** (parallel variants, distinct files):
-   - **Translator** → `output/translated.<lang>.md` for each requested language.
-   - **Visual Enricher** → `output/enriched.md`.
-   - **Finalizer** → `final/<project>-NNN.md` — the clean, **printable final
-     deliverable**. It reads the canonical `output/humanized.md`, strips every
-     authoring scaffold (HTML comments + `origination:` annotations, the rev/END
-     markers, rubric/guidance blockquotes, and the per-section
-     `Confidence/Source/Status/Disposition/Hint` lines), keeps all substantive
-     content and ⚠️ warnings, and externalizes it under `final/` named
-     `<PROJECT_SLUG>-<NNN>.md` (zero-padded per-phase counter; idempotency guard
-     skips a new counter when the deliverable is unchanged). Inject `PROJECT_SLUG`
-     (from `initiative.json.project`). This is the clearly-final document a human
-     prints or hands off.
+- **Submitter-closeable** — a residual the person in front of you can answer now (a
+  soft confidence, an unconfirmed assumption they actually hold, a missing number
+  they know). These are fair to offer to close.
+- **Downstream-owner** — a residual that belongs to a *later* role (PO product-vision
+  fit, Tech Lead feasibility of an assumption). These are **correctly deferred**; do
+  not pester the Submitter with them — surface them as handoff debt and carry them in
+  `owes`.
 
-   *(Per project choice: translated, enriched, and the final deliverable are
-   independent of each other; only the Finalizer's externalized copy is the
-   printable final.)*
+Then ask via `AskUserQuestion` (prose-enumerated on hosts without it), **recommending
+the readiness-maximizing path**:
+
+| Option | Effect |
+|---|---|
+| **Close the gaps now (recommended)** | Re-enter the Phase 2 loop targeting the Submitter-closeable residuals (and non-blocking soft sections) to push readiness toward its max; downstream-owner items stay deferred. |
+| Pick specific items | `multiSelect` the residuals to close; loop on those only. |
+| Ship as draft for review | Proceed to production as-is; residual drafts travel as honest dispositions for a downstream owner to resolve. |
+
+Only after the human's call do you proceed to Phase 3. Record the decision (and any
+newly-closed items) so the run is auditable.
+
+## Phase 3 — Production (isolated context, a chain that feeds the deliverable)
+
+Once the checkpoint is settled, hand off to isolated agents that need only the final
+doc — this keeps your context lean ("isolate when satisfied"). The variants form a
+**chain** so the visuals reach the printable deliverable instead of dead-ending in a
+side branch:
+
+1. Spawn **in the same turn** (both read the settled `$DOC`, independent → parallel):
+   - **Humanizer** → `output/humanized.md` (the canonical clean copy the rest read).
+   - **Enrichment Analyst** → `output/enrichment-plan.md` — a read-the-data
+     specialist that catalogs every opportunity for an analytical/quantitative
+     visual (each entry: the section it illuminates, the data points **with their
+     Q###/source citation**, the proposed visual type, an evidence grade, a
+     low-confidence DRAFT flag, and a caption). This is the **insumo** the Enricher
+     renders; separating *what to visualize* from *rendering it* makes the plan
+     auditable and the data sourced.
+2. Then **Visual Enricher** → `output/enriched.md`: it reads `humanized.md` **and**
+   the `enrichment-plan.md` and renders the planned visuals (Mermaid-native by
+   default: `xychart-beta`/`pie`/`radar` for quantitative charts, flow/stakeholder
+   maps otherwise), marking low-confidence visuals DRAFT and keeping every fact.
+3. In parallel with step 2, spawn the read-only **Citation Resolver**: it reads
+   `qa-log.md` + `sources-index.md` + `$DOC` and returns (a) a reader-facing
+   "Sources & question log" appendix spec and (b) the rewrite map turning in-text
+   `Q###` / `§file` references into in-document anchor links. You route its proposal
+   to the Finalizer.
+4. **Translator** → `output/translated.<lang>.md` for each requested language (reads
+   `humanized.md`); independent of the enrichment chain, so it can go out alongside
+   step 2.
+5. **Finalizer** → `final/<project>-NNN.md` — the clean, **printable final
+   deliverable**, last in the chain because it consumes the enriched copy. It reads
+   `output/enriched.md` (so the visuals survive), strips authoring scaffold (HTML
+   comments + `origination:` annotations, the rev/END markers, rubric/guidance
+   blockquotes, and the `<!-- VISUAL ... -->` enrichment-annotation comments) **but
+   keeps every Mermaid block and summary table**, **relocates** each section's
+   Provenance block into the Citation Resolver's "Sources & question log" appendix
+   (rather than deleting the telemetry) and applies the reference-link rewrites, keeps
+   all substantive content and ⚠️ warnings, and externalizes it under `final/` named
+   `<PROJECT_SLUG>-<NNN>.md` (zero-padded per-phase counter; idempotency guard skips a
+   new counter when the deliverable is unchanged). Inject `PROJECT_SLUG` (from
+   `initiative.json.project`). This is the clearly-final document a human prints or
+   hands off: clean **and** enriched, with traceable, linked provenance.
 
 ## Phase 4 — Wrap
 
@@ -225,7 +272,9 @@ this keeps your context lean ("isolate when satisfied"):
 - **Loop:** Question Strategist, Evidence Extractor, Reconciler, Synthesizer
   (read-only proposers); Ledger Writer, Doc Updater, Glossary Keeper, Gap Reporter
   (writers); Confidence Auditor (read-only gate).
-- **Production:** Humanizer, then Translator ∥ Visual Enricher ∥ Finalizer.
+- **Production:** Humanizer ∥ Enrichment Analyst, then Visual Enricher ∥ Citation
+  Resolver ∥ Translator, then Finalizer (consumes the enriched copy + the Citation
+  Resolver's appendix/link map).
 - **Wrap:** Packager.
 
 Every writer obeys the single-writer + serialize/queue/merge/RMW rules in

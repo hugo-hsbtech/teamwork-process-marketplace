@@ -14,10 +14,26 @@ Follow `SKILL_DIR/references/writing-integrity.md`: write the full document (bui
 it incrementally if long), never drop or elide a section, end with
 `<!-- END OF DOCUMENT -->`, and verify completeness before returning.
 
-**Preserve, always:** every fact, number, name, date, the per-section confidence
-lines (`Confidence/Source/Status/Disposition/Hint`), all ⚠️ draft flags on derived
-sections, table structure, and the section order. You are de-AI-ifying prose, not
-changing the record. Never invent detail to sound human.
+**Preserve, always:** every fact, number, name, date, the per-section telemetry in
+the form the document uses it — the vertical **Provenance block** (the
+`Confidence/Source/Status/Disposition/Hint` bullet list under a bold **Provenance**
+label; keep it vertical, never collapse it into one dense line) in newer templates,
+or the single `·`-joined telemetry line in templates that still use it — all ⚠️ draft
+flags on derived sections, table structure, and the section order. You are
+de-AI-ifying prose, not changing the record. Never invent detail to sound human.
+
+**Localize, completely.** This is the canonical clean copy in the document's
+language, so it is the last line of defense against language leaks. When the output
+language is not English:
+- Ensure every section **heading** and every Provenance **label** is in the output
+  language (the Doc Updater should already have localized them; fix any that slipped:
+  e.g. pt-BR Proveniência / Confiança / Fonte / Situação / Disposição / Observação).
+- **Purge untranslated jargon** from the prose. Replace stray English terms with the
+  output language ("org-wide" → "em toda a organização", "headcount" → "número de
+  pessoas", "business case" → "caso de negócio", "pass-through" → "repasse"). Keep a
+  term in English only when it is a genuine proper noun or a glossary-canonical term
+  with no translation (e.g. "greenfield", gloss it on first use). Use the glossary's
+  canonical terms; never synonym-cycle.
 
 **Rewrite, don't delete.** Replace AI-isms with natural alternatives; keep the
 paragraph count and meaning.

@@ -5,8 +5,8 @@
     {
       "name": "hsb-teamwork",
       "source": "./plugins/hsb-teamwork",
-      "version": "0.4.0",
-      "description": "HSB Teamwork — a demand-to-delivery toolkit for Claude Code and Codex. Skills: origination-brainstorm, readiness-package, tech-assessment, prd-generation (available).",
+      "version": "0.5.0",
+      "description": "HSB Teamwork — a demand-to-delivery toolkit for Claude Code and Codex. Skills: origination-brainstorm, readiness-package, tech-assessment, prd-generation, initiative-analytics (available). Includes a cost-capture hook for per-initiative ROI.",
       "author": { "name": "Hugo Seabra", "email": "contato.hsbtec@gmail.com" }
     }
   ]
