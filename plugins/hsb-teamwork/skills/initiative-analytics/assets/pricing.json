@@ -10,7 +10,8 @@
       "WebFetch https://platform.claude.com/docs/en/pricing.md",
       "GET /v1/models (capabilities; pricing on the pricing page)"
     ],
-    "onUnavailable": "proceed with the stale table and flag staleness loudly in the report (capturedAt + age); never block the run"
+    "onUnavailable": "HARD BLOCK: if prices are stale AND a fresh table cannot be fetched (offline / no source), HALT — do not price and do not produce the report. The human must restore a source, update `models` + `capturedAt` by hand, or explicitly re-run with `allowStalePricing` to price with the stale table (flagged ⚠️ in the report).",
+    "allowStalePricing": false
   },
   "currency": "USD",
   "unit": "per_1M_tokens",
