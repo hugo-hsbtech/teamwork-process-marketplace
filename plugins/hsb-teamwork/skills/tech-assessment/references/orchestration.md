@@ -4,8 +4,15 @@ This skill is a **multi-agent pipeline** that extends the same engine as
 origination-brainstorm and readiness-package. The conversation you (the
 orchestrator) run is Layer 0 — the only layer that talks to the **CTO**.
 Everything else is a specialized subagent you spawn with a focused prompt and
-tear down. This file is the authoritative spec for *who runs when, who may write
-what, and what runs in parallel* in the tech-assessment flow.
+tear down. This file is the **narrative** view of *who runs when, who may write
+what, and what runs in parallel* in the tech-assessment flow. The **machine** view —
+the authoritative, validated ordering — is declared in
+[`../pipeline.yaml`](../pipeline.yaml) and checked by `tools/pipeline_graph.py`; see
+[`scheduling.md`](scheduling.md). When the prose and the graph disagree, the graph
+wins and the prose is the bug. In particular, the parallel batches, the single-writer
+and single-decider invariants, and the **provisional-then-reconcile** handling of the
+draft-pass proposers (effort/ADRs drafted before the verdict) are derived from the
+graph, not hand-maintained here.
 
 The TA is the **CTO's** artefact — the persona's *technical-strategy* mandate
 (`personas/03-cto.md` §2). It **responds** to the Readiness Package and is authored

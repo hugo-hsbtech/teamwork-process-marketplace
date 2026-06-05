@@ -1,0 +1,196 @@
+# Declarative dependency graph for the tech-assessment pipeline.
+#
+# This is the source of truth for *ordering and conflict-safety*. The orchestrator
+# (Layer 0) schedules by it; tools/pipeline_graph.py validates it. The prose in
+# references/orchestration.md is the narrative view of this same graph.
+#
+# Two edge kinds encode the hybrid scheduling model (see references/scheduling.md):
+#   - reads          HARD edge. A node cannot run until every datum it reads exists.
+#                    Topological order is computed from these edges alone.
+#   - provisional_on SOFT edge. The node DOES run early (in the parallel draft pass),
+#                    before this datum exists, so the CTO opens a pre-filled form.
+#                    Its output is tagged provisional; when the named datum resolves,
+#                    a `reconciliations` rule re-dispositions it. This is what keeps
+#                    the pre-fill UX *and* the safety: sequencing is data, not prose.
+#
+# The validator FAILS the build if a provisional_on edge has no matching
+# reconciliation rule — i.e. it mechanically enforces the fix for the
+# "effort/ADRs drafted before the veto exists" conflict.
+
+version: 1
+skill: tech-assessment
+
+# Inputs that exist before the pipeline runs (no node decides them).
+external_inputs:
+  - template                 # the TA target template
+  - rp                       # the frozen, escalated Readiness Package
+  - intake-record            # the Intake Record (demand nature + KB classification)
+  - tech-landscape-existing  # the persistent KB, IF one already exists
+
+# Section datums of the TA document. `reads_all_sections: true` on a node expands to
+# these (used by the auditor, the doc transcriber, and the humanizer so we don't list
+# every section under each).
+section_datums:
+  - current-state
+  - tech-foundation
+  - affected-systems
+  - architectural-impact
+  - integrations
+  - alternatives
+  - nfr-feasibility
+  - testability-observability
+  - hard-constraints
+  - tech-risks
+  - build-vs-buy
+  - adrs
+  - effort-cost
+  - feasibility-verdict
+
+# Physical file ownership — the single-writer invariant (concurrency safety).
+# The validator asserts each file has exactly one writer and that the writer node
+# declares `persists:` it. Logical authorship (who DECIDES a datum) is separate and
+# lives in nodes.*.decides; physical writes still funnel through these owners.
+file_writers:
+  contract.lock.md: hsb-template-analyst
+  sources/: hsb-source-indexer
+  qa-log.md: hsb-ledger-writer
+  technical-assessment.md: hsb-doc-updater
+  tech-landscape: hsb-landscape-keeper
+  output/humanized.md: hsb-humanizer
+  output/translated.md: hsb-translator
+  output/enriched.md: hsb-visual-enricher
+  final/: hsb-finalizer
+  output/manifest.md: hsb-packager
+
+nodes:
+
+  # ---- Setup -------------------------------------------------------------------
+  hsb-template-validator:
+    phase: setup
+    reads: [template]
+    decides: [template-valid]
+
+  hsb-template-analyst:
+    phase: setup
+    reads: [template, template-valid]
+    decides: [contract]
+    persists: contract.lock.md
+
+  hsb-source-indexer:
+    phase: setup
+    reads: [rp, intake-record, tech-landscape-existing]
+    decides: [sources]
+    persists: sources/
+
+  # ---- Classify & inherit (the governing decision first) -----------------------
+  hsb-tech-classifier:
+    phase: classify
+    governs: true              # output gates which path sections are in force
+    reads: [contract, sources]
+    decides: [tech-classification]
+
+  hsb-stage-inheritor:
+    phase: classify
+    reads: [contract, sources]
+    decides: [inherited-context]
+
+  # ---- Draft pass (fan-out, parallel) ------------------------------------------
+  hsb-section-drafter:
+    phase: draft
+    fanout: per-section        # spawned once per SECTION, all in the same turn
+    reads: [contract, tech-classification, inherited-context, sources]
+    decides:
+      - current-state
+      - tech-foundation
+      - affected-systems
+      - architectural-impact
+      - integrations
+      - alternatives
+      - nfr-feasibility
+      - testability-observability
+      - hard-constraints
+      - tech-risks
+      - build-vs-buy
+
+  hsb-adr-proposer:
+    phase: draft
+    reads: [architectural-impact, tech-foundation, current-state, integrations, alternatives, tech-landscape-existing]
+    decides: [adrs]
+    provisional_on: [feasibility-verdict]   # drafts in parallel, BEFORE the verdict
+
+  hsb-effort-estimator:
+    phase: draft
+    reads: [architectural-impact, affected-systems, integrations, build-vs-buy]
+    decides: [effort-cost]
+    provisional_on: [feasibility-verdict]   # drafts in parallel, BEFORE the verdict
+
+  # ---- The verdict (gate) ------------------------------------------------------
+  hsb-feasibility-assessor:
+    phase: verdict
+    reads: [tech-classification, architectural-impact, nfr-feasibility, integrations, tech-risks, hard-constraints]
+    decides: [feasibility-verdict]
+
+  # ---- Confirm loop ------------------------------------------------------------
+  hsb-ledger-writer:
+    phase: confirm
+    reads: [contract, tech-classification, inherited-context]
+    decides: [qa-log]
+    persists: qa-log.md
+
+  hsb-confidence-auditor:
+    phase: confirm
+    reads: [contract]
+    reads_all_sections: true   # re-scores every section + the verdict
+    decides: [readiness-verdict]
+
+  hsb-doc-updater:
+    phase: confirm
+    reads: [contract, inherited-context, tech-classification]
+    reads_all_sections: true   # transcribes the decided sections into the document
+    decides: [ta-document]
+    persists: technical-assessment.md
+
+  hsb-landscape-keeper:
+    phase: confirm
+    reads: [tech-classification, current-state, tech-foundation, adrs]
+    decides: [tech-landscape]
+    persists: tech-landscape
+
+  # ---- Production & wrap -------------------------------------------------------
+  hsb-humanizer:
+    phase: production
+    reads: [ta-document]
+    decides: [humanized]
+    persists: output/humanized.md
+
+  hsb-translator:
+    phase: production
+    reads: [humanized]
+    decides: [translated]
+    persists: output/translated.md
+
+  hsb-visual-enricher:
+    phase: production
+    reads: [humanized]
+    decides: [enriched]
+    persists: output/enriched.md
+
+  hsb-finalizer:
+    phase: production
+    reads: [humanized, enriched]
+    decides: [final]
+    persists: final/
+
+  hsb-packager:
+    phase: production
+    reads: [final, humanized, translated, readiness-verdict, feasibility-verdict, tech-landscape]
+    decides: [manifest]
+    persists: output/manifest.md
+
+# When a provisional datum resolves to a value, the named provisional outputs must be
+# re-dispositioned. The validator requires one of these for every provisional_on edge.
+reconciliations:
+  - when: feasibility-verdict == "Infeasible as scoped"
+    redisposition: [effort-cost, adrs]
+    to: "decided: N/A — vetoed (see feasibility-verdict)"
+    via: hsb-doc-updater
