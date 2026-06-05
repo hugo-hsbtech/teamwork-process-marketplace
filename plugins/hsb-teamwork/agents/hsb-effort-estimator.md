@@ -37,7 +37,7 @@ a Build-vs-Buy still open) so the CTO firms it.
 - **Internal only.** Not a contractual commitment, not client-facing. It will be refined
   by the Tech Lead in the Tech Backlog — propose the CTO-level firm number, not a task
   breakdown.
-- If the verdict is heading toward `inviável-como-escopado`, the estimate may be N/A —
+- If the verdict is heading toward `Infeasible as scoped`, the estimate may be N/A —
   flag that rather than estimating a scope that will be vetoed.
 - Honesty over precision: if a part cannot be estimated without a Discovery spike, say so
   and flag it for `discovery-path`.

@@ -5,10 +5,10 @@ This file is the contract. Each fillable section carries an annotation:
 and a self-sufficient rubric. The Template Analyst derives contract.lock.md from
 these (the same engine as origination-brainstorm / readiness-package — the marker
 keyword stays `origination:`).
-The confidence line adds an Origin field (inherited | ai_drafted | cto_authored)
-per personas/02-po.md §2/§10 and templates/03-technical-assessment.md. The TA is
-the CTO's output: it RESPONDS to the RP and is authored ALONE by the CTO — it
-never edits the RP. To use a different document type, copy this file, re-annotate,
+The confidence line adds an Origin field (inherited | ai_drafted | cto_authored |
+reused_from_KB) per personas/03-cto.md §3/§6 and templates/03-technical-assessment.md.
+The TA is the CTO's output: it RESPONDS to the RP and is authored ALONE by the CTO —
+it never edits the RP. To use a different document type, copy this file, re-annotate,
 and pass it as TEMPLATE. See references/contract-and-template.md (in origination-brainstorm).
 Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 
@@ -16,218 +16,220 @@ TWO PATHS, ONE TEMPLATE. The `tech-classification` section governs which path is
 required: Greenfield (the TA DEFINES the foundation — fill `tech-foundation`) or
 Brownfield/Hybrid (the TA DISCOVERS the current system — fill `current-state`).
 Fill the applicable path; the other is dispositioned `Disposition: decided` with
-content "N/A — see Classificação Técnica" (an honest disposition that clears the
+content "N/A — see Technical classification" (an honest disposition that clears the
 gate). See references/classification.md.
 -->
 
-# Technical Assessment — [Nome da demanda]
-<!-- rev: 0 · updated: AAAA-MM-DD -->
+# Technical Assessment — [Demand name]
+<!-- rev: 0 · updated: YYYY-MM-DD -->
 
-> O Technical Assessment (TA) é o **output do CTO** — e vai **além da arquitetura**:
-> estabelece o **terreno técnico** sobre o qual a engenharia decide. Como a camada de
-> execução (humana ou agente de IA) **não tem conhecimento implícito do código-fonte**,
-> o TA torna explícito o que normalmente fica tácito: a natureza da demanda (software
-> novo vs. existente), o estado atual ou a fundação a criar, a base de conhecimento, a
-> viabilidade de cada NFR, as alternativas descartadas, testabilidade e observabilidade.
-> É escrito **sozinho** pelo CTO, **em paralelo** ao Readiness Package, e **responde** a
-> ele: o CTO **nunca edita o RP**. O TA não redefine o produto — pode **vetar** a
-> viabilidade do escopo, e então o PO revisa o escopo do RP. A fusão do RP (produto) com
-> este TA (técnico) acontece no PRD. Ver `personas/02-po.md` §2 e §10 e
+> The Technical Assessment (TA) is the **CTO's output** — and goes **beyond
+> architecture**: it establishes the **technical terrain** on which engineering decides.
+> Because the execution layer (human or AI agent) **has no implicit knowledge of the
+> source code**, the TA makes explicit what normally goes unstated: the nature of the
+> demand (new vs. existing software), the current state or the foundation to be created,
+> the knowledge base, the feasibility of each NFR, the discarded alternatives,
+> testability, and observability. It is written **alone** by the CTO, **in parallel** with
+> the Readiness Package, and **responds** to it: the CTO **never edits the RP**. The TA
+> does not redefine the product — it may **veto** the feasibility of the scope, in which
+> case the PO revises the RP scope. The merge of the RP (product) with this TA (technical)
+> happens in the PRD. See `personas/03-cto.md`, `personas/02-po.md` §2/§10, and
 > `interactions/05-po-to-cto.md` / `interactions/06-cto-to-po.md`.
 
-## Metadados
+## Metadata
 <!-- origination: id=meta; blocks=false; min-confidence=0; kind=meta -->
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
-| **ID da Avaliação** | TA-AAAA-NNN |
-| **Versão** | v1 |
-| **RP vinculado** | RP-AAAA-NNN vX |
-| **Intake vinculado** | INT-AAAA-NNN |
-| **Responsável** | [Nome] (CTO) |
-| **Status** | Requisitado / Em andamento / Assinado / Vetado |
-| **Veredito de viabilidade** | viável / viável-com-ressalvas / inviável-como-escopado |
-| **Data de assinatura** | — |
-| **Output language** | [e.g. pt-BR] |
+| **Assessment ID** | TA-YYYY-NNN |
+| **Version** | v1 |
+| **Linked RP** | RP-YYYY-NNN vX |
+| **Linked Intake** | INT-YYYY-NNN |
+| **Owner** | [Name] (CTO) |
+| **Status** | Requested / In progress / Signed off / Vetoed |
+| **Feasibility verdict** | Feasible / Feasible with caveats / Infeasible as scoped |
+| **Sign-off date** | — |
+| **Output language** | [e.g. en-US] |
 
-## Histórico de Revisão
+## Revision History
 <!-- origination: id=revisions; blocks=false; min-confidence=0; kind=meta -->
 
-| Versão | Data | Autor | Status | Resumo |
+| Version | Date | Author | Status | Summary |
 |---|---|---|---|---|
-| v1 | AAAA-MM-DD | [Nome] (CTO) | Em andamento | Avaliação inicial. |
+| v1 | YYYY-MM-DD | [Name] (CTO) | In progress | Initial assessment. |
 
 ---
 
-## Veredito de Viabilidade
+## Feasibility Verdict
 <!-- origination: id=feasibility-verdict; blocks=true; min-confidence=85; kind=capture -->
-> Rubric: a **decisão de primeira classe do CTO** (`personas/03-cto.md` §3 — *feasibility
-> is first class*: todo juízo carrega `verdict` + `rationale` + **`terrain`** + `confidence`
-> + `source` + `generates`). Carrega rationale — nunca um carimbo — e o **terreno** em que
-> repousa: *"viabilidade não se avalia em terreno desconhecido"* (`03-cto.md` §3, a regra de
-> ouro do CTO). Se **inviável-como-escopado**, o CTO retorna com veto + rationale; o PO
-> revisa o escopo do RP e re-escala. O CTO não redefine o produto. Esta seção só se resolve
-> em confiança alta (a viabilidade é o juízo central do CTO).
+> Rubric: the **CTO's first-class decision** (`personas/03-cto.md` §3 — *feasibility is
+> first class*: every judgment carries `verdict` + `rationale` + **`terrain`** +
+> `confidence` + `source` + `generates`). Carries rationale — never a rubber stamp — and
+> the **terrain** it rests on: *"feasibility cannot be assessed on unknown terrain"*
+> (`03-cto.md` §3, the CTO's golden rule). If **Infeasible as scoped**, the CTO returns
+> with a veto + rationale; the PO revises the RP scope and re-escalates. The CTO does not
+> redefine the product. This section resolves only at high confidence (feasibility is the
+> CTO's central judgment).
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
-| **Veredito** | viável / viável-com-ressalvas / inviável-como-escopado |
-| **Rationale** | [Por quê — defensável] |
-| **Terreno (terrain)** | `tech-landscape-[sistema].md` (KB em que repousa) · "não documentado → Discovery" |
-| **Ressalvas (se aplicável)** | [O que precisa ser verdade para o veredito se sustentar] |
-| **Gera (generates)** | hard_constraint · adr · discovery_spike · kb_update · — |
+| **Verdict** | Feasible / Feasible with caveats / Infeasible as scoped |
+| **Rationale** | [Why — defensible] |
+| **Terrain** | `tech-landscape-[system].md` (the KB it rests on) · "undocumented → Discovery" |
+| **Caveats (if applicable)** | [What must be true for the verdict to hold] |
+| **Generates** | hard_constraint · adr · discovery_spike · kb_update · — |
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 
 ---
 
-## Classificação Técnica e Base de Conhecimento
+## Technical classification and Knowledge Base
 <!-- origination: id=tech-classification; blocks=true; min-confidence=80; kind=capture -->
-> Rubric: **a decisão que governa o resto do documento.** Herda a natureza da demanda do
-> Intake e a confirma sob a lente técnica. Define qual caminho preencher (greenfield vs.
-> brownfield) e ancora o TA na base de conhecimento — o que existe, o que falta, o que
-> será criado. Se a KB não existe/está incompleta (brownfield), documentar o sistema
-> atual é **pré-requisito**: registre como spike no *Caminho de Discovery* e produza/
-> atualize o `tech-landscape`. Se greenfield, os ADRs fundacionais **semeiam** um novo
-> `tech-landscape`.
+> Rubric: **the decision that governs the rest of the document.** Inherits the demand
+> nature from the Intake and confirms it under the technical lens. Defines which path to
+> fill (greenfield vs. brownfield) and anchors the TA in the knowledge base — what exists,
+> what is missing, what will be created. If the KB does not exist or is incomplete
+> (brownfield), documenting the current system is a **prerequisite**: register it as a
+> spike in the *Discovery Path* and produce/update the `tech-landscape`. If greenfield,
+> the foundational ADRs **seed** a new `tech-landscape`.
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
-| **Natureza (confirmada pelo CTO)** | Greenfield (novo) · Brownfield (existente) · Híbrido (novo dentro de existente) |
-| **Caminho a preencher** | Fundação técnica (greenfield) · Estado atual (brownfield) · Ambos (híbrido) |
-| **Base de Conhecimento (KB)** | Existe → referência · Parcial → referência + lacunas · Não existe → criar (Discovery) |
-| **Referência da KB** | `tech-landscape-[sistema].md` · link · — |
+| **Nature (confirmed by CTO)** | Greenfield (new) · Brownfield (existing) · Hybrid (new within existing) |
+| **Path to fill** | Technical foundation (greenfield) · Current state (brownfield) · Both (hybrid) |
+| **Knowledge Base (KB)** | Exists → reference · Partial → reference + gaps · Does not exist → create (Discovery) |
+| **KB reference** | `tech-landscape-[system].md` · link · — |
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 
 ---
 
-## Perguntas do PO Endereçadas
+## PO Questions Addressed
 <!-- origination: id=po-questions; blocks=true; min-confidence=70; kind=capture -->
-> Rubric: *trace-to-source.* As incógnitas técnicas específicas que o PO escalou — e a
-> resposta a cada uma. Mantém a avaliação ancorada ao que foi perguntado (herdadas do
-> RP / da escalada). Sem ao menos uma pergunta endereçada (ou "nenhuma pergunta
-> específica foi escalada"), a seção NÃO está satisfeita.
+> Rubric: *trace-to-source.* The specific technical unknowns the PO escalated — and the
+> answer to each. Keeps the assessment anchored to what was asked (inherited from the RP /
+> the escalation). Without at least one question addressed (or "no specific question was
+> escalated"), the section is NOT satisfied.
 
-| # | Pergunta do PO | Resposta do CTO |
+| # | PO question | CTO answer |
 |---|---|---|
-| 1 | [Incógnita técnica] | [Resposta] |
+| 1 | [Technical unknown] | [Answer] |
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 
 ---
 
-## Caminho BROWNFIELD — Estado atual / Landscape técnico
+## BROWNFIELD Path — Current state / Technical landscape
 <!-- origination: id=current-state; blocks=true; min-confidence=75; kind=capture -->
-> Rubric: **documentar o sistema antes de mudá-lo** (preencher se a demanda modifica
-> software existente). Em brownfield, a decisão de implementação depende do que já existe
-> — padrões, convenções, integrações, dívida. Equivalente ao *document-project* do BMAD.
-> Quando há um `tech-landscape` atualizado, **referencie-o** e registre aqui só o
-> específico desta demanda. **Se greenfield:** não se aplica — `Disposition: decided`,
-> conteúdo "N/A — greenfield (ver Classificação Técnica)".
+> Rubric: **document the system before changing it** (fill in if the demand modifies
+> existing software). In brownfield, the implementation decision depends on what already
+> exists — patterns, conventions, integrations, debt. This is the equivalent of BMAD's
+> *document-project*. When an up-to-date `tech-landscape` exists, **reference it** and
+> record here only what is specific to this demand. **If greenfield:** not applicable —
+> `Disposition: decided`, content "N/A — greenfield (see Technical classification)".
 
-### Padrões e convenções existentes a respeitar
+### Existing patterns and conventions to respect
 
-| Aspecto | Como é hoje | Implicação para esta demanda |
+| Aspect | How it is today | Implication for this demand |
 |---|---|---|
-| **Estrutura / organização do código** | [Onde as coisas ficam] | [O que seguir] |
-| **Padrões de dados / persistência** | [Modelo, migrations] | |
-| **Padrões de API / contrato** | [REST/eventos, versionamento] | |
-| **Autenticação / autorização** | [Como é aplicada] | |
+| **Code structure / organization** | [Where things live] | [What to follow] |
+| **Data / persistence patterns** | [Model, migrations] | |
+| **API / contract patterns** | [REST/events, versioning] | |
+| **Authentication / authorization** | [How it is applied] | |
 
-### Pontos de integração tocados
+### Integration points touched
 
-| Ponto de integração | Sistema/módulo | Natureza do acoplamento | Risco de mudar |
+| Integration point | System/module | Coupling nature | Risk of changing |
 |---|---|---|---|
-| [Interface/serviço] | [Quem] | [Síncrono / evento / DB compartilhado] | Alto / Médio / Baixo |
+| [Interface/service] | [Who] | [Synchronous / event / shared DB] | High / Medium / Low |
 
-### Dívida técnica e risco de regressão
+### Technical debt and regression risk
 
-| Área | Dívida / fragilidade conhecida | Risco de regressão | Cobertura de testes atual |
+| Area | Known debt / fragility | Regression risk | Current test coverage |
 |---|---|---|---|
-| [Módulo] | [O que é frágil] | Alto / Médio / Baixo | [Boa / parcial / nenhuma] |
+| [Module] | [What is fragile] | High / Medium / Low | [Good / partial / none] |
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 
 ---
 
-## Caminho GREENFIELD — Fundação técnica
+## GREENFIELD Path — Technical foundation
 <!-- origination: id=tech-foundation; blocks=true; min-confidence=75; kind=capture -->
-> Rubric: **decidir a fundação — com critério, não por reflexo** (preencher se a demanda
-> constrói software/módulo novo). Em greenfield não há terreno a descobrir: o TA o
-> **cria**. Registre as escolhas-base e o *porquê*, para sustentar ADRs e tornar-se o
-> ponto de partida do novo `tech-landscape`. **Se brownfield puro:** não se aplica —
-> `Disposition: decided`, conteúdo "N/A — brownfield (ver Classificação Técnica)".
+> Rubric: **decide the foundation — with criteria, not by reflex** (fill in if the demand
+> builds new software/module). In greenfield there is no terrain to discover: the TA
+> **creates** it. Record the base choices and the *why*, so they sustain ADRs and become
+> the starting point of the new `tech-landscape`. **If pure brownfield:** not applicable —
+> `Disposition: decided`, content "N/A — brownfield (see Technical classification)".
 
-### Seleção de stack (com critério)
+### Stack selection (with criteria)
 
-| Camada | Escolha | Critério de decisão | Alternativa descartada |
+| Layer | Choice | Decision criterion | Discarded alternative |
 |---|---|---|---|
-| **Linguagem / runtime** | [Escolha] | [Por quê — time, ecossistema, performance] | [Qual e por que não] |
+| **Language / runtime** | [Choice] | [Why — team, ecosystem, performance] | [What and why not] |
 | **Framework / app** | | | |
-| **Persistência / dados** | | | |
+| **Persistence / data** | | | |
 | **Infra / deploy** | | | |
 
-### Arquitetura-alvo
+### Target architecture
 
-> Diagrama de contexto e container (estilo C4 — só os níveis que agregam valor). Texto ou referência ao diagrama.
+> Context and container diagram (C4 style — only the levels that add value). Text or reference to diagram.
 
 ```text
-[Diagrama de contexto/container — sistemas, usuários, containers e como se comunicam]
+[Context/container diagram — systems, users, containers and how they communicate]
 ```
 
-### Estrutura e convenções de repositório
+### Structure and repository conventions
 
-- **Organização de pastas / módulos:** [padrão a adotar]
-- **Convenções de nomeação / lint / teste:** [padrão a adotar]
-- **Estratégia de branching / CI:** [padrão a adotar]
+- **Folder / module organization:** [pattern to adopt]
+- **Naming / lint / test conventions:** [pattern to adopt]
+- **Branching / CI strategy:** [pattern to adopt]
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 
 ---
 
-## Sistemas e Componentes Afetados
+## Affected Systems and Components
 <!-- origination: id=affected-systems; blocks=true; min-confidence=70; kind=capture -->
-> Rubric: mapa do raio de impacto. Cada serviço/módulo tocado e a natureza do impacto.
-> Herda os sistemas/integrações que o RP nomeou no escopo.
+> Rubric: the blast-radius map. Each service/module touched and the nature of the impact.
+> Inherits the systems/integrations the RP named in scope.
 
-| Sistema / Componente | Natureza do impacto |
+| System / Component | Nature of impact |
 |---|---|
-| [Serviço / módulo] | [Novo / modificado / apenas consumido] |
+| [Service / module] | [New / modified / consumed only] |
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 
 ---
 
-## Impacto Arquitetural
+## Architectural Impact
 <!-- origination: id=architectural-impact; blocks=true; min-confidence=75; kind=capture -->
-> Rubric: território exclusivo do CTO (migrado da antiga Seção 8 do RP). Para cada área
-> tocada, o impacto e a nota arquitetural (padrão a seguir/evitar). Preencher apenas as
-> áreas relevantes — não forçar as irrelevantes.
+> Rubric: exclusive CTO territory (migrated from the old RP Section 8). For each area
+> touched, the impact and the architectural note (pattern to follow/avoid). Fill in only
+> the relevant areas — do not force the irrelevant ones.
 
-| Área | Impacto | Nota arquitetural |
+| Area | Impact | Architectural note |
 |---|---|---|
-| **Modelo de dados** | [Descrição] | [Padrão a seguir/evitar] |
-| **Eventos / mensageria** | [Descrição] | |
-| **Frontend** | [Descrição] | |
-| **Segurança** | [Descrição] | |
-| **Multi-tenancy** | [Descrição] | |
-| **Performance / Escalabilidade** | [Descrição] | |
-| **Observabilidade** | [Descrição] | |
+| **Data model** | [Description] | [Pattern to follow/avoid] |
+| **Events / messaging** | [Description] | |
+| **Frontend** | [Description] | |
+| **Security** | [Description] | |
+| **Multi-tenancy** | [Description] | |
+| **Performance / Scalability** | [Description] | |
+| **Observability** | [Description] | |
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 
 ---
 
-## Integrações Necessárias
+## Required Integrations
 <!-- origination: id=integrations; blocks=true; min-confidence=70; kind=capture -->
-> Rubric: as integrações do RP, agora sob a lente de **viabilidade técnica** (migrado da
-> antiga Seção 7 do RP). Para cada sistema: tipo, protocolo e viabilidade / riscos
-> conhecidos. Se a demanda não tem integrações, registre "nenhuma" com `Disposition: decided`.
+> Rubric: the RP's integrations, now under the **technical feasibility** lens (migrated
+> from the old RP Section 7). For each system: type, protocol, and feasibility / known
+> risks. If the demand has no integrations, record "none" with `Disposition: decided`.
 
-| Sistema | Tipo | Protocolo | Viabilidade / Riscos conhecidos |
+| System | Type | Protocol | Feasibility / Known risks |
 |---|---|---|---|
-| [Sistema 1] | Interno / Externo / API / Evento / Webhook / DB | [REST / OIDC / gRPC / …] | [Viável / limitações de terceiro / risco] |
+| [System 1] | Internal / External / API / Event / Webhook / DB | [REST / OIDC / gRPC / …] | [Feasible / third-party limitations / risk] |
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 
@@ -235,149 +237,151 @@ gate). See references/classification.md.
 
 ## Build vs. Buy
 <!-- origination: id=build-vs-buy; blocks=false; min-confidence=0; kind=capture -->
-> Rubric: para cada capacidade não-trivial — construir, comprar/integrar um terceiro, ou
-> reusar algo existente? A decisão afeta diretamente custo, prazo e risco. Pular (com
-> `Disposition: decided`, "sem decisão make-or-buy relevante") se não houver decisão.
+> Rubric: for each non-trivial capability — build, buy/integrate a third party, or reuse
+> something existing? The decision has a direct effect on cost, timeline, and risk. Skip
+> (with `Disposition: decided`, "no relevant make-or-buy decision") if there is none.
 
-| Capacidade | Decisão | Rationale | Efeito em custo/prazo |
+| Capability | Decision | Rationale | Effect on cost/timeline |
 |---|---|---|---|
-| [Capacidade] | Build / Buy / Reuse | [Por quê] | [Resumo] |
+| [Capability] | Build / Buy / Reuse | [Why] | [Summary] |
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 
 ---
 
-## Alternativas Consideradas
+## Alternatives Considered
 <!-- origination: id=alternatives; blocks=true; min-confidence=70; kind=capture -->
-> Rubric: **o rationale, não só a conclusão** (padrão design doc Google/RFC). Registrar o
-> que foi avaliado e **por que foi descartado** dá ao downstream o contexto para decidir
-> a implementação — e evita re-litigar a mesma alternativa depois. Uma linha por
-> alternativa significativa.
+> Rubric: **the rationale, not just the conclusion** (design-doc standard, Google/RFC).
+> Recording what was evaluated and **why it was discarded** gives the downstream the
+> context to decide on implementation — and prevents the same alternative from being
+> re-litigated later. One row per significant alternative.
 
-| Alternativa | Prós | Contras | Por que NÃO foi escolhida |
+| Alternative | Pros | Cons | Why it was NOT chosen |
 |---|---|---|---|
-| [Abordagem A] | [Prós] | [Contras] | [Razão da rejeição] |
+| [Approach A] | [Pros] | [Cons] | [Reason for rejection] |
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 
 ---
 
-## Viabilidade dos NFRs  ·  *(mapeado ao RP, Seção 8)*
+## NFR Feasibility  ·  *(mapped to RP, Section 8)*
 <!-- origination: id=nfr-feasibility; blocks=true; min-confidence=75; kind=capture -->
-> Rubric: **fecha o laço produto ↔ técnico.** O PO declarou requisitos de qualidade no RP
-> (Seção 8); aqui o CTO responde, NFR a NFR, se são **viáveis** e **como** — os *quality
-> scenarios* do arc42. Um NFR inviável é veto ou sinal de re-escopo, não um detalhe. Uma
-> linha por NFR herdado do RP §8.
+> Rubric: **closes the product ↔ technical loop.** The PO declared quality requirements in
+> the RP (Section 8); here the CTO responds, NFR by NFR, whether they are **feasible** and
+> **how** — the *quality scenarios* from arc42. An infeasible NFR is a veto or re-scoping
+> signal, not a detail. One row per NFR inherited from RP §8.
 
-| NFR (do RP §8) | Viável? | Como será alcançado / abordagem | Risco / ressalva |
+| NFR (from RP §8) | Feasible? | How it will be achieved / approach | Risk / caveat |
 |---|---|---|---|
-| [ex.: propagação < 500ms] | Sim / Com ressalvas / Não | [Mecanismo técnico] | [O que ameaça] |
+| [e.g.: propagation < 500ms] | Yes / With caveats / No | [Technical mechanism] | [What threatens it] |
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 
 ---
 
-## Testabilidade e Observabilidade
+## Testability and Observability
 <!-- origination: id=testability-observability; blocks=true; min-confidence=70; kind=capture -->
-> Rubric: como **provar** que funciona e como **ver** em produção. Sem isto, os critérios
-> de aceite do RP não podem ser verificados e o comportamento não pode ser monitorado.
+> Rubric: how to **prove** it works and how to **see** it in production. Without this, the
+> RP acceptance criteria cannot be verified and behavior cannot be monitored.
 
-| Dimensão | Abordagem |
+| Dimension | Approach |
 |---|---|
-| **Estratégia de teste** | [Unitário / integração / e2e — o que cobre o quê; áreas de risco de regressão] |
-| **Dados / ambiente de teste** | [Como reproduzir cenários, incl. edge cases do RP §9] |
-| **Telemetria / métricas técnicas** | [O que instrumentar para observar a feature] |
-| **Logs / alertas** | [Sinais de falha e como serão detectados] |
+| **Test strategy** | [Unit / integration / e2e — what covers what; regression risk areas] |
+| **Test data / environment** | [How to reproduce scenarios, including edge cases from RP §9] |
+| **Telemetry / technical metrics** | [What to instrument to observe the feature] |
+| **Logs / alerts** | [Failure signals and how they will be detected] |
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 
 ---
 
-## Restrições Inegociáveis (Hard Constraints)
+## Hard Constraints
 <!-- origination: id=hard-constraints; blocks=true; min-confidence=75; kind=capture -->
-> Rubric: condições não-negociáveis que limitam o espaço de solução. O PO não as suaviza
-> nem reinterpreta — se discordar, escala explicitamente (`interactions/06-cto-to-po.md`).
-> Se não há restrições rígidas, registre "nenhuma" com `Disposition: decided`.
-
-| Restrição | Tipo | Detalhe | Efeito no escopo |
-|---|---|---|---|
-| [Restrição 1] | Técnica / Plataforma / Segurança / Multi-tenancy / Externa | [Detalhe] | [O que muda no RP, se algo] |
-
-`Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
-
----
-
-## Riscos Técnicos e Mitigações
-<!-- origination: id=tech-risks; blocks=true; min-confidence=75; kind=capture -->
-> Rubric: riscos **técnicos** vivem aqui (migrados do RP). Riscos de produto/negócio
-> permanecem no RP (Seção 12). Cada risco tem categoria, probabilidade, impacto e mitigação.
-
-| Risco | Categoria | Probabilidade | Impacto | Mitigação |
-|---|---|---|---|---|
-| [Risco 1] | Técnico / Segurança / Infra / Integração / Dados | Alto / Médio / Baixo | Alto / Médio / Baixo | [Mitigação] |
-
-`Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
-
----
-
-## Decisões de Arquitetura (ADRs)
-<!-- origination: id=adrs; blocks=true; min-confidence=75; kind=capture -->
-> Rubric: direção arquitetural no nível do CTO. A IA pode chegar com **ADRs sugeridos**
-> (reusados da base de conhecimento) — o CTO aprova/ajusta (o WOW moment de §10). O
-> detalhamento fino e ADRs de implementação ficam no Tech Backlog do Tech Lead. Cada ADR
-> carrega decisão, rationale e o sign-off do CTO.
-
-| # | Decisão | Rationale | Sign-off do CTO |
-|---|---|---|---|
-| ADR-001 | [Decisão] | [Por que esta abordagem] | ✓ |
-
-`Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
-
----
-
-## Avaliação de Esforço e Custo (firme)
-<!-- origination: id=effort-cost; blocks=true; min-confidence=70; kind=capture -->
-> Rubric: uso interno. São as estimativas **firmes** do CTO — substituem a estimativa
-> preliminar do PO (RP Seção 13). Serão refinadas pelo Tech Lead no Tech Backlog. Não é
-> compromisso contratual nem material para cliente.
-
-### Esforço de Desenvolvimento
-
-| Área | Estimativa | Senioridade |
-|---|---|---|
-| [Backend / Frontend / QA] | [X dias] | Sênior / Pleno / Júnior / QA |
-| **Total** | **X dias** | |
-
-### Impacto de Infraestrutura
-
-[Novo provisionamento, mudanças de cluster, regiões adicionais — ou "Nenhum"]
-
-### Impacto de Custo de Terceiros
-
-[Novos provedores, licenças, APIs pagas — ou "Nenhum"]
-
-### Impacto de Custo Operacional Recorrente
-
-[Storage, observabilidade, bandwidth — quantificar se possível]
-
-### Avaliação de TCO
-
-[A feature é custo-neutro, adiciona custo recorrente, ou cria uma fundação reutilizável para fases futuras?]
-
-`Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
-
----
-
-## Caminho de Discovery (se uma incógnita técnica bloqueia a conclusão)
-<!-- origination: id=discovery-path; blocks=false; min-confidence=0; kind=capture -->
-> Rubric: preencher apenas se uma incógnita técnica impede o fechamento da avaliação. O
-> CTO define o spike/investigação; o PO determina o time-box. A demanda volta ao
-> Discovery (`interactions/05-po-to-cto.md`). Se nada bloqueia, registre "—" com
+> Rubric: non-negotiable conditions that limit the solution space. The PO does not soften
+> or reinterpret them — if they disagree, they escalate explicitly
+> (`interactions/06-cto-to-po.md`). If there are no hard constraints, record "none" with
 > `Disposition: decided`.
 
-| Incógnita | Spike / Investigação | Quem | Time-box sugerido |
+| Constraint | Type | Detail | Effect on scope |
 |---|---|---|---|
-| [Incógnita técnica] | [O que investigar] | [CTO / time] | [N dias] |
+| [Constraint 1] | Technical / Platform / Security / Multi-tenancy / External | [Detail] | [What changes in the RP, if anything] |
+
+`Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
+
+---
+
+## Technical Risks and Mitigations
+<!-- origination: id=tech-risks; blocks=true; min-confidence=75; kind=capture -->
+> Rubric: **technical** risks live here (migrated from the RP). Product/business risks
+> remain in the RP (Section 12). Each risk carries category, probability, impact, and
+> mitigation.
+
+| Risk | Category | Probability | Impact | Mitigation |
+|---|---|---|---|---|
+| [Risk 1] | Technical / Security / Infra / Integration / Data | High / Medium / Low | High / Medium / Low | [Mitigation] |
+
+`Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
+
+---
+
+## Architecture Decisions (ADRs)
+<!-- origination: id=adrs; blocks=true; min-confidence=75; kind=capture -->
+> Rubric: architectural direction at the CTO level. The AI may arrive with **suggested
+> ADRs** (reused from the knowledge base) — the CTO approves/adjusts (the WOW moment of
+> `03-cto.md` §3/§12). Fine-grained breakdown and implementation ADRs belong to the Tech
+> Lead's Tech Backlog. Each ADR carries the decision, rationale, and the CTO sign-off.
+
+| # | Decision | Rationale | CTO sign-off |
+|---|---|---|---|
+| ADR-001 | [Decision] | [Why this approach] | ✓ |
+
+`Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
+
+---
+
+## Effort and Cost Assessment (firm)
+<!-- origination: id=effort-cost; blocks=true; min-confidence=70; kind=capture -->
+> Rubric: internal use only. These are the CTO's **firm** estimates — they replace the
+> PO's preliminary estimate (RP Section 13). They will be refined by the Tech Lead in the
+> Tech Backlog. Not a contractual commitment or client-facing material.
+
+### Development Effort
+
+| Area | Estimate | Seniority |
+|---|---|---|
+| [Backend / Frontend / QA] | [X days] | Senior / Mid / Junior / QA |
+| **Total** | **X days** | |
+
+### Infrastructure Impact
+
+[New provisioning, cluster changes, additional regions — or "None"]
+
+### Third-Party Cost Impact
+
+[New providers, licenses, paid APIs — or "None"]
+
+### Recurring Operational Cost Impact
+
+[Storage, observability, bandwidth — quantify if possible]
+
+### TCO Assessment
+
+[Is the feature cost-neutral, does it add recurring cost, or does it create a reusable foundation for future phases?]
+
+`Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
+
+---
+
+## Discovery Path (if a technical unknown blocks completion)
+<!-- origination: id=discovery-path; blocks=false; min-confidence=0; kind=capture -->
+> Rubric: fill in only if a technical unknown prevents the assessment from closing. The
+> CTO defines the spike/investigation; the PO determines the time-box. The demand returns
+> to Discovery (`interactions/05-po-to-cto.md`). If nothing blocks, record "—" with
+> `Disposition: decided`.
+
+| Unknown | Spike / Investigation | Who | Suggested time-box |
+|---|---|---|---|
+| [Technical unknown] | [What to investigate] | [CTO / team] | [N days] |
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 

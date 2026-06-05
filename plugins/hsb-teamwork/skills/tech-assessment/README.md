@@ -40,7 +40,7 @@ assessed on unknown terrain* — so every verdict carries the **terrain** (the
 1. **Classification gate.** `hsb-tech-classifier` confirms the demand nature under the
    technical lens — **Greenfield** (the TA *defines* the foundation: stack, ADRs,
    structure) / **Brownfield** (the TA *discovers* the current system: patterns,
-   integrations, debt) / **Híbrido** (both) — and resolves the Knowledge Base
+   integrations, debt) / **Hybrid** (both) — and resolves the Knowledge Base
    (`tech-landscape`). This **governs which path is in force**; the other path is an
    honest `N/A`.
 2. **Draft-then-confirm.** `hsb-stage-inheritor` carries the RP/Intake material forward
@@ -67,7 +67,7 @@ whose `produces` is `readiness-package` — plus the **Intake Record** (for the 
 nature + KB) and the **`TechAssessmentRef` debt** the RP pushed into `owes`. The TA runs
 as the `assessment/` **phase**, recording its outputs and **discharging the owed
 Technical Assessment** back into the index on sign-off. Output language defaults to
-pt-BR.
+**en-US** (mirroring the CTO's opening statement when another language is detected).
 
 ## Input
 
@@ -101,7 +101,7 @@ All artifacts land in the initiative's `assessment/` phase, plus the persistent
     ├── assessment-report.md        # live gap map (optional)
     ├── output/
     │   ├── humanized.md            # canonical clean copy
-    │   ├── translated.pt-BR.md     # translated variant (or the confirmed language)
+    │   ├── translated.<lang>.md     # translated variant (or the confirmed language)
     │   ├── enriched.md             # visually enriched (NFR table, integrations map, ADRs)
     │   └── manifest.md             # index of artifacts + verdict + sign-off status
     └── final/
@@ -113,10 +113,10 @@ The shared `glossary.md`, `decisions.md`, the `tech-landscape`, and the
 
 ## The feasibility verdict and the veto
 
-- **`viável`** — buildable as specified → TA signs; PRD can merge RP + TA.
-- **`viável-com-ressalvas`** — buildable **if** stated conditions hold → TA signs with
+- **`Feasible`** — buildable as specified → TA signs; PRD can merge RP + TA.
+- **`Feasible with caveats`** — buildable **if** stated conditions hold → TA signs with
   the caveats recorded as hard constraints.
-- **`inviável-como-escopado`** — the **veto**: the TA freezes as a signed veto and the
+- **`Infeasible as scoped`** — the **veto**: the TA freezes as a signed veto and the
   orchestrator signals the PO to revise the RP scope and re-escalate. The CTO does not
   redefine the product. See [`references/feasibility.md`](references/feasibility.md).
 

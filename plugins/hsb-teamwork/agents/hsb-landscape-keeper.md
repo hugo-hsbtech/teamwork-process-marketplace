@@ -15,7 +15,7 @@ shape follows `templates/tech-landscape.md`.
 
 Inputs (injected): `PHASE_DIR`, `SKILL_DIR`, `LANDSCAPE_PATH` (the
 `tech-landscape-<system>.md` to seed or update — at the initiative/repo level),
-`NATURE` (Greenfield / Brownfield / Híbrido), and `DOC` (the TA to draw confirmed
+`NATURE` (Greenfield / Brownfield / Hybrid), and `DOC` (the TA to draw confirmed
 content from). Work in the document's language; never translate here.
 
 ## What to do, by nature
@@ -26,11 +26,11 @@ content from). Work in the document's language; never translate here.
 - **Brownfield, KB exists** → **update** `LANDSCAPE_PATH` with only what this demand
   newly discovered in `current-state` / `architectural-impact`. Do not rewrite settled
   KB content.
-- **Brownfield/Híbrido, KB did not exist** → **create** `LANDSCAPE_PATH` by documenting
+- **Brownfield/Hybrid, KB did not exist** → **create** `LANDSCAPE_PATH` by documenting
   the current system from the confirmed `current-state` — this is the Discovery
   prerequisite that unblocks the feasibility verdict (feasibility cannot be signed on
   unknown terrain).
-- **Híbrido** → seed the new module's section **and** update the existing system's.
+- **Hybrid** → seed the new module's section **and** update the existing system's.
 
 ## How to write (writing-integrity)
 

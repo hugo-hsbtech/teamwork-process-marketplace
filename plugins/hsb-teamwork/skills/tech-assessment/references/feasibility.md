@@ -17,9 +17,9 @@ proposes one verdict — never a rubber stamp. The CTO commits the final verdict
 
 | Verdict | Meaning | Effect |
 |---|---|---|
-| `viável` | The scope is buildable as specified | TA proceeds to sign-off; PRD can merge RP + TA |
-| `viável-com-ressalvas` | Buildable **if** stated conditions hold (e.g. a specific mechanism, a pre-condition, a hard constraint) | TA signs with the caveats recorded; the PO must honour the hard constraints in scope |
-| `inviável-como-escopado` | Not buildable as scoped — the **veto** | TA freezes as a signed veto; the PO revises the RP scope and re-escalates |
+| `Feasible` | The scope is buildable as specified | TA proceeds to sign-off; PRD can merge RP + TA |
+| `Feasible with caveats` | Buildable **if** stated conditions hold (e.g. a specific mechanism, a pre-condition, a hard constraint) | TA signs with the caveats recorded; the PO must honour the hard constraints in scope |
+| `Infeasible as scoped` | Not buildable as scoped — the **veto** | TA freezes as a signed veto; the PO revises the RP scope and re-escalates |
 
 ## The decision model (first-class, not annotation)
 
@@ -28,11 +28,11 @@ The verdict carries the CTO's **feasibility-on-terrain layer** (`personas/03-cto
 
 | Field | Meaning |
 |---|---|
-| `verdict` | the ruling itself (`viável` / `viável-com-ressalvas` / `inviável-como-escopado`) |
+| `verdict` | the ruling itself (`Feasible` / `Feasible with caveats` / `Infeasible as scoped`) |
 | `rationale` | **why** — the defensible reasoning; never optional |
-| `terrain` | **the knowledge base the verdict rests on** — a reference to the `tech-landscape-<system>.md`, or an honest "não documentado → Discovery". The new first-class attribute: a verdict on undocumented terrain is a guess, not a verdict. |
+| `terrain` | **the knowledge base the verdict rests on** — a reference to the `tech-landscape-<system>.md`, or an honest "undocumented → Discovery". The new first-class attribute: a verdict on undocumented terrain is a guess, not a verdict. |
 | `confidence` | 0–100 against the section threshold (reuses the engine's confidence layer) |
-| `caveats` | for `viável-com-ressalvas`: exactly what must be true for the verdict to hold (each typically also a `hard-constraint`) |
+| `caveats` | for `Feasible with caveats`: exactly what must be true for the verdict to hold (each typically also a `hard-constraint`) |
 | `basis` / `source` | the evidence it rests on (which NFR-feasibility row, architectural-impact area, risk) + its trace-to-source (e.g. "RP question #2", "tech-landscape §5", "reused ADR-102") |
 | `generates` | what the verdict **creates downstream** — `hard_constraint` / `adr` / `discovery_spike` / `kb_update` — linking the judgment to the sections it drives |
 
@@ -40,14 +40,14 @@ High threshold by design (`min-confidence 85`): this is the central CTO judgment
 it resolves only at high confidence and is always `cto_authored` — the assessor
 proposes; the **CTO commits**.
 
-## The veto path (`inviável-como-escopado`)
+## The veto path (`Infeasible as scoped`)
 
 The veto is a **first-class, valid outcome**, not a failure of the run
 (`interactions/05-po-to-cto.md`, `interactions/06-cto-to-po.md`):
 
 1. The verdict carries the veto + a defensible rationale (which constraint or NFR makes
    the scope unbuildable).
-2. The TA **still freezes** — the CTO's decision is complete and signed (`Status: Vetado`).
+2. The TA **still freezes** — the CTO's decision is complete and signed (`Status: Vetoed`).
 3. The orchestrator pushes a **scope-revision signal** back to the `readiness/` phase
    (a note in `initiative.json` / `decisions.md`) so the PO revises the RP scope and
    **re-escalates**. The CTO **does not redefine the product** — they veto and state
@@ -78,7 +78,7 @@ resolved, the terrain documented, and any Discovery spike defined*) requires:
 
 1. The `feasibility-verdict` is committed — `cto_authored` at its `min-confidence`
    (85). A verdict is mandatory; the TA never freezes without one.
-2. **The terrain is documented.** The `tech-classification` KB is `Existe` / `Parcial`,
+2. **The terrain is documented.** The `tech-classification` KB is `Exists` / `Partial`,
    **or** the `tech-landscape` was created/updated for this demand (greenfield seed /
    brownfield document). *The TA does not sign a feasibility verdict on undocumented
    brownfield terrain* (`03-cto.md` §4) — an absent KB makes `discovery` the only honest
@@ -86,17 +86,17 @@ resolved, the terrain documented, and any Discovery spike defined*) requires:
 3. Every other `blocksFreeze` section is either resolved (`cto_authored` /
    confirmed-`inherited`) **or** honestly disposed:
    - the non-applicable path → `Disposition: decided` ("N/A — <nature>");
-   - "nenhuma" sections (integrations / hard-constraints / build-vs-buy when none
+   - "none" sections (integrations / hard-constraints / build-vs-buy when none
      apply) → `Disposition: decided`;
    - an unclosable unknown → `discovery` (owner + time-box).
 4. **Verdict-conditioned closure:**
-   - `viável` → all in-force technical sections resolved.
-   - `viável-com-ressalvas` → the caveats are recorded as `hard-constraints`.
-   - `inviável-como-escopado` → the veto rationale is recorded; downstream sections that
+   - `Feasible` → all in-force technical sections resolved.
+   - `Feasible with caveats` → the caveats are recorded as `hard-constraints`.
+   - `Infeasible as scoped` → the veto rationale is recorded; downstream sections that
      depend on a buildable scope (e.g. `effort-cost`, `adrs`) may be `Disposition: decided`
-     ("N/A — escopo vetado, ver Veredito") rather than fully drafted.
+     ("N/A — scope vetoed, see Verdict") rather than fully drafted.
 
-When `signOffReady`, the TA freezes (`Status: Assinado` or `Status: Vetado`) and the
+When `signOffReady`, the TA freezes (`Status: Signed off` or `Status: Vetoed`) and the
 orchestrator discharges the RP's `TechAssessmentRef` debt in the initiative index
 (`status: signed` / `vetoed`, with the verdict and link). This is the migration the
 readiness-package's `references/escalation.md` anticipated: with the tech-assessment

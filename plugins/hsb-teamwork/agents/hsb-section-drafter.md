@@ -41,7 +41,7 @@ readiness-package run, propose draft content for (the one in `SECTION`, or all):
 For a **technical-assessment** run (the CTO's TA), propose draft content for the one in
 `SECTION`, or for the in-force technical sections — only those the classification put in
 force (the orchestrator tells you which path applies; dispose the non-applicable path
-`Disposition: decided`, content "N/A — <nature> (ver Classificação Técnica)"):
+`Disposition: decided`, content "N/A — <nature> (see Technical classification)"):
 
 - **current-state** *(brownfield/hybrid)* — existing patterns/conventions to respect,
   integration points touched (coupling nature + risk), technical debt / regression risk
@@ -55,16 +55,16 @@ force (the orchestrator tells you which path applies; dispose the non-applicable
 - **architectural-impact** — per area (data model, events, frontend, security,
   multi-tenancy, performance, observability): the impact + the architectural note.
 - **integrations** — the RP's required integrations under the technical-feasibility lens
-  (type, protocol, feasibility / known risks). "Nenhuma" → `Disposition: decided`.
+  (type, protocol, feasibility / known risks). "None" → `Disposition: decided`.
 - **alternatives** — one row per significant alternative: pros, cons, and **why NOT
   chosen** (design-doc standard), so the downstream does not re-litigate it.
-- **nfr-feasibility** — **one row per RP §8 NFR**: feasible? (Sim / Com ressalvas / Não),
+- **nfr-feasibility** — **one row per RP §8 NFR**: feasible? (Yes / With caveats / No),
   how it will be achieved, risk/caveat. Never soften an infeasible NFR — it is a veto or
   re-scoping signal for the Feasibility Assessor.
 - **testability-observability** — test strategy + test data/env (covering RP §9 edge
   cases) + telemetry/technical metrics + logs/alerts.
 - **hard-constraints** — non-negotiable conditions, with type, detail, and effect on
-  scope. "Nenhuma" → `Disposition: decided`.
+  scope. "None" → `Disposition: decided`.
 - **tech-risks** — technical risks only (product/business risks stay in the RP), each
   with category, probability, impact, mitigation.
 - **build-vs-buy** — per non-trivial capability: Build / Buy / Reuse + rationale + effect

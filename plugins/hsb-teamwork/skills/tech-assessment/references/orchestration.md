@@ -111,7 +111,7 @@ Visual Enricher ∥ Finalizer in Phase 5).
    (`tech-assessment-ref` = requested/deferred). If the RP froze with
    `Status: not_requested`, there is no architectural impact and **no TA is needed** —
    say so and stop (`templates/03-technical-assessment.md` § "When there is NO TA").
-4. **Confirm output language** (default `pt-BR`, mirrors the engine). Record it.
+4. **Confirm output language** (default `en-US` when ambiguous; mirror the CTO's language). Record it.
 
 Do not ask a wall of questions here — select the initiative, confirm the RP + the
 owed escalation, and confirm language.
@@ -137,10 +137,10 @@ Gate: `contract.lock.md` exists and the RP + Intake are indexed.
 ## Phase 2 — Classify & inherit (the governing decision first)
 
 1. Spawn **`hsb-tech-classifier`** (read-only). It inherits the demand nature
-   (Greenfield / Brownfield / Híbrido) and the KB reference from the **Intake
+   (Greenfield / Brownfield / Hybrid) and the KB reference from the **Intake
    Record**, **confirms them under the technical lens**, and proposes the
    `tech-classification` entry: the nature, the **path to fill**, and the KB
-   resolution (`Existe` / `Parcial` / `Não existe → Discovery`). Ask the CTO **only
+   resolution (`Exists` / `Partial` / `Does not exist → Discovery`). Ask the CTO **only
    what the classifier could not settle** (CTO-priority questions, engine
    `open`/`choice` protocol). Route the confirmed classification through
    `hsb-ledger-writer` → `hsb-doc-updater`. See [`classification.md`](classification.md).
@@ -176,11 +176,11 @@ Gate: `contract.lock.md` exists and the RP + Intake are indexed.
 3. Once the impact/risk/NFR sections exist, spawn **`hsb-feasibility-assessor`**
    (read-only). It reads the drafted architectural impact, NFR feasibility, risks, and
    constraints and proposes the **feasibility verdict** with rationale (and, if
-   warranted, the **veto** — `inviável-como-escopado`). Route to `hsb-doc-updater`. See
+   warranted, the **veto** — `Infeasible as scoped`). Route to `hsb-doc-updater`. See
    [`feasibility.md`](feasibility.md).
 
 At the end of Phase 3 every in-force section has an entry — `inherited`, `ai_drafted`,
-`reused_from_KB`, or `decided` (N/A path / "nenhuma") — so the CTO never faces a blank
+`reused_from_KB`, or `decided` (N/A path / "none") — so the CTO never faces a blank
 form.
 
 ## Phase 4 — Confirm loop (until signOffReady)
@@ -202,14 +202,14 @@ Repeats until the freeze gate clears:
 4. **`hsb-doc-updater`** promotes confirmed entries: `Origin: ai_drafted` /
    `inherited` / `reused_from_KB` → `cto_authored`, raising confidence to reflect the
    CTO's judgment.
-5. **If the KB had to be created** (brownfield/hybrid, KB `Não existe`): spawn
+5. **If the KB had to be created** (brownfield/hybrid, KB `Does not exist`): spawn
    **`hsb-landscape-keeper`** to produce/update the `tech-landscape-<system>.md` from
    the documented current state — feasibility cannot be signed on unknown terrain.
 6. **Gate check:** `signOffReady = true` when:
    - the `feasibility-verdict` is committed (`cto_authored` at its threshold), **and**
    - every other `blocksFreeze` section is resolved (`cto_authored` / confirmed-
      `inherited`) or honestly disposed (`decided` N/A path / `discovery`), **and**
-   - if the verdict is `inviável-como-escopado`, the **veto rationale** is recorded
+   - if the verdict is `Infeasible as scoped`, the **veto rationale** is recorded
      (the TA freezes as a signed veto; see [`feasibility.md`](feasibility.md) § The
      veto path).
 
@@ -232,7 +232,7 @@ Once `signOffReady`:
    - **`hsb-landscape-keeper`** (greenfield) → seeds the new `tech-landscape-<system>.md`
      from the foundational ADRs, if not already created in Phase 4.
 3. **`hsb-packager`** writes `output/manifest.md`: the feasibility verdict, sign-off
-   status (Assinado / Vetado), open `discovery` dispositions, template hash/version,
+   status (Signed off / Vetoed), open `discovery` dispositions, template hash/version,
    the handoff note to the PRD (the technical half of `PRD = RP + TA`), the
    `tech-landscape` it seeded/updated, and an index entry for the Finalizer's `final/`
    deliverable.
@@ -272,7 +272,7 @@ INITIATIVE_DIR/                  # shared by every front
     ├── assessment-report.md    # hsb-gap-reporter (optional)
     ├── output/
     │   ├── humanized.md        # hsb-humanizer
-    │   ├── translated.pt-BR.md # hsb-translator
+    │   ├── translated.<lang>.md # hsb-translator
     │   ├── enriched.md         # hsb-visual-enricher
     │   └── manifest.md         # hsb-packager
     └── final/                  # hsb-finalizer — clean, printable final deliverable(s)

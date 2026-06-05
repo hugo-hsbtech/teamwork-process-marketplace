@@ -9,7 +9,7 @@ run. You are the only layer that talks to the CTO.
    `readiness-package`) plus the **Intake Record** (demand nature + KB) and the owed
    `TechAssessmentRef` debt. Confirm a TA is actually owed (RP escalation
    requested/deferred — if `not_requested`, there is no TA: stop). Pick the mode
-   (fresh / revisit / batch) and the output language (default pt-BR).
+   (fresh / revisit / batch) and the output language (default en-US; mirror the CTO's language).
 2. Resolve-or-resume the `assessment/` phase (`INITIATIVE_DIR/assessment/`; see the
    package's `skills/origination-brainstorm/references/initiatives.md`).
 3. Run the phases — setup, classify & inherit, draft pass + verdict, confirm loop,
@@ -26,7 +26,7 @@ Non-negotiables (full detail under `skills/tech-assessment/references/` and the 
   path is an honest `Disposition: decided` N/A entry;
 - **draft-then-confirm**: pre-fill, then the CTO judges — questions are a fallback;
 - **the feasibility verdict is the CTO's first-class decision** (`hsb-feasibility-assessor`
-  proposes; the CTO commits). `inviável-como-escopado` is the veto path — freeze as a
+  proposes; the CTO commits). `Infeasible as scoped` is the veto path — freeze as a
   signed veto and signal the PO to revise the RP scope; the CTO never edits the RP;
 - one writer per file; read-modify-write; never truncate — end with the
   `<!-- END OF DOCUMENT -->` sentinel and verify it. `hsb-landscape-keeper` is the sole

@@ -14,8 +14,8 @@ The demand nature is **not** invented by the CTO. It was born at triage (Act 1 o
 PO journey — see the readiness-package's `references/triage.md`) and carried into the
 Intake Record and the RP metadata. `hsb-tech-classifier`:
 
-1. **Inherits** the nature (Greenfield / Brownfield / Híbrido) and the KB reference
-   (`tech-landscape-[system].md` · Parcial · A criar · N/A) from the **Intake Record**.
+1. **Inherits** the nature (Greenfield / Brownfield / Hybrid) and the KB reference
+   (`tech-landscape-[system].md` · Partial · To create · N/A) from the **Intake Record**.
 2. **Confirms them under the technical lens** — the CTO can override a triage
    classification that the code reality contradicts (e.g. triage said "new feature" but
    it actually modifies an existing module → Brownfield). An override carries a rationale.
@@ -28,11 +28,11 @@ Intake Record and the RP metadata. `hsb-tech-classifier`:
 |---|---|---|---|
 | **Greenfield** (new software/module) | `tech-foundation` | `current-state` → N/A | **Defines** the foundation: stack (with criteria), target architecture (C4), structure/conventions. These ADRs **seed** a new `tech-landscape`. |
 | **Brownfield** (changes existing software) | `current-state` | `tech-foundation` → N/A | **Discovers** the existing system: patterns/conventions to respect, integration points, debt/regression risk. References (or creates) the `tech-landscape`. |
-| **Híbrido** (new module inside existing) | **both** `tech-foundation` and `current-state` | — | Both: define the new module's foundation **and** document the existing terrain it plugs into. |
+| **Hybrid** (new module inside existing) | **both** `tech-foundation` and `current-state` | — | Both: define the new module's foundation **and** document the existing terrain it plugs into. |
 
 **The non-applicable path is not a gap.** When a path does not apply, its entry is
-filled with `Disposition: decided` and content `"N/A — <nature> (ver Classificação
-Técnica)"`. This is an **honest disposition** that clears the freeze gate — exactly
+filled with `Disposition: decided` and content `"N/A — <nature> (see Technical
+classification)"`. This is an **honest disposition** that clears the freeze gate — exactly
 like a `discovery` disposition does in the other skills. The orchestrator and the
 Confidence Auditor treat a `decided` N/A path entry as resolved, not missing.
 
@@ -40,13 +40,13 @@ Confidence Auditor treat a `decided` N/A path entry as resolved, not missing.
 
 The TA cannot judge feasibility on unknown terrain. The classifier resolves the KB — the
 terrain's `kbStatus` dial (`personas/03-cto.md` §5.2: `complete` / `partial` / `stub` /
-`absent`), surfaced here as `Existe` / `Parcial` / `Não existe`:
+`absent`), surfaced here as `Exists` / `Partial` / `Does not exist`:
 
 | KB state | What it means | What the TA does |
 |---|---|---|
-| **Existe** | An up-to-date `tech-landscape-[system].md` exists | **Reference it**; record in `current-state` only what is specific to this demand |
-| **Parcial** | A `tech-landscape` exists but has gaps for this demand | Reference it + name the gaps; fill the gaps in `current-state`; `hsb-landscape-keeper` updates the KB |
-| **Não existe** (brownfield/hybrid) | No KB for the system being changed | **Documenting the current system is a prerequisite** — register a documentation **Discovery spike** in `discovery-path`, and have `hsb-landscape-keeper` create the `tech-landscape`. Feasibility cannot be signed until the terrain is known. |
+| **Exists** | An up-to-date `tech-landscape-[system].md` exists | **Reference it**; record in `current-state` only what is specific to this demand |
+| **Partial** | A `tech-landscape` exists but has gaps for this demand | Reference it + name the gaps; fill the gaps in `current-state`; `hsb-landscape-keeper` updates the KB |
+| **Does not exist** (brownfield/hybrid) | No KB for the system being changed | **Documenting the current system is a prerequisite** — register a documentation **Discovery spike** in `discovery-path`, and have `hsb-landscape-keeper` create the `tech-landscape`. Feasibility cannot be signed until the terrain is known. |
 | **N/A (greenfield)** | No prior terrain to discover | The TA **is the origin** of the KB — the foundational ADRs seed a new `tech-landscape` (Phase 4/5). |
 
 ## Why it matters

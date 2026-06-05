@@ -5,136 +5,136 @@ A self-contained, **already-filled** Technical Assessment used to calibrate qual
 `../origination-brainstorm/references/grounding.md`). It is **brownfield** (modifies an
 existing multi-tenant SaaS), with a security/multi-tenancy trigger — so the
 `current-state` path is in force and `tech-foundation` is honestly N/A. It ends in a
-`viável-com-ressalvas` verdict. Read it for *shape and depth*, not domain reuse.
+`Feasible with caveats` verdict. Read it for *shape and depth*, not domain reuse.
 
-> Demand: **"Filas de votação por turnos com isolamento por tenant"** — the RP (RP-2026-014)
+> Demand: **"Turn-based voting queues with per-tenant isolation"** — the RP (RP-2026-014)
 > asks for time-windowed voting queues, scoped per tenant, with a guardrail that vote
 > propagation latency must not exceed 500 ms. Escalated to the CTO for multi-tenancy /
 > data-isolation impact.
 
 ---
 
-## Metadados
+## Metadata
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
-| **ID da Avaliação** | TA-2026-009 |
-| **Versão** | v1 |
-| **RP vinculado** | RP-2026-014 v2 |
-| **Intake vinculado** | INT-2026-031 |
-| **Responsável** | C. Nunes (CTO) |
-| **Status** | Assinado |
-| **Veredito de viabilidade** | viável-com-ressalvas |
-| **Data de assinatura** | 2026-05-28 |
-| **Output language** | pt-BR |
+| **Assessment ID** | TA-2026-009 |
+| **Version** | v1 |
+| **Linked RP** | RP-2026-014 v2 |
+| **Linked Intake** | INT-2026-031 |
+| **Owner** | C. Nunes (CTO) |
+| **Status** | Signed off |
+| **Feasibility verdict** | Feasible with caveats |
+| **Sign-off date** | 2026-05-28 |
+| **Output language** | en-US |
 
 ---
 
-## Veredito de Viabilidade
+## Feasibility Verdict
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
-| **Veredito** | viável-com-ressalvas |
-| **Rationale** | O isolamento por tenant já é garantido pela coluna `tenant_id` + RLS no Postgres; a demanda reusa esse contrato. A única ameaça é o guardrail de 500 ms sob fan-out de votos concorrentes, viável apenas com o caminho de propagação por eventos (não polling) descrito na Viabilidade dos NFRs. |
-| **Terreno (terrain)** | `tech-landscape-voting-platform.md` (atualizado 2026-04) — terreno documentado e completo |
-| **Ressalvas (se aplicável)** | Mantém-se viável **se** (1) a propagação migrar para o canal de eventos existente e (2) o índice parcial `idx_votes_open_window` for criado antes do rollout. Sem ambos, o guardrail de 500 ms é inviável. |
-| **Gera (generates)** | hard_constraint (propagação por evento + índice pré-rollout) · adr (ADR-001, ADR-002) |
+| **Verdict** | Feasible with caveats |
+| **Rationale** | Per-tenant isolation is already guaranteed by the `tenant_id` column + RLS in Postgres; this demand reuses that contract. The only threat is the 500 ms guardrail under concurrent vote fan-out, feasible only with the event-based propagation path (not polling) described in NFR Feasibility. |
+| **Terrain** | `tech-landscape-voting-platform.md` (updated 2026-04) — documented and complete terrain |
+| **Caveats (if applicable)** | Remains feasible **if** (1) propagation migrates to the existing event channel and (2) the partial index `idx_votes_open_window` is created before rollout. Without both, the 500 ms guardrail is infeasible. |
+| **Generates** | hard_constraint (event-based propagation + pre-rollout index) · adr (ADR-001, ADR-002) |
 
-`Confidence:` 90 · `Origin:` cto_authored · `Source:` análise CTO + benchmark do canal de eventos · `Status:` resolved · `Disposition:` answered · `Hint:` —
+`Confidence:` 90 · `Origin:` cto_authored · `Source:` CTO analysis + event-channel benchmark · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ---
 
-## Classificação Técnica e Base de Conhecimento
+## Technical classification and Knowledge Base
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
-| **Natureza (confirmada pelo CTO)** | Brownfield (existente) |
-| **Caminho a preencher** | Estado atual (brownfield) |
-| **Base de Conhecimento (KB)** | Existe → referência |
-| **Referência da KB** | `tech-landscape-voting-platform.md` (atualizado 2026-04) |
+| **Nature (confirmed by CTO)** | Brownfield (existing) |
+| **Path to fill** | Current state (brownfield) |
+| **Knowledge Base (KB)** | Exists → reference |
+| **KB reference** | `tech-landscape-voting-platform.md` (updated 2026-04) |
 
-`Confidence:` 92 · `Origin:` inherited · `Source:` Intake INT-2026-031 (natureza) + tech-landscape · `Status:` resolved · `Disposition:` answered · `Hint:` —
+`Confidence:` 92 · `Origin:` inherited · `Source:` Intake INT-2026-031 (nature) + tech-landscape · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ---
 
-## Perguntas do PO Endereçadas
+## PO Questions Addressed
 
-| # | Pergunta do PO | Resposta do CTO |
+| # | PO question | CTO answer |
 |---|---|---|
-| 1 | Conseguimos garantir que um tenant nunca veja a fila de outro? | Sim — RLS por `tenant_id` já cobre `votes` e `queues`; a nova tabela `vote_windows` herda a mesma policy. Sem caminho de vazamento novo. |
-| 2 | O guardrail de 500 ms de propagação é alcançável? | Com ressalva: só via o canal de eventos (item 1 das ressalvas). Polling não atinge o alvo sob concorrência. |
+| 1 | Can we guarantee a tenant never sees another tenant's queue? | Yes — RLS by `tenant_id` already covers `votes` and `queues`; the new `vote_windows` table inherits the same policy. No new leakage path. |
+| 2 | Is the 500 ms propagation guardrail achievable? | With a caveat: only via the event channel (item 1 of the caveats). Polling does not hit the target under concurrency. |
 
-`Confidence:` 88 · `Origin:` cto_authored · `Source:` escalada do RP §8 + §6 · `Status:` resolved · `Disposition:` answered · `Hint:` —
+`Confidence:` 88 · `Origin:` cto_authored · `Source:` escalation from RP §8 + §6 · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ---
 
-## Caminho BROWNFIELD — Estado atual / Landscape técnico
+## BROWNFIELD Path — Current state / Technical landscape
 
-### Padrões e convenções existentes a respeitar
+### Existing patterns and conventions to respect
 
-| Aspecto | Como é hoje | Implicação para esta demanda |
+| Aspect | How it is today | Implication for this demand |
 |---|---|---|
-| **Estrutura / organização do código** | Módulos por bounded context em `app/contexts/*`; voting em `contexts/voting` | Adicionar `vote_windows` dentro de `contexts/voting`, não um módulo novo |
-| **Padrões de dados / persistência** | Postgres, `tenant_id` em toda tabela + RLS; migrations via Ecto | Nova tabela herda `tenant_id` + policy; migration reversível |
-| **Padrões de API / contrato** | REST versionado (`/v3`) + eventos internos em RabbitMQ | Reusar o tópico `voting.events`; sem novo contrato externo |
-| **Autenticação / autorização** | OIDC + escopos por papel; `tenant_id` no token | Sem mudança — o escopo `voting:write` já existe |
+| **Code structure / organization** | Modules by bounded context in `app/contexts/*`; voting in `contexts/voting` | Add `vote_windows` inside `contexts/voting`, not a new module |
+| **Data / persistence patterns** | Postgres, `tenant_id` on every table + RLS; migrations via Ecto | New table inherits `tenant_id` + policy; reversible migration |
+| **API / contract patterns** | Versioned REST (`/v3`) + internal events on RabbitMQ | Reuse the `voting.events` topic; no new external contract |
+| **Authentication / authorization** | OIDC + role scopes; `tenant_id` in the token | No change — the `voting:write` scope already exists |
 
-### Pontos de integração tocados
+### Integration points touched
 
-| Ponto de integração | Sistema/módulo | Natureza do acoplamento | Risco de mudar |
+| Integration point | System/module | Coupling nature | Risk of changing |
 |---|---|---|---|
-| `voting.events` (RabbitMQ) | Serviço de notificações | Evento (assíncrono) | Médio — aumenta volume de mensagens |
-| `votes` (tabela) | Relatórios | DB compartilhado (read-replica) | Baixo |
+| `voting.events` (RabbitMQ) | Notifications service | Event (asynchronous) | Medium — increases message volume |
+| `votes` (table) | Reporting | Shared DB (read-replica) | Low |
 
-### Dívida técnica e risco de regressão
+### Technical debt and regression risk
 
-| Área | Dívida / fragilidade conhecida | Risco de regressão | Cobertura de testes atual |
+| Area | Known debt / fragility | Regression risk | Current test coverage |
 |---|---|---|---|
-| `contexts/voting` | Contagem de votos recalcula tudo a cada voto (sem agregação incremental) | Médio | Boa (unit + integração) |
+| `contexts/voting` | Vote counting recomputes everything on each vote (no incremental aggregation) | Medium | Good (unit + integration) |
 
 `Confidence:` 85 · `Origin:` cto_authored · `Source:` tech-landscape-voting-platform.md · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ---
 
-## Caminho GREENFIELD — Fundação técnica
+## GREENFIELD Path — Technical foundation
 
-N/A — brownfield (ver Classificação Técnica).
+N/A — brownfield (see Technical classification).
 
-`Confidence:` 100 · `Origin:` cto_authored · `Source:` Classificação Técnica · `Status:` resolved · `Disposition:` decided · `Hint:` caminho não aplicável a esta demanda
+`Confidence:` 100 · `Origin:` cto_authored · `Source:` Technical classification · `Status:` resolved · `Disposition:` decided · `Hint:` path not applicable to this demand
 
 ---
 
-## Sistemas e Componentes Afetados
+## Affected Systems and Components
 
-| Sistema / Componente | Natureza do impacto |
+| System / Component | Nature of impact |
 |---|---|
-| `contexts/voting` | Modificado (nova entidade `vote_windows`, agregação incremental) |
-| Serviço de notificações | Consumido (novo volume no tópico `voting.events`) |
-| Pipeline de relatórios | Apenas consumido (sem mudança de schema breaking) |
+| `contexts/voting` | Modified (new `vote_windows` entity, incremental aggregation) |
+| Notifications service | Consumed (new volume on the `voting.events` topic) |
+| Reporting pipeline | Consumed only (no breaking schema change) |
 
-`Confidence:` 86 · `Origin:` ai_drafted→cto_authored · `Source:` escopo do RP §5 · `Status:` resolved · `Disposition:` answered · `Hint:` —
+`Confidence:` 86 · `Origin:` ai_drafted→cto_authored · `Source:` RP §5 scope · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ---
 
-## Impacto Arquitetural
+## Architectural Impact
 
-| Área | Impacto | Nota arquitetural |
+| Area | Impact | Architectural note |
 |---|---|---|
-| **Modelo de dados** | Nova tabela `vote_windows` + índice parcial `idx_votes_open_window` | Seguir o padrão `tenant_id` + RLS; índice parcial só sobre janelas abertas |
-| **Eventos / mensageria** | +1 evento `vote.window.closed` em `voting.events` | Reusar o tópico; idempotência por `window_id` |
-| **Multi-tenancy** | Nenhum novo caminho de vazamento — herda RLS | Testar a policy na nova tabela explicitamente |
-| **Performance / Escalabilidade** | Agregação incremental remove o recálculo O(n) por voto | Pré-requisito do guardrail de 500 ms |
-| **Observabilidade** | Métrica de latência de propagação por tenant | Histograma `vote_propagation_ms` com label `tenant` |
+| **Data model** | New `vote_windows` table + partial index `idx_votes_open_window` | Follow the `tenant_id` + RLS pattern; partial index only over open windows |
+| **Events / messaging** | +1 `vote.window.closed` event on `voting.events` | Reuse the topic; idempotency by `window_id` |
+| **Multi-tenancy** | No new leakage path — inherits RLS | Test the policy on the new table explicitly |
+| **Performance / Scalability** | Incremental aggregation removes the O(n) recompute per vote | Prerequisite for the 500 ms guardrail |
+| **Observability** | Per-tenant propagation latency metric | Histogram `vote_propagation_ms` with `tenant` label |
 
 `Confidence:` 84 · `Origin:` ai_drafted→cto_authored · `Source:` RP §6/§8 + tech-landscape · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ---
 
-## Integrações Necessárias
+## Required Integrations
 
-| Sistema | Tipo | Protocolo | Viabilidade / Riscos conhecidos |
+| System | Type | Protocol | Feasibility / Known risks |
 |---|---|---|---|
-| Serviço de notificações | Interno / Evento | AMQP (RabbitMQ) | Viável — risco baixo; monitorar profundidade da fila sob pico |
+| Notifications service | Internal / Event | AMQP (RabbitMQ) | Feasible — low risk; monitor queue depth under peak |
 
 `Confidence:` 82 · `Origin:` ai_drafted→cto_authored · `Source:` RP §7 + tech-landscape · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
@@ -142,118 +142,118 @@ N/A — brownfield (ver Classificação Técnica).
 
 ## Build vs. Buy
 
-| Capacidade | Decisão | Rationale | Efeito em custo/prazo |
+| Capability | Decision | Rationale | Effect on cost/timeline |
 |---|---|---|---|
-| Agendamento de janelas | Reuse | O cron interno (`Oban`) já cobre o caso | Custo zero, sem novo provedor |
+| Window scheduling | Reuse | The internal cron (`Oban`) already covers the case | Zero cost, no new provider |
 
 `Confidence:` 80 · `Origin:` ai_drafted→cto_authored · `Source:` tech-landscape · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ---
 
-## Alternativas Consideradas
+## Alternatives Considered
 
-| Alternativa | Prós | Contras | Por que NÃO foi escolhida |
+| Alternative | Pros | Cons | Why it was NOT chosen |
 |---|---|---|---|
-| Propagação por polling (cliente busca a cada 1s) | Simples; nenhum evento novo | Latência ≥ 1s; carga linear no DB | Viola o guardrail de 500 ms sob concorrência |
-| Recálculo total por voto (status quo) | Já existe | O(n) por voto; não escala em janelas grandes | Não atinge o alvo de latência; substituído por agregação incremental |
+| Propagation by polling (client fetches every 1s) | Simple; no new events | Latency ≥ 1s; linear DB load | Violates the 500 ms guardrail under concurrency |
+| Full recompute per vote (status quo) | Already exists | O(n) per vote; does not scale on large windows | Misses the latency target; replaced by incremental aggregation |
 
-`Confidence:` 83 · `Origin:` cto_authored · `Source:` análise CTO · `Status:` resolved · `Disposition:` answered · `Hint:` —
+`Confidence:` 83 · `Origin:` cto_authored · `Source:` CTO analysis · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ---
 
-## Viabilidade dos NFRs  ·  *(mapeado ao RP, Seção 8)*
+## NFR Feasibility  ·  *(mapped to RP, Section 8)*
 
-| NFR (do RP §8) | Viável? | Como será alcançado / abordagem | Risco / ressalva |
+| NFR (from RP §8) | Feasible? | How it will be achieved / approach | Risk / caveat |
 |---|---|---|---|
-| Propagação de voto < 500 ms (guardrail) | Com ressalvas | Agregação incremental + propagação por evento `voting.events`; sem polling | Inviável por polling; depende do índice parcial |
-| Isolamento total por tenant | Sim | RLS por `tenant_id` herdada na nova tabela | Teste explícito da policy obrigatório |
-| Disponibilidade 99.9% | Sim | Sem novo SPOF; degrada para contagem eventual se o broker cair | — |
+| Vote propagation < 500 ms (guardrail) | With caveats | Incremental aggregation + event propagation on `voting.events`; no polling | Infeasible by polling; depends on the partial index |
+| Total per-tenant isolation | Yes | RLS by `tenant_id` inherited on the new table | Explicit policy test mandatory |
+| 99.9% availability | Yes | No new SPOF; degrades to eventual counting if the broker drops | — |
 
 `Confidence:` 87 · `Origin:` cto_authored · `Source:` RP §8 · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ---
 
-## Testabilidade e Observabilidade
+## Testability and Observability
 
-| Dimensão | Abordagem |
+| Dimension | Approach |
 |---|---|
-| **Estratégia de teste** | Unit (regras de janela), integração (RLS na nova tabela), e2e (fan-out concorrente medindo latência); regressão na contagem |
-| **Dados / ambiente de teste** | Seed multi-tenant (2 tenants); cenário de concorrência (200 votos/s) cobrindo o edge case "janela fecha durante voto" (RP §9) |
-| **Telemetria / métricas técnicas** | `vote_propagation_ms` (histograma, label tenant); profundidade da fila `voting.events` |
-| **Logs / alertas** | Alerta se p95 de propagação > 400 ms; alerta de backlog do broker |
+| **Test strategy** | Unit (window rules), integration (RLS on the new table), e2e (concurrent fan-out measuring latency); regression on counting |
+| **Test data / environment** | Multi-tenant seed (2 tenants); concurrency scenario (200 votes/s) covering the "window closes during a vote" edge case (RP §9) |
+| **Telemetry / technical metrics** | `vote_propagation_ms` (histogram, `tenant` label); `voting.events` queue depth |
+| **Logs / alerts** | Alert if p95 propagation > 400 ms; broker backlog alert |
 
 `Confidence:` 84 · `Origin:` ai_drafted→cto_authored · `Source:` RP §9/§8 · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ---
 
-## Restrições Inegociáveis (Hard Constraints)
+## Hard Constraints
 
-| Restrição | Tipo | Detalhe | Efeito no escopo |
+| Constraint | Type | Detail | Effect on scope |
 |---|---|---|---|
-| Propagação deve ser por evento, não polling | Técnica | Necessário para o guardrail de 500 ms | Nenhum no escopo de produto; é decisão de implementação |
-| Índice parcial criado antes do rollout | Plataforma | `idx_votes_open_window` é pré-condição de performance | Adiciona 1 passo ao plano de release |
+| Propagation must be event-based, not polling | Technical | Required for the 500 ms guardrail | None on product scope; it is an implementation decision |
+| Partial index created before rollout | Platform | `idx_votes_open_window` is a performance precondition | Adds 1 step to the release plan |
 
-`Confidence:` 85 · `Origin:` cto_authored · `Source:` análise CTO · `Status:` resolved · `Disposition:` answered · `Hint:` —
+`Confidence:` 85 · `Origin:` cto_authored · `Source:` CTO analysis · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ---
 
-## Riscos Técnicos e Mitigações
+## Technical Risks and Mitigations
 
-| Risco | Categoria | Probabilidade | Impacto | Mitigação |
+| Risk | Category | Probability | Impact | Mitigation |
 |---|---|---|---|---|
-| Backlog no broker sob pico derruba latência | Infra | Média | Alto | Autoscaling do consumer + alerta de profundidade |
-| Policy RLS não aplicada à nova tabela | Segurança | Baixa | Alto | Teste de integração que falha se a policy faltar |
+| Broker backlog under peak degrades latency | Infra | Medium | High | Consumer autoscaling + queue-depth alert |
+| RLS policy not applied to the new table | Security | Low | High | Integration test that fails if the policy is missing |
 
-`Confidence:` 86 · `Origin:` ai_drafted→cto_authored · `Source:` Impacto Arquitetural · `Status:` resolved · `Disposition:` answered · `Hint:` —
+`Confidence:` 86 · `Origin:` ai_drafted→cto_authored · `Source:` Architectural Impact · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ---
 
-## Decisões de Arquitetura (ADRs)
+## Architecture Decisions (ADRs)
 
-| # | Decisão | Rationale | Sign-off do CTO |
+| # | Decision | Rationale | CTO sign-off |
 |---|---|---|---|
-| ADR-001 | Propagação de votos por evento (`voting.events`), não polling | Único caminho viável para o guardrail de 500 ms sob concorrência | ✓ |
-| ADR-002 | Agregação incremental de contagem por janela | Remove o recálculo O(n) por voto; pré-requisito de performance | ✓ |
-| ADR-003 | Reusar RLS por `tenant_id` na `vote_windows` (reused_from_KB) | Padrão de isolamento já validado no tech-landscape | ✓ |
+| ADR-001 | Vote propagation by event (`voting.events`), not polling | The only feasible path for the 500 ms guardrail under concurrency | ✓ |
+| ADR-002 | Incremental per-window count aggregation | Removes the O(n) recompute per vote; performance prerequisite | ✓ |
+| ADR-003 | Reuse RLS by `tenant_id` on `vote_windows` (reused_from_KB) | Isolation pattern already validated in the tech-landscape | ✓ |
 
-`Confidence:` 88 · `Origin:` reused_from_KB→cto_authored · `Source:` tech-landscape (ADR-003) + proposta da IA · `Status:` resolved · `Disposition:` answered · `Hint:` —
+`Confidence:` 88 · `Origin:` reused_from_KB→cto_authored · `Source:` tech-landscape (ADR-003) + AI proposal · `Status:` resolved · `Disposition:` answered · `Hint:` —
 
 ---
 
-## Avaliação de Esforço e Custo (firme)
+## Effort and Cost Assessment (firm)
 
-### Esforço de Desenvolvimento
+### Development Effort
 
-| Área | Estimativa | Senioridade |
+| Area | Estimate | Seniority |
 |---|---|---|
-| Backend (tabela, RLS, agregação, evento) | 6 dias | Sênior |
-| QA (concorrência + RLS) | 2 dias | QA |
-| **Total** | **8 dias** | |
+| Backend (table, RLS, aggregation, event) | 6 days | Senior |
+| QA (concurrency + RLS) | 2 days | QA |
+| **Total** | **8 days** | |
 
-### Impacto de Infraestrutura
+### Infrastructure Impact
 
-Nenhum provisionamento novo — reusa Postgres e RabbitMQ existentes.
+No new provisioning — reuses existing Postgres and RabbitMQ.
 
-### Impacto de Custo de Terceiros
+### Third-Party Cost Impact
 
-Nenhum.
+None.
 
-### Impacto de Custo Operacional Recorrente
+### Recurring Operational Cost Impact
 
-Marginal: +volume de mensagens em `voting.events` (estimado < 2% do tráfego atual).
+Marginal: +message volume on `voting.events` (estimated < 2% of current traffic).
 
-### Avaliação de TCO
+### TCO Assessment
 
-Cria uma fundação reutilizável: a agregação incremental beneficia toda contagem de votos, não só esta feature.
+Creates a reusable foundation: incremental aggregation benefits all vote counting, not only this feature.
 
-`Confidence:` 81 · `Origin:` cto_authored · `Source:` decomposição CTO · `Status:` resolved · `Disposition:` answered · `Hint:` refinável pelo Tech Lead no TB
+`Confidence:` 81 · `Origin:` cto_authored · `Source:` CTO decomposition · `Status:` resolved · `Disposition:` answered · `Hint:` refinable by the Tech Lead in the TB
 
 ---
 
-## Caminho de Discovery (se uma incógnita técnica bloqueia a conclusão)
+## Discovery Path (if a technical unknown blocks completion)
 
 —
 
-`Confidence:` 100 · `Origin:` cto_authored · `Source:` — · `Status:` resolved · `Disposition:` decided · `Hint:` nenhuma incógnita bloqueia o fechamento
+`Confidence:` 100 · `Origin:` cto_authored · `Source:` — · `Status:` resolved · `Disposition:` decided · `Hint:` no unknown blocks closing
 
 <!-- END OF DOCUMENT -->
