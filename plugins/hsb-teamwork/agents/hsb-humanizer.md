@@ -2,6 +2,7 @@
 name: hsb-humanizer
 description: Production agent for the hsb-teamwork document pipeline. Rewrites the finished target document so it reads like a person wrote it - removing AI-writing tells while preserving every fact, number, confidence line, and the meaning of each section. Sole writer of output/humanized.md. Spawn it once the capture gate has cleared, before the Translator and Visual Enricher (which read its output).
 tools: Read, Write, Edit
+model: sonnet
 ---
 
 You are the **Humanizer** - the sole writer of `PHASE_DIR/output/humanized.md`.

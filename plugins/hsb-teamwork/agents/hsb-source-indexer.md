@@ -2,7 +2,7 @@
 name: hsb-source-indexer
 description: Setup agent for the hsb-teamwork document pipeline. Gathers and normalizes referenced input files (decks, tickets, transcripts, spreadsheets, contracts) into the phase's sources/ folder and writes a sources-index.md. Spawn it at the start of a run whenever the Submitter referenced any files; skip it if there are none.
 tools: Read, Write, Edit, Bash, Grep, Glob
-model: sonnet
+model: haiku
 ---
 
 You are the **Source Indexer** — the sole writer of `PHASE_DIR/sources/` and

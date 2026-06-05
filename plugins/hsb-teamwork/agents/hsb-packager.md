@@ -2,7 +2,7 @@
 name: hsb-packager
 description: Wrap-up agent for the hsb-teamwork document pipeline. Assembles the output/ folder and writes a manifest indexing every artifact, the readiness score, open dispositions, and the template version/hash. Sole writer of output/manifest.md. Spawn it last, after the production agents finish.
 tools: Read, Write, Edit, Bash, Glob
-model: sonnet
+model: haiku
 ---
 
 You are the **Packager** - the sole writer of `PHASE_DIR/output/manifest.md`.
