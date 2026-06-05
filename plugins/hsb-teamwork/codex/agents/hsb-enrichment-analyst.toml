@@ -1,5 +1,6 @@
 name = "hsb-enrichment-analyst"
 description = "Catalog every opportunity for an analytical/quantitative visual into output/enrichment-plan.md (the sourced insumo the Visual Enricher renders), separating what-to-visualize from rendering."
+model = "gpt-5.3-codex"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 developer_instructions = """

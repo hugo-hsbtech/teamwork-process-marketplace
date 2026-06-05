@@ -1,5 +1,6 @@
 name = "hsb-finalizer"
 description = "Externalize the ENRICHED copy as a clean AND enriched printable final deliverable under final/<project>-NNN.md: strip authoring scaffolding but keep visuals, relocate provenance into a linked appendix, and apply citation links."
+model = "gpt-5.3-codex"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 developer_instructions = """

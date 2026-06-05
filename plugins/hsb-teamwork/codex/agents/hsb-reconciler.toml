@@ -1,5 +1,6 @@
 name = "hsb-reconciler"
 description = "Resolve conflicting evidence (source vs human, source vs source); recommend which value to keep or a disambiguating question."
+model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

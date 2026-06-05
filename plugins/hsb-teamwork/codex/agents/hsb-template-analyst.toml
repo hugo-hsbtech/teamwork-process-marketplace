@@ -1,5 +1,6 @@
 name = "hsb-template-analyst"
 description = "Derive contract.lock.md from the validated template; hash it; restart analysis if the hash changed."
+model = "gpt-5.3-codex"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 developer_instructions = """

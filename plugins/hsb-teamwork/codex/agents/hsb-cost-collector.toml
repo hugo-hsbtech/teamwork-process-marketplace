@@ -1,5 +1,6 @@
 name = "hsb-cost-collector"
 description = "Aggregate the initiative cost ledger into investment metrics — tokens and USD by phase/agent/model, cache savings, durations, agent-invocation counts."
+model = "gpt-5.4-mini"
 model_reasoning_effort = "low"
 sandbox_mode = "read-only"
 developer_instructions = """

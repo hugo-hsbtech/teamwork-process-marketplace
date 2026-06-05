@@ -1,5 +1,6 @@
 name = "hsb-metrics-analyst"
 description = "Compute process/throughput and quality/outcome metrics across all phases, and extract a value score (0-100) from the frozen documents."
+model = "gpt-5.3-codex"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 developer_instructions = """

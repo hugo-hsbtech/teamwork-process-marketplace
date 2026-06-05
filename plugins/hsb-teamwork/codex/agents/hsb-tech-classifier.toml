@@ -1,5 +1,6 @@
 name = "hsb-tech-classifier"
 description = "Confirm the demand nature (Greenfield/Brownfield/Hybrid) under the technical lens, resolve the Knowledge Base (tech-landscape), and set which TA path is in force — the governing decision of the Technical Assessment."
+model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

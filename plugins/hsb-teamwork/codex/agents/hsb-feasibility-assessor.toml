@@ -1,5 +1,6 @@
 name = "hsb-feasibility-assessor"
 description = "Propose the CTO's first-class decision — the feasibility verdict (Feasible / Feasible with caveats / Infeasible as scoped) — with a defensible rationale and the veto path; the gate proposer for the Technical Assessment."
+model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """
