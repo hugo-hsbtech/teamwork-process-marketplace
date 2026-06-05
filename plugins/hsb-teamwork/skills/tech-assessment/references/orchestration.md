@@ -7,10 +7,11 @@ Everything else is a specialized subagent you spawn with a focused prompt and
 tear down. This file is the authoritative spec for *who runs when, who may write
 what, and what runs in parallel* in the tech-assessment flow.
 
-The TA is the **CTO's** artefact. It **responds** to the Readiness Package and is
-authored **alone**; it **never edits the RP** (`personas/02-po.md` §2/§10,
-`interactions/05-po-to-cto.md`). It may **veto** feasibility — then the PO revises
-the RP scope and re-escalates (see [`feasibility.md`](feasibility.md)).
+The TA is the **CTO's** artefact — the persona's *technical-strategy* mandate
+(`personas/03-cto.md` §2). It **responds** to the Readiness Package and is authored
+**alone**; it **never edits the RP** (`personas/03-cto.md` §1/§10, `personas/02-po.md`
+§2/§10, `interactions/05-po-to-cto.md`). It may **veto** feasibility — then the PO
+revises the RP scope and re-escalates (see [`feasibility.md`](feasibility.md)).
 
 ## What this reuses (no duplication)
 
@@ -182,7 +183,7 @@ At the end of Phase 3 every in-force section has an entry — `inherited`, `ai_d
 `reused_from_KB`, or `decided` (N/A path / "nenhuma") — so the CTO never faces a blank
 form.
 
-## Phase 4 — Confirm loop (until signReady)
+## Phase 4 — Confirm loop (until signOffReady)
 
 Repeats until the freeze gate clears:
 
@@ -204,7 +205,7 @@ Repeats until the freeze gate clears:
 5. **If the KB had to be created** (brownfield/hybrid, KB `Não existe`): spawn
    **`hsb-landscape-keeper`** to produce/update the `tech-landscape-<system>.md` from
    the documented current state — feasibility cannot be signed on unknown terrain.
-6. **Gate check:** `signReady = true` when:
+6. **Gate check:** `signOffReady = true` when:
    - the `feasibility-verdict` is committed (`cto_authored` at its threshold), **and**
    - every other `blocksFreeze` section is resolved (`cto_authored` / confirmed-
      `inherited`) or honestly disposed (`decided` N/A path / `discovery`), **and**
@@ -216,7 +217,7 @@ See [`feasibility.md`](feasibility.md) for the full gate and the Discovery exit.
 
 ## Phase 5 — Production & wrap
 
-Once `signReady`:
+Once `signOffReady`:
 
 1. **`hsb-humanizer`** writes `output/humanized.md` — the canonical clean copy all
    production agents read. Must finish first.

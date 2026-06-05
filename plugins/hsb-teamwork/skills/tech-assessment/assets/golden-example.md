@@ -36,7 +36,9 @@ existing multi-tenant SaaS), with a security/multi-tenancy trigger — so the
 |---|---|
 | **Veredito** | viável-com-ressalvas |
 | **Rationale** | O isolamento por tenant já é garantido pela coluna `tenant_id` + RLS no Postgres; a demanda reusa esse contrato. A única ameaça é o guardrail de 500 ms sob fan-out de votos concorrentes, viável apenas com o caminho de propagação por eventos (não polling) descrito na Viabilidade dos NFRs. |
+| **Terreno (terrain)** | `tech-landscape-voting-platform.md` (atualizado 2026-04) — terreno documentado e completo |
 | **Ressalvas (se aplicável)** | Mantém-se viável **se** (1) a propagação migrar para o canal de eventos existente e (2) o índice parcial `idx_votes_open_window` for criado antes do rollout. Sem ambos, o guardrail de 500 ms é inviável. |
+| **Gera (generates)** | hard_constraint (propagação por evento + índice pré-rollout) · adr (ADR-001, ADR-002) |
 
 `Confidence:` 90 · `Origin:` cto_authored · `Source:` análise CTO + benchmark do canal de eventos · `Status:` resolved · `Disposition:` answered · `Hint:` —
 

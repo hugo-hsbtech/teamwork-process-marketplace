@@ -190,7 +190,7 @@ it) and merges with it into the PRD. You are the only layer that talks to the CT
 Read these once, then follow them for the whole run:
 - `../skills/tech-assessment/references/orchestration.md` — phases, agent roles, phase gates, folder layout.
 - `../skills/tech-assessment/references/classification.md` — the governing decision (nature → path; honest-N/A; KB).
-- `../skills/tech-assessment/references/feasibility.md` — the CTO's first-class decision (verdict, veto path, signReady gate).
+- `../skills/tech-assessment/references/feasibility.md` — the CTO's first-class decision (verdict, veto path, signOffReady gate).
 - `../skills/tech-assessment/references/inheritance.md` — RP/Intake → TA section mapping.
 - `../skills/tech-assessment/references/landscape.md` — seed/reference the persistent tech-landscape KB.
 - `../skills/origination-brainstorm/references/initiatives.md` — initiative resolve-or-select + phase folders.
@@ -224,7 +224,7 @@ yourself as a step, in this order:
 4. **Confirm loop:** present the pre-filled TA to the CTO; the CTO judges, edits, approves
    ADRs, firms the estimate, and **commits the feasibility verdict**; questions are a
    fallback only. If the KB had to be created/updated, run Landscape Keeper role
-   (`hsb-landscape-keeper`). Loop until `signReady` (verdict committed + every blocksFreeze
+   (`hsb-landscape-keeper`). Loop until `signOffReady` (verdict committed + every blocksFreeze
    section resolved or honestly disposed; a veto freezes as a signed veto).
 5. **Production:** write the humanized copy, the translation, and the enriched copy; for
    greenfield, seed the new `tech-landscape-<system>.md` (Landscape Keeper); then

@@ -25,13 +25,20 @@ user-invocable: true
 # Technical Assessment (orchestrator)
 
 You are **Layer 0 — the orchestrator**, and the *only* layer that talks to the
-**CTO**. You run the CTO's journey: take a **frozen, escalated Readiness Package** and
-produce the **Technical Assessment (TA)** — the CTO's own artefact that **responds** to
-the RP and merges with it into the PRD (`PRD = RP + TA`). You do not fill the document
-yourself; you **locate the linked RP and Intake, spawn specialized subagents with
-exactly what they need, route their outputs, gate on the classification and the
+**CTO** — the *feasibility authority* and *terrain-setter* (`personas/03-cto.md`). You
+run the CTO's **technical-strategy mandate**: take a **frozen, escalated Readiness
+Package** and produce the **Technical Assessment (TA)** — the CTO's own artefact that
+**responds** to the RP and merges with it into the PRD (`PRD = RP + TA`). You do not fill
+the document yourself; you **locate the linked RP and Intake, spawn specialized subagents
+with exactly what they need, route their outputs, gate on the classification and the
 feasibility verdict, and keep the CTO in the loop**. Heavy work is delegated so your
 context stays lean.
+
+> **Scope.** The CTO persona has a **dual mandate** (`03-cto.md` §2): *technical strategy*
+> (the TA — a per-demand artefact that **freezes** at sign-off) and *people leadership*
+> (capacity map, 90-day reviews, hiring signal — a living state that **never freezes**).
+> This skill operationalizes the **technical-strategy** mandate only — the Technical
+> Assessment. The people-leadership cockpit is out of scope.
 
 The TA is authored **alone** by the CTO and **never edits the RP**
 (`personas/02-po.md` §2/§10, `interactions/05-po-to-cto.md`). It may **veto**
@@ -89,13 +96,21 @@ output is then "draft for CTO sign-off," never a real sign-off).
 - [ ] Phase 2 · spawn `hsb-stage-inheritor`; route proposals → `hsb-ledger-writer` → `hsb-doc-updater`
 - [ ] Phase 3 · **same message (fan-out):** `hsb-section-drafter` × {in-force path section(s), `affected-systems`, `architectural-impact`, `integrations`, `alternatives`, `nfr-feasibility`, `testability-observability`, `hard-constraints`, `tech-risks`, `build-vs-buy`} + `hsb-adr-proposer` ∥ `hsb-effort-estimator`; route all → `hsb-doc-updater`
 - [ ] Phase 3 · spawn `hsb-feasibility-assessor` (after impact/NFR/risks exist); route → `hsb-doc-updater`
-- [ ] Phase 4 · loop: `hsb-confidence-auditor` (incremental `SECTIONS`) → (fallback) `hsb-question-strategist` → CTO reviews/approves/signs → `hsb-ledger-writer` → `hsb-doc-updater` until `signReady`
+- [ ] Phase 4 · loop: `hsb-confidence-auditor` (incremental `SECTIONS`) → (fallback) `hsb-question-strategist` → CTO reviews/approves/signs → `hsb-ledger-writer` → `hsb-doc-updater` until `signOffReady`
 - [ ] Phase 4 · if KB had to be created/updated: spawn `hsb-landscape-keeper`
 - [ ] Phase 5 · spawn `hsb-humanizer` (await — it writes the copy the rest read)
 - [ ] Phase 5 · **same message:** `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer` (∥ `hsb-landscape-keeper` if seeding greenfield)
 - [ ] Phase 5 · spawn `hsb-packager`; **discharge the RP's `TechAssessmentRef` debt** in the index; report to the CTO (verdict, artifacts, veto signal if any)
 
 ## First, read these (once per run)
+
+### The canonical persona (authoritative source)
+
+- `teamwork-process/personas/03-cto.md` — the **CTO persona**: the feasibility model
+  (§3 — `verdict`/`rationale`/`terrain`/`confidence`/`source`/`generates`), the terrain
+  fork (§3.1), the dual mandate (§2), the TA contract and sign-off gate (§5.1/§10), the
+  dispositions incl. `discovery` (§6), and the AI-suggested-ADRs WOW (§3/§12). This skill
+  operationalizes the persona's technical-strategy mandate; the references below are how.
 
 ### TA-specific references
 
@@ -108,7 +123,7 @@ output is then "draft for CTO sign-off," never a real sign-off).
   resolution.
 - [`references/feasibility.md`](references/feasibility.md) — the CTO's first-class
   decision: the verdict scale, the decision model, the **veto path**, the Discovery
-  exit, and the `signReady` freeze gate.
+  exit, and the `signOffReady` freeze gate.
 - [`references/inheritance.md`](references/inheritance.md) — how `hsb-stage-inheritor`
   maps the RP/Intake forward into the TA (NFRs → NFR-feasibility, integrations, PO
   questions, demand nature), what it preserves, and what it does not do.
@@ -326,7 +341,7 @@ swappable — pass a custom TA template path as `TEMPLATE`.
 |---|---|
 | `references/orchestration.md` | Phase flow, full agent roster + phase assignments, single-writer ownership, folder layout |
 | `references/classification.md` | The governing decision — nature → path, honest-N/A path, KB resolution |
-| `references/feasibility.md` | The CTO's first-class decision — verdict scale, decision model, veto path, Discovery exit, `signReady` gate |
+| `references/feasibility.md` | The CTO's first-class decision — verdict scale, decision model, veto path, Discovery exit, `signOffReady` gate |
 | `references/inheritance.md` | RP/Intake → TA section mapping, what `hsb-stage-inheritor` preserves |
 | `references/landscape.md` | Seed (greenfield) / reference-update (brownfield) the persistent `tech-landscape` KB |
 | `assets/target-template.technical-assessment.md` | Default TA template (annotated) |

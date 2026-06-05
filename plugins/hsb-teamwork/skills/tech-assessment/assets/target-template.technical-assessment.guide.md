@@ -18,6 +18,13 @@ Origins: `inherited` (carried from the linked RP / Intake Record, keep its sourc
 CTO confirms). The promotion path is `inherited` / `ai_drafted` → **CTO review** →
 `cto_authored`.
 
+> These map onto the CTO persona's dispositions (`personas/03-cto.md` §6:
+> `assessed` / `ai_drafted` / `reused_from_KB` / `discovery`) — `cto_authored` is the
+> engine's name for `assessed` (the CTO judged directly). `discovery` is the honest
+> "I can't assess yet" disposition: a technical unknown blocks the verdict, so it is
+> time-boxed as a spike (→ `discovery-path`) rather than bluffed — exactly the
+> Submitter's `discovery` philosophy applied to the terrain.
+
 ---
 
 ## The governing section — fill this first
@@ -40,15 +47,27 @@ CTO confirms). The promotion path is `inherited` / `ai_drafted` → **CTO review
 ## The CTO's first-class decision
 
 - **`feasibility-verdict`** (blocks, min-conf 85) — the **CTO's first-class model is
-  feasibility** (`personas/02-po.md:363`). `hsb-feasibility-assessor` proposes one
-  verdict — `viável` / `viável-com-ressalvas` / `inviável-como-escopado` — with a
-  defensible rationale (never a rubber stamp) and, when "com ressalvas", what must be
-  true for it to hold. High threshold by design: this is the central CTO judgment, so it
-  resolves only at high confidence and is always `cto_authored` (the CTO commits it).
+  feasibility** (`personas/03-cto.md` §3 — *feasibility is first class*).
+  `hsb-feasibility-assessor` proposes one verdict — `viável` / `viável-com-ressalvas` /
+  `inviável-como-escopado` — carrying the full feasibility model: `verdict` + `rationale`
+  + **`terrain`** + `confidence` + `source` + `generates`. A defensible rationale (never a
+  rubber stamp), the **terrain** it rests on (the `tech-landscape` KB, or an honest
+  "não documentado → Discovery" — *"feasibility cannot be assessed on unknown terrain"*,
+  the CTO's golden rule, `03-cto.md` §3), and, when "com ressalvas", what must be true for
+  it to hold. The **`generates`** field names what the verdict creates downstream —
+  `hard_constraint` / `adr` / `discovery_spike` / `kb_update` — so the judgment links to
+  the sections it drives. High threshold by design: this is the central CTO judgment, so
+  it resolves only at high confidence and is always `cto_authored` (the CTO commits it).
   - **`inviável-como-escopado` is the veto path:** the verdict carries the veto +
     rationale; the TA still freezes (the CTO's decision is complete and signed), and the
     orchestrator signals the PO to revise the RP scope and re-escalate. The CTO does not
     redefine the product. See references/feasibility.md § The veto path.
+
+> **Terrain is traced everywhere, not only here.** Beyond the verdict's explicit Terrain
+> row, every entry's `Source` carries *trace-to-source* (`03-cto.md` §3 — e.g. "RP
+> question #2", "tech-landscape §5", "reused ADR-102"), and `tech-classification` resolves
+> the KB. Terrain is the structural twin of confidence: a verdict on undocumented terrain
+> is a guess, not a verdict.
 
 ---
 

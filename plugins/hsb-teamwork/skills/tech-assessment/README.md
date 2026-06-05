@@ -8,16 +8,24 @@
 > (planned) — each a skill under `/hsb-teamwork:<skill>`, reusing the same engine.
 
 A portable, CTO-facing Claude skill that produces the **Technical Assessment**
-(`TA-AAAA-NNN`) for a demand the PO escalated to the CTO
-(`teamwork-process/templates/03-technical-assessment.md`,
+(`TA-AAAA-NNN`) for a demand the PO escalated to the CTO — the CTO persona's
+*technical-strategy* mandate, the **feasibility authority** and **terrain-setter**
+(`teamwork-process/personas/03-cto.md`, `templates/03-technical-assessment.md`,
 `personas/02-po.md` §2/§10, `interactions/05-po-to-cto.md`).
 
 The TA is the **CTO's** artefact. It **responds** to the Readiness Package and is
 authored **alone** — it **never edits the RP**. It may **veto** feasibility, in which
 case the PO revises the RP scope and re-escalates. The TA contains: the feasibility
-verdict, architectural impact, integrations feasibility, NFR feasibility (mapped to RP
-§8), testability/observability, hard constraints, technical risks, suggested ADRs (the
-CTO approves), and the firm effort/cost.
+verdict (carrying the **terrain** it rests on), architectural impact, integrations
+feasibility, NFR feasibility (mapped to RP §8), testability/observability, hard
+constraints, technical risks, suggested ADRs (the CTO approves), and the firm
+effort/cost.
+
+> **Scope — the technical-strategy mandate.** The CTO persona has a **dual mandate**
+> (`03-cto.md` §2): *technical strategy* (the TA — a per-demand artefact that **freezes**)
+> and *people leadership* (capacity map, 90-day reviews, hiring signal — a living state
+> that **never freezes**). This skill operationalizes the **technical-strategy** mandate:
+> the Technical Assessment. The people-leadership cockpit is out of scope here.
 
 > This README is the orientation. The authoritative spec lives in [`SKILL.md`](SKILL.md)
 > (the orchestrator) and [`references/`](references/).
@@ -25,7 +33,9 @@ CTO approves), and the firm effort/cost.
 ## The big idea
 
 **Classify first, then draft-then-confirm — feasibility is the headline.** The CTO's
-first-class model is *feasibility* (`personas/02-po.md:363`). The pipeline:
+first-class model is *feasibility* (`personas/03-cto.md` §3), and *feasibility cannot be
+assessed on unknown terrain* — so every verdict carries the **terrain** (the
+`tech-landscape` KB) it rests on. The pipeline:
 
 1. **Classification gate.** `hsb-tech-classifier` confirms the demand nature under the
    technical lens — **Greenfield** (the TA *defines* the foundation: stack, ADRs,
@@ -152,7 +162,7 @@ plugins/hsb-teamwork/
 │   ├── references/
 │   │   ├── orchestration.md                           # phases, roster, single-writer rule, layout
 │   │   ├── classification.md                          # nature → path, honest-N/A, KB resolution
-│   │   ├── feasibility.md                             # verdict, veto path, Discovery exit, signReady gate
+│   │   ├── feasibility.md                             # verdict, veto path, Discovery exit, signOffReady gate
 │   │   ├── inheritance.md                             # RP/Intake → TA section mapping
 │   │   └── landscape.md                               # seed/reference the persistent tech-landscape
 │   └── assets/

@@ -1,8 +1,11 @@
 # Classification — the decision that governs the document
 
-The TA has **two paths, one template** (`templates/03-technical-assessment.md`). The
-`tech-classification` section decides which path is in force, so it is filled
-**first** — before any path section is drafted. `hsb-tech-classifier` is the
+The TA has **two paths, one template** (`templates/03-technical-assessment.md`) — the
+**terrain fork** (`personas/03-cto.md` §3.1: greenfield *creates* the terrain, brownfield
+*discovers* it). Because *feasibility cannot be assessed on unknown terrain* (`03-cto.md`
+§3, the CTO's golden rule), the **first thing the CTO classifies is whether the terrain
+already exists.** The `tech-classification` section decides which path is in force, so it
+is filled **first** — before any path section is drafted. `hsb-tech-classifier` is the
 **governing proposer**: the rest of the run keys off its output.
 
 ## The classification is born at triage, confirmed here
@@ -35,7 +38,9 @@ Confidence Auditor treat a `decided` N/A path entry as resolved, not missing.
 
 ## Knowledge Base resolution
 
-The TA cannot judge feasibility on unknown terrain. The classifier resolves the KB:
+The TA cannot judge feasibility on unknown terrain. The classifier resolves the KB — the
+terrain's `kbStatus` dial (`personas/03-cto.md` §5.2: `complete` / `partial` / `stub` /
+`absent`), surfaced here as `Existe` / `Parcial` / `Não existe`:
 
 | KB state | What it means | What the TA does |
 |---|---|---|

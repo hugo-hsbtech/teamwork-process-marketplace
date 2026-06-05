@@ -3,8 +3,11 @@
 The `tech-landscape-<system>.md` is the **technical knowledge base per system** (not
 per demand): product/stack/structure/integrations/debt. It is the "prior knowledge
 base" that gives an engineer — or an AI agent with no implicit knowledge of the
-source — the terrain for implementation decisions. Style: *steering docs* (Kiro) /
-`document-project` (BMAD). See `templates/tech-landscape.md` and `templates/README.md`.
+source — the terrain for implementation decisions. It is the CTO's **terrain contract**
+(`personas/03-cto.md` §5.2): persistent, per-system, the only CTO contract that is not
+per-demand — *feasibility rests on terrain* (§3), and the execution layer has no implicit
+knowledge of the code. Style: *steering docs* (Kiro) / `document-project` (BMAD). See
+`templates/tech-landscape.md` and `templates/README.md`.
 
 The TA's relationship to it depends on the **demand nature** (see
 [`classification.md`](classification.md)):

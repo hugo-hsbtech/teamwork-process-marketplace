@@ -61,17 +61,21 @@ gate). See references/classification.md.
 
 ## Veredito de Viabilidade
 <!-- origination: id=feasibility-verdict; blocks=true; min-confidence=85; kind=capture -->
-> Rubric: a **decisão de primeira classe do CTO** (`personas/02-po.md` §10 — o modelo
-> de primeira classe do CTO é a *viabilidade*). Carrega rationale — nunca um carimbo.
-> Se **inviável-como-escopado**, o CTO retorna com veto + rationale; o PO revisa o
-> escopo do RP e re-escala. O CTO não redefine o produto. Esta seção só se resolve em
-> confiança alta (a viabilidade é o juízo central do CTO).
+> Rubric: a **decisão de primeira classe do CTO** (`personas/03-cto.md` §3 — *feasibility
+> is first class*: todo juízo carrega `verdict` + `rationale` + **`terrain`** + `confidence`
+> + `source` + `generates`). Carrega rationale — nunca um carimbo — e o **terreno** em que
+> repousa: *"viabilidade não se avalia em terreno desconhecido"* (`03-cto.md` §3, a regra de
+> ouro do CTO). Se **inviável-como-escopado**, o CTO retorna com veto + rationale; o PO
+> revisa o escopo do RP e re-escala. O CTO não redefine o produto. Esta seção só se resolve
+> em confiança alta (a viabilidade é o juízo central do CTO).
 
 | Campo | Valor |
 |---|---|
 | **Veredito** | viável / viável-com-ressalvas / inviável-como-escopado |
 | **Rationale** | [Por quê — defensável] |
+| **Terreno (terrain)** | `tech-landscape-[sistema].md` (KB em que repousa) · "não documentado → Discovery" |
 | **Ressalvas (se aplicável)** | [O que precisa ser verdade para o veredito se sustentar] |
+| **Gera (generates)** | hard_constraint · adr · discovery_spike · kb_update · — |
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 
