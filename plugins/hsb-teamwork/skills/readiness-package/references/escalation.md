@@ -74,12 +74,28 @@ package is marked **provisionally frozen**, with the manifest noting
 The `packager` outputs this flag explicitly in `output/manifest.md` so the
 downstream (PRD/PM handoff) knows the Technical Assessment is still owed.
 
-**Migration note:** when the `tech-assessment` skill lands, tighten the gate to
-require `TechAssessmentRef.status = signed` before freezing. The `deferred`
-path will be retired; the skill will block at the freeze gate and hand off to
-the TA skill to produce the Assessment. Update this file and the manifest
-template at that time.
+**Migration note — the `tech-assessment` skill has landed.** The
+[`tech-assessment`](../../tech-assessment/SKILL.md) skill now exists. The handoff is:
 
-This divergence is deliberate and temporary. It is called out here, in the
-skill's README, and in every manifest that the packager writes for a
-provisionally-frozen RP.
+1. The RP freezes (provisionally) with `TechAssessmentRef.status = requested` /
+   `disposition = deferred` and pushes the owed Technical Assessment into the
+   initiative index `owes` (`{ "ref": "TechAssessmentRef", "to": "tech-assessment",
+   "status": "deferred" }`).
+2. `/hsb-teamwork:tech-assessment` runs as the `assessment/` phase, **consumes** that
+   frozen RP (+ the Intake Record), produces the signed Technical Assessment, and
+   **discharges the debt** in the index — setting the `owes` entry to `status: signed`
+   (verdict `viável` / `viável-com-ressalvas`) or `status: vetoed`
+   (`inviável-como-escopado`), with a link to the TA.
+3. On a **veto**, the TA signals the PO to revise the RP scope and re-escalate
+   (Revisit mode bumps the RP and, in turn, the TA version).
+
+So `TechAssessmentRef.status` now moves `deferred → signed | vetoed` once the TA front
+runs. The **tightened gate** — requiring `TechAssessmentRef.status = signed` before the
+RP can be considered *fully* (not provisionally) frozen — is satisfied by reading the
+discharged `owes` entry from the index after the `assessment/` phase completes.
+
+The provisional-`deferred` path remains the documented behaviour **only** for the window
+between RP freeze and the TA front running (or when the `tech-assessment` skill is not
+installed). It is called out here, in the skill's README, and in every manifest the
+packager writes for a provisionally-frozen RP — and is resolved as soon as the TA front
+discharges the debt.

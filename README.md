@@ -49,12 +49,12 @@ on Claude Code or `/hsb-teamwork-<skill>` on Codex.
 | Step            | Skill                   | Status      |
 |-----------------|-------------------------|-------------|
 | Origination          | **`origination-brainstorm`** | ✅ available |
-| Readiness       | `readiness-package`     | 🔜 planned  |
-| Tech assessment | `tech-assessment`       | 🔜 planned  |
+| Readiness       | **`readiness-package`** | ✅ available |
+| Tech assessment | **`tech-assessment`**   | ✅ available |
 | PRD             | `prd-generation`        | 🔜 planned  |
 
-Planned steps reuse the same agents and reference files, so the mechanics below
-carry across the whole toolkit.
+Available and planned steps reuse the same agents and reference files, so the
+mechanics below carry across the whole toolkit.
 
 ---
 
@@ -330,9 +330,9 @@ evals and local use) without a second copy.
 ## Roadmap
 
 - [x] `origination-brainstorm` — origination → filled, confidence-graded document + variants
-- [ ] `readiness-package` — turn an origination into a delivery-ready package
-- [ ] `tech-assessment` — technical feasibility and approach
-- [ ] `prd-generation` — PRD from the accumulated context
+- [x] `readiness-package` — the PO's two-act journey: triage → frozen Readiness Package
+- [x] `tech-assessment` — the CTO's journey: feasibility verdict + Technical Assessment (the technical half of the PRD)
+- [ ] `prd-generation` — PRD from the accumulated context (RP + TA)
 
 ---
 

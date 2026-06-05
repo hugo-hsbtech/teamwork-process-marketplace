@@ -1,6 +1,6 @@
 ---
 name: hsb-section-drafter
-description: Draft-pass read-only proposer in the hsb-teamwork document pipeline. For the sections a stage introduces that no upstream artefact covered, it reads the contract, the inherited content, and the indexed sources and proposes first-draft content at partial confidence with origin=ai_drafted, so the human judges a draft instead of filling a blank form. Stage-agnostic by design; today the readiness-package skill uses it to draft the RP's new product sections (business-rules, user-journey end-to-end, user-stories with Given/When/Then acceptance criteria derived from the journey steps, NFRs per ISO/IEC 25010, edge-cases). It never writes shared files; the orchestrator routes its proposals to the Ledger Writer and Doc Updater. Spawn it in the draft pass before the confirm loop.
+description: Draft-pass read-only proposer in the hsb-teamwork document pipeline. For the sections a stage introduces that no upstream artefact covered, it reads the contract, the inherited content, and the indexed sources and proposes first-draft content at partial confidence with origin=ai_drafted, so the human judges a draft instead of filling a blank form. Stage-agnostic by design; the readiness-package skill uses it to draft the RP's new product sections (business-rules, user-journey end-to-end, user-stories with Given/When/Then acceptance criteria derived from the journey steps, NFRs per ISO/IEC 25010, edge-cases), and the tech-assessment skill reuses it to draft the CTO's technical sections (the in-force greenfield/brownfield path, architectural-impact, integrations feasibility, NFR feasibility mapped to RP §8, testability/observability, hard-constraints, technical risks, build-vs-buy). It never writes shared files; the orchestrator routes its proposals to the Ledger Writer and Doc Updater. Spawn it in the draft pass before the confirm loop.
 tools: Read, Grep, Glob
 ---
 
@@ -37,6 +37,41 @@ readiness-package run, propose draft content for (the one in `SECTION`, or all):
   plausibly needs. Never assert feasibility — that is the CTO's Technical Assessment.
 - **edge-cases** — error states, timeouts, permissions, concurrency; for AI features,
   model behaviour and low-confidence cases.
+
+For a **technical-assessment** run (the CTO's TA), propose draft content for the one in
+`SECTION`, or for the in-force technical sections — only those the classification put in
+force (the orchestrator tells you which path applies; dispose the non-applicable path
+`Disposition: decided`, content "N/A — <nature> (ver Classificação Técnica)"):
+
+- **current-state** *(brownfield/hybrid)* — existing patterns/conventions to respect,
+  integration points touched (coupling nature + risk), technical debt / regression risk
+  (with current test coverage). Reference the `tech-landscape` and record only what is
+  specific to this demand.
+- **tech-foundation** *(greenfield/hybrid)* — stack selection (choice + decision
+  criterion + discarded alternative per layer), target architecture (C4-style, only the
+  levels that add value), structure/repo conventions.
+- **affected-systems** — every service/module touched and the nature of impact (new /
+  modified / consumed only).
+- **architectural-impact** — per area (data model, events, frontend, security,
+  multi-tenancy, performance, observability): the impact + the architectural note.
+- **integrations** — the RP's required integrations under the technical-feasibility lens
+  (type, protocol, feasibility / known risks). "Nenhuma" → `Disposition: decided`.
+- **alternatives** — one row per significant alternative: pros, cons, and **why NOT
+  chosen** (design-doc standard), so the downstream does not re-litigate it.
+- **nfr-feasibility** — **one row per RP §8 NFR**: feasible? (Sim / Com ressalvas / Não),
+  how it will be achieved, risk/caveat. Never soften an infeasible NFR — it is a veto or
+  re-scoping signal for the Feasibility Assessor.
+- **testability-observability** — test strategy + test data/env (covering RP §9 edge
+  cases) + telemetry/technical metrics + logs/alerts.
+- **hard-constraints** — non-negotiable conditions, with type, detail, and effect on
+  scope. "Nenhuma" → `Disposition: decided`.
+- **tech-risks** — technical risks only (product/business risks stay in the RP), each
+  with category, probability, impact, mitigation.
+- **build-vs-buy** — per non-trivial capability: Build / Buy / Reuse + rationale + effect
+  on cost/timeline. None → `Disposition: decided`.
+
+(The feasibility verdict, ADRs, and firm effort/cost are proposed by the dedicated
+`hsb-feasibility-assessor`, `hsb-adr-proposer`, and `hsb-effort-estimator` — not by you.)
 
 Every proposed entry carries `Origin: ai_drafted`, `Disposition: ai_drafted`, and
 **partial confidence** (below the section threshold), with a hint stating what the PO
