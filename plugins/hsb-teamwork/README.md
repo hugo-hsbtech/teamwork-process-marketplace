@@ -20,17 +20,25 @@ A demand-to-delivery toolkit for **Claude Code** and **Codex**. Skills so far:
   (technical) into the **PRD**, the single artifact that opens the downstream and is
   delivered to the PM: it stitches the two halves, reconciles the scope, consolidates
   the risks, and closes with a dual PO+CTO sign-off — inventing no facts.
+- **`initiative-analytics`** — a **cross-cutting measurement** of any initiative: a
+  bundled **cost-capture hook** measures tokens/models/USD/time per phase and per
+  agent into a cost ledger, which the skill pairs with the structured artifacts and a
+  document-extracted value score to render a **per-initiative ROI report** (cost is
+  measured, value is estimate-grade, anything uncaptured says so).
 
 This page is the **install-and-use guide**; pick your tool below.
 
 - Marketplace: **`hsb-tech`** · Plugin: **`hsb-teamwork`**
 - Author: Hugo Seabra · Dedicated repo: `hugo-hsbtech/teamwork-process-marketplace`
 
-**`hsb-teamwork` is a multi-step toolkit.** It ships four skills —
-`origination-brainstorm`, `readiness-package`, `tech-assessment`, and `prd-generation` —
-each invoked as `/hsb-teamwork:<skill>` (Claude) or `/hsb-teamwork-<skill>` (Codex).
-They share this plugin's agents and reference files, so the pipeline mechanics carry
-across every step.
+**`hsb-teamwork` is a multi-step toolkit.** It ships five skills —
+`origination-brainstorm`, `readiness-package`, `tech-assessment`, `prd-generation`, and
+`initiative-analytics` — each invoked as `/hsb-teamwork:<skill>` (Claude) or
+`/hsb-teamwork-<skill>` (Codex). They share this plugin's agents and reference files, so
+the pipeline mechanics carry across every step. The first four form the
+demand-to-delivery chain; `initiative-analytics` measures its ROI. The plugin also ships
+a **cost-capture hook** (`hooks/`) that auto-registers on install and feeds that
+analytics.
 
 ---
 
@@ -99,10 +107,10 @@ From a clone of the repo (so the method files under
 ```bash
 cd plugins/hsb-teamwork
 
-# 1. Slash command  ->  /hsb-teamwork-origination-brainstorm
-cp codex/prompts/hsb-teamwork-origination-brainstorm.md  ~/.codex/prompts/
+# 1. Slash commands  ->  /hsb-teamwork-<skill> (one prompt per skill; copy all five)
+cp codex/prompts/hsb-teamwork-*.md  ~/.codex/prompts/
 
-# 2. The 17 subagents (project-scoped, or ~/.codex/agents for global)
+# 2. The 20 subagents (project-scoped, or ~/.codex/agents for global)
 mkdir -p .codex/agents && cp codex/agents/hsb-*.toml  .codex/agents/
 
 # 3. Orchestrator instructions: either drop codex/AGENTS.md in as AGENTS.md
