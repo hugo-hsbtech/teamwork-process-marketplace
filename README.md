@@ -51,10 +51,10 @@ on Claude Code or `/hsb-teamwork-<skill>` on Codex.
 | Origination          | **`origination-brainstorm`** | ✅ available |
 | Readiness       | **`readiness-package`** | ✅ available |
 | Tech assessment | **`tech-assessment`**   | ✅ available |
-| PRD             | `prd-generation`        | 🔜 planned  |
+| PRD             | **`prd-generation`**    | ✅ available |
 
-Available and planned steps reuse the same agents and reference files, so the
-mechanics below carry across the whole toolkit.
+All four steps reuse the same agents and reference files, so the mechanics below
+carry across the whole toolkit.
 
 ---
 
@@ -173,7 +173,8 @@ flowchart TD
 ### The 17 agents (+ orchestrator)
 
 The agents are named for the specialty they perform, not the phase they run in, so
-the same roster serves origination-brainstorm, readiness-package, and the planned stages.
+the same roster serves origination-brainstorm, readiness-package, tech-assessment, and
+prd-generation.
 The names are identical on Claude and Codex (`hsb-<role>`).
 
 | Phase | Agent                        | Role                                         |
@@ -332,7 +333,7 @@ evals and local use) without a second copy.
 - [x] `origination-brainstorm` — origination → filled, confidence-graded document + variants
 - [x] `readiness-package` — the PO's two-act journey: triage → frozen Readiness Package
 - [x] `tech-assessment` — the CTO's journey: feasibility verdict + Technical Assessment (the technical half of the PRD)
-- [ ] `prd-generation` — PRD from the accumulated context (RP + TA)
+- [x] `prd-generation` — the PRD merge: RP + TA → the PRD (dual PO+CTO sign-off) delivered to the PM
 
 ---
 
