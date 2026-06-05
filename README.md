@@ -108,6 +108,12 @@ flowchart LR
     INIT -. "ties every phase" .- PRDP
 ```
 
+> This is the flow *between* skills — each node is one step's frozen hand-off, not
+> its internals. Every skill runs its **own internal pipeline** (origination's
+> capture loop, readiness's triage-then-rationalize, tech-assessment's
+> classify-then-confirm), documented in that skill's own README. What they share is
+> the [engine](#the-shared-engine), not the phases.
+
 1. **Origination — the Submitter.** A raw statement (+ files) becomes a fully-filled,
    confidence-graded **origination-record** through a brainstorming loop that asks
    only the gaps and disposes honestly of what is still unknown. *Output:* the
