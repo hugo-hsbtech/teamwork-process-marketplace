@@ -60,7 +60,8 @@ Before doing anything else, bind yourself to these invariants:
    groups are: Setup `hsb-source-indexer` ∥ `hsb-template-analyst` (each act);
    Draft pass **fan-out** — one `hsb-section-drafter` per product section
    (`business-rules` ∥ `user-journey` ∥ `user-stories` ∥ `nfrs` ∥ `edge-cases`), all in one turn;
-   Production `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer`. The
+   Production `hsb-humanizer` ∥ `hsb-enrichment-analyst` (both write what the
+   rest read), then `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer`. The
    draft-pass fan-out is the main lever against slow runs — the read-only drafters
    run concurrently and converge on the single `hsb-doc-updater`.
 4. **Track the run with TodoWrite.** Create the checklist below *before* Phase A.
@@ -90,8 +91,8 @@ these invariants matter most.
 - [ ] Phase B2 · **same message (fan-out):** `hsb-section-drafter` × {`business-rules`, `user-journey`, `user-stories`, `nfrs`, `edge-cases`}; route all → `hsb-doc-updater`
 - [ ] Phase B2 · spawn `hsb-escalation-flagger` (carry the triage early-flag as a hint); route → `hsb-doc-updater`
 - [ ] Phase B3 · loop: `hsb-confidence-auditor` (incremental — only touched `SECTIONS`) → (fallback) `hsb-question-strategist` → `hsb-ledger-writer` → `hsb-doc-updater` until `freezeReady`
-- [ ] Phase B4 · spawn `hsb-humanizer` (await — it writes the copy the rest read)
-- [ ] Phase B4 · **same message:** `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer`
+- [ ] Phase B4 · **same message:** `hsb-humanizer` ∥ `hsb-enrichment-analyst` (await — they write the copy + the sourced visual plan the rest read)
+- [ ] Phase B4 · **same message:** `hsb-translator` ∥ `hsb-visual-enricher` (renders the plan) ∥ `hsb-finalizer`
 - [ ] Phase B4 · spawn `hsb-packager`; report to the PO
 
 ## First, read these (once per run)
@@ -189,8 +190,9 @@ keyed by stable id, never clobbers, and the document ends with a
 | 2 | `hsb-gap-reporter` | write the live gap map `readiness-report.md` (optional) |
 | 2 | `hsb-confidence-auditor` | re-score sections + gate verdict (read-only) |
 | 4 | `hsb-humanizer` | write `output/humanized.md` |
+| 4 | `hsb-enrichment-analyst` | catalog the sourced visual/analytics opportunities into `output/enrichment-plan.md` (read-only on `DOC`; runs parallel with the Humanizer) |
 | 4 | `hsb-translator` | write `output/translated.pt-BR.md` |
-| 4 | `hsb-visual-enricher` | write `output/enriched.md` |
+| 4 | `hsb-visual-enricher` | render the plan's visuals into `output/enriched.md` |
 | 4 | `hsb-finalizer` | externalize the clean, printable final `final/<project>-NNN.md` |
 | 4 | `hsb-packager` | write `output/manifest.md` |
 
@@ -220,7 +222,8 @@ draft, for the fan-out); the Confidence Auditor takes `SECTIONS` (touched ids, f
 incremental re-audit); the **Finalizer** needs `PROJECT_SLUG` (from
 `initiative.json.project`). **Run independent agents in the same turn** so they execute
 in parallel (Indexer ∥ Analyst at each setup; the Drafter fan-out across product
-sections in Phase B2; Translator ∥ Visual Enricher ∥ Finalizer in Phase B4).
+sections in Phase B2; Humanizer ∥ Enrichment Analyst, then Translator ∥ Visual
+Enricher ∥ Finalizer in Phase B4).
 
 **You broker everything above `PHASE_DIR`.** The initiative-level files
 (`initiative.json`, `glossary.md`, `decisions.md`) are yours; agents stay
@@ -350,8 +353,11 @@ annotation markers stay in the engine's canonical form regardless of output lang
    Updater promotes origins to `po_authored`. Loop until every `blocksFreeze` section
    is resolved or honestly disposed, and `TechAssessmentRef.status ∈ {signed,
    not_requested}`.
-7. **Phase B4 — Production + wrap:** Humanizer writes `output/humanized.md` (must
-   finish first); then Translator ∥ Visual Enricher ∥ Finalizer in parallel — the
+7. **Phase B4 — Production + wrap:** Humanizer writes `output/humanized.md` ∥
+   Enrichment Analyst catalogs the sourced visual opportunities into
+   `output/enrichment-plan.md` (both must finish first — they write what the rest
+   read); then Translator ∥ Visual Enricher (renders the plan into
+   `output/enriched.md`) ∥ Finalizer in parallel — the
    Finalizer externalizes the **printable final deliverable** at
    `final/<project>-NNN.md` (scaffolding stripped, counter-suffixed); then Packager
    writes `output/manifest.md` (indexing the `final/` deliverable too). **Record the
