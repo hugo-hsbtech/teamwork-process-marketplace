@@ -70,6 +70,15 @@ Before doing anything else, bind yourself to these invariants:
    Mark each item `in_progress` when you spawn its agent(s) and `completed` when
    their output is routed. This is the mechanism that stops a multi-agent run
    from collapsing into a single inline shortcut.
+5. **Deferral is the PO's decision, never the skill's.** The freeze gate clearing on
+   honest dispositions (`discovery` / `deferred` / `assumption`) is *necessary, not
+   sufficient*. You must never silently auto-defer a gap the PO could close and freeze
+   on their behalf. Before producing, run the **Phase B3.5 readiness checkpoint**:
+   classify the residuals (PO-closeable-now vs. genuinely-downstream-owner) and ask the
+   PO whether to **close them now and finish end-to-end** or defer them. Doing the whole
+   journey in one sitting must always be an offered path; postponing anything is the
+   PO's explicit, recorded call. The only exception is headless / batch — no live PO to
+   ask (§ Modes).
 
 **Headless / batch changes none of this.** "No live PO" means *no questions* and
 *honest dispositions* — it does **not** mean skip the agents. The pull to
@@ -93,6 +102,7 @@ these invariants matter most.
 - [ ] Phase B2 · **same message (fan-out):** `hsb-section-drafter` × {`business-rules`, `user-journey`, `user-stories`, `nfrs`, `edge-cases`}; route all → `hsb-doc-updater`
 - [ ] Phase B2 · spawn `hsb-escalation-flagger` (carry the triage early-flag as a hint); route → `hsb-doc-updater`
 - [ ] Phase B3 · loop: `hsb-confidence-auditor` (incremental — only touched `SECTIONS`) → (fallback) `hsb-question-strategist` → `hsb-ledger-writer` → `hsb-doc-updater` until `freezeReady`
+- [ ] Phase B3.5 · refresh `hsb-gap-reporter`; classify residuals (PO-closeable vs downstream-owner); **ask the PO** (close gaps now end-to-end / pick items / freeze & defer as-is) before producing — deferral is the PO's call
 - [ ] Phase B4 · **same message:** `hsb-humanizer` ∥ `hsb-enrichment-analyst` (await — they write the copy + the sourced visual plan the rest read)
 - [ ] Phase B4 · **same message:** `hsb-translator` ∥ `hsb-visual-enricher` (renders the plan) ∥ `hsb-citation-resolver` (appendix + link map)
 - [ ] Phase B4 · then `hsb-finalizer` **last** (reads `output/enriched.md` + the citation map → clean **and** enriched `final/<project>-NNN.md`)
@@ -358,7 +368,15 @@ annotation markers stay in the engine's canonical form regardless of output lang
    Updater promotes origins to `po_authored`. Loop until every `blocksFreeze` section
    is resolved or honestly disposed, and `TechAssessmentRef.status ∈ {signed,
    not_requested}`.
-7. **Phase B4 — Production + wrap:** Humanizer writes `output/humanized.md` ∥
+7. **Phase B3.5 — Readiness checkpoint (you + PO):** the gate clearing is not "the PO
+   chose to stop." Refresh the Gap Reporter, **classify each residual** as
+   PO-closeable-now vs. downstream-owner (the CTO's Technical Assessment, another
+   stakeholder), and **ask the PO** what to do — *close the gaps now* (recommended;
+   re-enter the B3 loop on the PO-closeable residuals to finish end-to-end in one
+   sitting), *pick specific items*, or *freeze and defer the rest as-is*. Postponing
+   anything is the PO's explicit, recorded decision — never silently the skill's. Only
+   then produce. (Headless / batch skips this — no PO to ask.)
+8. **Phase B4 — Production + wrap:** Humanizer writes `output/humanized.md` ∥
    Enrichment Analyst catalogs the sourced visual opportunities into
    `output/enrichment-plan.md` (both must finish first — they write what the rest
    read); then Translator ∥ Visual Enricher (renders the plan into
