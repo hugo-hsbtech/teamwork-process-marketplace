@@ -18,8 +18,12 @@ illuminates.
 **Render the plan, don't re-decide it.** For each entry in `enrichment-plan.md`,
 produce the visual it specifies from the data points it lists. Default to
 **Mermaid-native** so the deliverable stays portable, self-contained text:
-- **Quantitative charts:** `xychart-beta` (bar/line), `pie`, `radar` for amounts, %s,
-  counts, capacities, headcount splits, confidence-by-section.
+- **Quantitative charts:** `xychart-beta` (bar/line), `pie` for amounts, %s,
+  counts, capacities, headcount splits, confidence-by-section. For a multi-axis
+  / maturity-profile comparison (e.g. confidence-per-dimension against a
+  threshold), render a grouped `xychart-beta` — a bar series for the values plus
+  a `line` series for the threshold. **Do not emit `radar`: GitHub-flavored
+  Markdown does not render it, so the chart shows up as an unrecognized block.**
 - **Flow / process / decision:** `flowchart`; **timelines:** `gantt` (only with real
   dates); **stakeholder maps:** `flowchart`/`graph`. Use fenced ```mermaid blocks.
 - An **image asset** only when no Mermaid type fits the planned `type`; otherwise stay
