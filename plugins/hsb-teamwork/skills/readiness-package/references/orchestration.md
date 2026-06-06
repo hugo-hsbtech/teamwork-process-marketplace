@@ -69,9 +69,11 @@ code changes.
 | `hsb-language-auditor` | read-only | Phase B4 — verifies the humanized copy for language leaks; leaks route back to the Humanizer |
 | `hsb-synthesizer` | read-only | Optional — composes generic `derived` sections; in the RP the `inherited-readiness` and `tech-assessment-ref` derived sections are composed by the Stage Inheritor and Escalation Flagger instead |
 | `hsb-humanizer` | **writer** (`output/humanized.md`) | Phase B4 — must finish before translator/enricher |
+| `hsb-enrichment-analyst` | **writer** (`output/enrichment-plan.md`) | Phase B4 — runs in parallel with the Humanizer; catalogs the sourced visual opportunities the Enricher then renders |
 | `hsb-translator` | **writer** (`output/translated.pt-BR.md`) | Phase B4, parallel with visual-enricher |
-| `hsb-visual-enricher` | **writer** (`output/enriched.md`) | Phase B4, parallel with translator |
-| `hsb-finalizer` | **writer** (`final/<project>-NNN.md`) | Phase B4, parallel with translator/enricher — externalizes the clean, printable final |
+| `hsb-visual-enricher` | **writer** (`output/enriched.md`) | Phase B4 — renders the Analyst's plan; parallel with translator |
+| `hsb-citation-resolver` | read-only | Phase B4 — proposes the "Sources & question log" appendix + the in-text reference→anchor rewrite map the Finalizer applies; routed as `CITATION` |
+| `hsb-finalizer` | **writer** (`final/<project>-NNN.md`) | Phase B4, **last in the chain** — consumes the **enriched** copy + the Citation Resolver's map; externalizes the clean **and** enriched printable final with linked provenance |
 | `hsb-packager` | **writer** (`output/manifest.md`) | Phase B4 (wrap) |
 
 ### Stage-agnostic agents this skill drives
@@ -248,29 +250,57 @@ during readiness become available to later fronts because the store is shared.
 
 Once `freezeReady`:
 
-1. **`hsb-humanizer`** writes `output/humanized.md` — the canonical clean
-   copy all production agents read. Must finish first. Then spawn
-   **`hsb-language-auditor`** (read-only) to verify it for language leaks
-   (untranslated jargon, unlocalized labels, terminology drift, em/en dashes);
-   route any leaks back to the Humanizer to fix before the rest read it.
-2. Then spawn **in the same turn** (parallel, distinct files):
+1. Spawn **in the same turn** (parallel, distinct files):
+   - **`hsb-humanizer`** writes `output/humanized.md` — the canonical clean
+     copy all production agents read. Then spawn **`hsb-language-auditor`**
+     (read-only) to verify it for language leaks (untranslated jargon,
+     unlocalized labels, terminology drift, em/en dashes); route any leaks back
+     to the Humanizer to fix before the rest read it.
+   - **`hsb-enrichment-analyst`** → `output/enrichment-plan.md` — a read-only
+     pass over the **settled `readiness-document.md`** (plus the ledger and
+     sources) that catalogs every analytical/quantitative visual the data
+     **already supports** (scope in/out balance, persona/JTBD map, business-rule
+     flow, NFR coverage, metrics with guardrails, confidence-by-section), each
+     entry carrying its `Q###`/source citation and an evidence grade. It runs on
+     the frozen document, so it is independent of the Humanizer and goes out in
+     the same turn. **Separating "what to visualize, from which sourced data"
+     from "how to render it" is what makes the enrichment auditable** — this is
+     the step whose absence left earlier RPs un-enriched.
+   Both must finish before step 2 (the rest read what they write).
+2. Then spawn **in the same turn** (parallel; the enrichment chain converges on
+   the Finalizer, so it goes last):
    - **`hsb-translator`** → `output/translated.pt-BR.md` (or the confirmed
-     output language).
-   - **`hsb-visual-enricher`** → `output/enriched.md` (scope in/out table,
-     persona/JTBD map, business-rule flow, metrics table with guardrails).
-   - **`hsb-finalizer`** → `final/<project>-NNN.md` — the clean, **printable
-     final deliverable**. It reads the canonical `output/humanized.md`, strips
-     every authoring scaffold (HTML comments + `origination:` annotations, the
-     rev/END markers, rubric/guidance blockquotes, and the per-section
-     `Confidence/Source/Status/Disposition/Hint` lines), keeps all content and ⚠️
-     warnings, and externalizes it under `final/` named `<PROJECT_SLUG>-<NNN>.md`
-     (zero-padded per-phase counter; idempotency guard skips a new counter when
-     unchanged). Inject `PROJECT_SLUG` (from `initiative.json.project`).
-3. **`hsb-packager`** writes `output/manifest.md` noting: freeze state,
+     output language); reads `humanized.md`, independent of the enrichment chain.
+   - **`hsb-visual-enricher`** → `output/enriched.md` — reads `humanized.md`
+     **and `output/enrichment-plan.md`** and **renders the planned visuals**
+     (Mermaid-native: `xychart-beta`/`pie`/`radar`/`flowchart`; tables/callouts
+     as Markdown), honoring each entry's draft flag and never inventing a number
+     the plan did not source. (No plan → legacy fallback, additive visuals only.)
+   - **`hsb-citation-resolver`** (read-only) — reads `qa-log.md` +
+     `sources-index.md` + `readiness-document.md` and returns (a) a reader-facing
+     **"Sources & question log" appendix** spec and (b) the rewrite map turning
+     in-text `Q###` / `§file` references into in-document anchor links. Route its
+     proposal to the Finalizer as `CITATION`.
+3. Then **`hsb-finalizer`** → `final/<project>-NNN.md` — the clean, **printable
+   final deliverable**, **last in the chain because it consumes the enriched
+   copy**. It reads **`output/enriched.md`** (so the rendered visuals survive
+   into the final), strips every authoring scaffold (HTML comments +
+   `origination:` annotations, the rev/END markers, rubric/guidance blockquotes,
+   the per-section `Confidence/Source/Status/Disposition/Hint` lines, and the
+   `<!-- VISUAL ... -->` annotation comments) **but keeps every Mermaid block and
+   summary table**, **relocates** each section's Provenance into the Citation
+   Resolver's "Sources & question log" appendix (rather than deleting the
+   telemetry) and applies its reference-link rewrites, keeps all content and ⚠️
+   warnings, and externalizes it under `final/` named `<PROJECT_SLUG>-<NNN>.md`
+   (zero-padded per-phase counter; idempotency guard skips a new counter when
+   unchanged). Inject `PROJECT_SLUG` (from `initiative.json.project`). The result
+   is the document a human prints or hands off: clean **and** enriched, with
+   traceable, linked provenance.
+4. **`hsb-packager`** writes `output/manifest.md` noting: freeze state,
    the TA-pending flag (if `tech-assessment-ref` disposition is `deferred`),
    open `discovery` dispositions, template hash/version, the handoff note
    to PRD/PM, and an index entry for the Finalizer's `final/` deliverable.
-4. **Record the front in the initiative index.** Update this phase's
+5. **Record the front in the initiative index.** Update this phase's
    `initiative.json` entry: `state: frozen` (or note a provisional freeze), final
    `readiness`, the `artifacts` paths (incl. `canonical: readiness/output/humanized.md`
    and `final: readiness/final/<project>-NNN.md`),
@@ -278,7 +308,7 @@ Once `freezeReady`:
    debt into `owes` (e.g. `{ "ref": "TechAssessmentRef", "to": "tech-assessment",
    "status": "deferred" }`). This turns a debt raised inside the RP document into a
    fact the next front reads from the index.
-5. Report to the PO: what was produced, the readiness score, the TA flag if
+6. Report to the PO: what was produced, the readiness score, the TA flag if
    present, and every item still parked as `discovery` or `deferred`.
 
 ## The phase folder layout
@@ -309,7 +339,8 @@ INITIATIVE_DIR/                  # shared by every front
     ├── output/
     │   ├── humanized.md        # hsb-humanizer
     │   ├── translated.pt-BR.md # hsb-translator
-    │   ├── enriched.md         # hsb-visual-enricher
+    │   ├── enrichment-plan.md  # hsb-enrichment-analyst — sourced visual catalog (insumo for the Enricher)
+    │   ├── enriched.md         # hsb-visual-enricher — renders the plan
     │   └── manifest.md         # hsb-packager
     └── final/                  # hsb-finalizer — clean, printable final deliverable(s)
         └── <project>-NNN.md    # externalized, scaffolding-stripped, counter-suffixed
