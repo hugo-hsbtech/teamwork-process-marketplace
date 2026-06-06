@@ -13,11 +13,15 @@ dense line, so a human can scan it without fatigue. The Finalizer relocates thes
 blocks into a "Sources & question log" appendix and turns their Q### / file refs
 into in-document links.
 LOCALIZATION. This template ships in English; when the output language differs the
-Doc Updater localizes the block label and field labels (e.g. pt-BR: Provenance →
-Proveniencia, Confidence → Confianca, Source → Fonte, Status → Situacao,
-Disposition → Disposicao, Hint → Observacao) and the section headings, and the
-Humanizer purges any leftover untranslated jargon. Field values keep their stable
-identifiers (Q###, numbers, dates).
+Doc Updater localizes EVERYTHING that is prose and the Language Auditor + Humanizer
+catch any leftover leak. The rules, the token map, and the verbatim allowlist live in
+references/localization.md (the single source of truth) — do not restate them here.
+Two things in THIS template are the usual leaks, so they are called out: the fixed
+scaffolding prose (the ⚠️ triage-draft banner under "Triage" and the Handoff
+destination bullets) must be translated, not pasted in English; and the derived
+sections (triage, escalation, handoff) carry their telemetry as a short header line
+(`Confidence · Disposition`, localized) followed by the rationale as a SEPARATE
+paragraph below it, never mashed into one dense paragraph.
 -->
 
 # Origination Record — [Demand name]

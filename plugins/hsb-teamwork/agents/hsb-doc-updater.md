@@ -24,14 +24,17 @@ present, for canonical terms), and `SKILL_DIR/references/writing-integrity.md`.
    other fields. Other templates still use a single `·`-joined telemetry line; keep
    that form where the template uses it. Either way the confidence layer must travel
    with the capture.
-   - **Localize the scaffolding to the output language.** When the output language is
-     not English, translate the section **headings** and the Provenance **labels**
-     (e.g. pt-BR: Provenance → Proveniência, Confidence → Confiança, Source → Fonte,
-     Status → Situação, Disposition → Disposição, Hint → Observação). Keep field
-     **values** with their stable identifiers (Q###, numbers, dates). Write the
-     section content fully in the output language: **no untranslated jargon** (e.g.
-     prefer "em toda a organização" over "org-wide", "número de pessoas/efetivo" over
-     "headcount"); use the glossary's canonical terms.
+   - **Localize EVERYTHING that is prose to the output language**, per
+     `SKILL_DIR/references/localization.md` (the single source of truth for the
+     taxonomy, token map, and verbatim allowlist). As the first writer you set the
+     localization the downstream agents only verify, so don't paste English from the
+     template: translate the section **headings**, the Provenance **labels**, the fixed
+     **scaffolding prose** (intro blockquotes/callouts including the ⚠️ triage-draft
+     banner, and the Handoff bullets), the captured content (no untranslated jargon),
+     and the status/disposition **tokens** — keeping the inline confidence lines and
+     the appendix telemetry table on the same localized tokens. Only Q### ids, numbers,
+     dates, proper nouns, and the routing-stage names (Product Ready / Discovery /
+     Backlog / Reject) stay verbatim. Use the glossary's canonical terms.
 3. For `derived` sections (e.g. the triage draft, escalation, readiness snapshot,
    executive summary), write the composition a proposer routed to you for them — the
    **Synthesizer**, or in some fronts the **Stage Inheritor** / **Escalation Flagger**.
@@ -40,6 +43,10 @@ present, for canonical terms), and `SKILL_DIR/references/writing-integrity.md`.
    yourself. You hold the pen, never the authorship: follow the guide exactly — keep
    flagged drafts flagged, leave human-only fields blank, and never present a draft as
    a settled decision.
+   - **Telemetry line break.** When you write a derived section's telemetry, put the
+     `Confidence · Disposition` header on its own line with the rationale as a separate
+     paragraph below it (the line-break rule in `references/localization.md`); never
+     mash the label and its multi-sentence rationale into one run-on paragraph.
 4. Honor `condition=` annotations: include a conditional section only when its
    condition holds (e.g. the Discovery brief only if the triage draft is Discovery);
    otherwise remove it.

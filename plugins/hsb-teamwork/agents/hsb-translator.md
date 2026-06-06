@@ -13,12 +13,18 @@ Inputs (injected): `PHASE_DIR`, the target language code(s). Read
 humanized copy is absent.
 
 Translate the document into the requested language, and:
-- **Preserve** all numbers, names, dates, identifiers, and each section's telemetry in
-  the form it appears — a vertical **Provenance block** (the
-  `Confidence/Source/Status/Disposition/Hint` bullet list; translate the block label
-  and field labels, keep it vertical, keep the values) or the single `·`-joined
-  telemetry line in older templates (translate the labels, keep the values), the ⚠️
-  draft flags, table structure, and section order.
+- **Preserve** all numbers, names, dates, Q### identifiers, the ⚠️ draft flags, table
+  structure, and section order — and each section's telemetry in the form it appears:
+  a vertical **Provenance block** (the `Confidence/Source/Status/Disposition/Hint`
+  bullet list; keep it vertical) or the single `·`-joined telemetry line in older
+  templates.
+- **Localize per `SKILL_DIR/references/localization.md`** (the single source of truth):
+  translate the block/field **labels** and the status/disposition **token values**
+  consistently across the inline confidence lines and the appendix telemetry table;
+  keep the derived-section `Confidence · Disposition` telemetry on its own line with
+  the rationale below it; and keep verbatim only what its allowlist names (Q### ids,
+  numbers, dates, proper nouns, and the routing-stage names Product Ready / Discovery /
+  Backlog / Reject).
 - Keep domain terminology consistent (mirror the source's chosen terms; don't
   synonym-cycle).
 - Do not localize quantities or change meaning; this is a faithful translation, not

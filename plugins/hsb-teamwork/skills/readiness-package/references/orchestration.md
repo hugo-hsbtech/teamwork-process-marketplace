@@ -23,6 +23,7 @@ Do not copy their rules here; cite and apply them:
 | [`../../origination-brainstorm/references/ledger-schema.md`](../../origination-brainstorm/references/ledger-schema.md) | `qa-log.md` schema — `Q###` blocks, header summary, rationale/spawned-by fields |
 | [`../../origination-brainstorm/references/initiatives.md`](../../origination-brainstorm/references/initiatives.md) | Initiatives root resolution (`$TEAMWORK_HOME` → git-root + `/.teamwork` → cwd), resolve-or-select, `.teamwork/<initiative>/` + phase-folder layout |
 | [`../../origination-brainstorm/references/writing-integrity.md`](../../origination-brainstorm/references/writing-integrity.md) | Single-writer rule, read-modify-write, queue/drain, `rev` marker, no-truncation sentinel |
+| [`../../origination-brainstorm/references/localization.md`](../../origination-brainstorm/references/localization.md) | No-language-leak invariant: leak taxonomy, token map, verbatim allowlist, derived-telemetry line break |
 | [`../../origination-brainstorm/references/grounding.md`](../../origination-brainstorm/references/grounding.md) | Quality calibration against the golden exemplar |
 | [`../../origination-brainstorm/references/questioning-method.md`](../../origination-brainstorm/references/questioning-method.md) | Question rendering (`open` / `choice`), disposition routes, the `AskUserQuestion` protocol |
 

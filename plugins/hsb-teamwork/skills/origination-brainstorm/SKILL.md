@@ -41,6 +41,9 @@ here. Pass paths into agents; never let them assume a location.
 - [`references/grounding.md`](references/grounding.md) — the quality bar.
 - [`references/writing-integrity.md`](references/writing-integrity.md) — the
   no-truncation + serialize/queue/merge/conflict rules every writer obeys.
+- [`references/localization.md`](references/localization.md) — the single source of
+  truth for "no language leaks": leak taxonomy, token map, verbatim allowlist, and the
+  derived-telemetry line break, enforced by the Language Auditor.
 - [`references/initiatives.md`](references/initiatives.md) — what an initiative is,
   where its state lives, the `.teamwork/` layout with per-front phase folders, and
   the resolve-or-select rule so re-runs reuse work instead of duplicating it.
