@@ -53,16 +53,20 @@ Principles underpinning correctness, speed, and parallelism:
    (`hsb-triage-assessor`, `hsb-stage-inheritor`, `hsb-section-drafter`,
    `hsb-escalation-flagger`) are read-only; the orchestrator routes their proposals
    through the single writers, which is what makes the fan-out safe.
-4. **Enriched, readable output (Phase B4).** The frozen RP is not the last word — the
-   production phase turns it into deliverables that meet the same reading-quality and
-   didactic bar as the origination-record. `hsb-humanizer` produces the clean copy;
-   `hsb-enrichment-analyst` catalogs every visual the data **already supports** into
-   a sourced, citation-carrying `enrichment-plan.md`; `hsb-visual-enricher` renders
-   that plan (Mermaid-native charts, scope/persona/business-rule/metrics visuals) so
-   the package reads at a glance and never invents a number. Deciding *what* to
-   visualize separately from *how* to render it is what keeps the enrichment
-   auditable — without the Analyst, the enricher runs blind and the RP ships
-   un-enriched.
+4. **Enriched, readable final deliverable (Phase B4).** The frozen RP is not the last
+   word — the production phase turns it into a final document that meets the same
+   reading-quality and didactic bar as the origination-record. `hsb-humanizer`
+   produces the clean copy; `hsb-enrichment-analyst` catalogs every visual the data
+   **already supports** into a sourced, citation-carrying `enrichment-plan.md`;
+   `hsb-visual-enricher` renders that plan (Mermaid-native charts,
+   scope/persona/business-rule/metrics visuals) into `enriched.md`; `hsb-citation-resolver`
+   builds the "Sources & question log" appendix + reference links; and **the
+   `hsb-finalizer` consumes the *enriched* copy** (not the bare one) so the visuals
+   survive into `final/<project>-NNN.md` — the printable hand-off is clean **and**
+   enriched, with provenance relocated into a linked appendix. The enricher feeding
+   the finalizer is the whole point: without the Analyst the enricher runs blind, and
+   without the finalizer reading `enriched.md` the visuals never reach the final
+   document.
 
 ## How to invoke
 
@@ -113,8 +117,8 @@ All artifacts land in the initiative's `readiness/` phase, `INITIATIVE_DIR/readi
 │   ├── enrichment-plan.md      # sourced catalog of visual opportunities (insumo for the enricher)
 │   ├── enriched.md             # visually enriched — the plan rendered (scope table, persona map, etc.)
 │   └── manifest.md             # index of all artifacts + freeze state + TA flag
-└── final/                      # the clean, printable final deliverable(s)
-    └── <project>-NNN.md        # externalized, scaffolding-stripped, counter-suffixed
+└── final/                      # the clean AND enriched, printable final deliverable(s)
+    └── <project>-NNN.md        # externalized from enriched.md — visuals kept, scaffolding stripped, provenance linked, counter-suffixed
 ```
 
 The shared `glossary.md` and `decisions.md`, and the `initiative.json` works +

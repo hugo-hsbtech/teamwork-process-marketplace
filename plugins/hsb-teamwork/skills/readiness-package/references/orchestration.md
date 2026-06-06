@@ -72,7 +72,8 @@ code changes.
 | `hsb-enrichment-analyst` | **writer** (`output/enrichment-plan.md`) | Phase B4 — runs in parallel with the Humanizer; catalogs the sourced visual opportunities the Enricher then renders |
 | `hsb-translator` | **writer** (`output/translated.pt-BR.md`) | Phase B4, parallel with visual-enricher |
 | `hsb-visual-enricher` | **writer** (`output/enriched.md`) | Phase B4 — renders the Analyst's plan; parallel with translator |
-| `hsb-finalizer` | **writer** (`final/<project>-NNN.md`) | Phase B4, parallel with translator/enricher — externalizes the clean, printable final |
+| `hsb-citation-resolver` | read-only | Phase B4 — proposes the "Sources & question log" appendix + the in-text reference→anchor rewrite map the Finalizer applies; routed as `CITATION` |
+| `hsb-finalizer` | **writer** (`final/<project>-NNN.md`) | Phase B4, **last in the chain** — consumes the **enriched** copy + the Citation Resolver's map; externalizes the clean **and** enriched printable final with linked provenance |
 | `hsb-packager` | **writer** (`output/manifest.md`) | Phase B4 (wrap) |
 
 ### Stage-agnostic agents this skill drives
@@ -266,27 +267,40 @@ Once `freezeReady`:
      from "how to render it" is what makes the enrichment auditable** — this is
      the step whose absence left earlier RPs un-enriched.
    Both must finish before step 2 (the rest read what they write).
-2. Then spawn **in the same turn** (parallel, distinct files):
+2. Then spawn **in the same turn** (parallel; the enrichment chain converges on
+   the Finalizer, so it goes last):
    - **`hsb-translator`** → `output/translated.pt-BR.md` (or the confirmed
-     output language).
+     output language); reads `humanized.md`, independent of the enrichment chain.
    - **`hsb-visual-enricher`** → `output/enriched.md` — reads `humanized.md`
      **and `output/enrichment-plan.md`** and **renders the planned visuals**
      (Mermaid-native: `xychart-beta`/`pie`/`radar`/`flowchart`; tables/callouts
      as Markdown), honoring each entry's draft flag and never inventing a number
      the plan did not source. (No plan → legacy fallback, additive visuals only.)
-   - **`hsb-finalizer`** → `final/<project>-NNN.md` — the clean, **printable
-     final deliverable**. It reads the canonical `output/humanized.md`, strips
-     every authoring scaffold (HTML comments + `origination:` annotations, the
-     rev/END markers, rubric/guidance blockquotes, and the per-section
-     `Confidence/Source/Status/Disposition/Hint` lines), keeps all content and ⚠️
-     warnings, and externalizes it under `final/` named `<PROJECT_SLUG>-<NNN>.md`
-     (zero-padded per-phase counter; idempotency guard skips a new counter when
-     unchanged). Inject `PROJECT_SLUG` (from `initiative.json.project`).
-3. **`hsb-packager`** writes `output/manifest.md` noting: freeze state,
+   - **`hsb-citation-resolver`** (read-only) — reads `qa-log.md` +
+     `sources-index.md` + `readiness-document.md` and returns (a) a reader-facing
+     **"Sources & question log" appendix** spec and (b) the rewrite map turning
+     in-text `Q###` / `§file` references into in-document anchor links. Route its
+     proposal to the Finalizer as `CITATION`.
+3. Then **`hsb-finalizer`** → `final/<project>-NNN.md` — the clean, **printable
+   final deliverable**, **last in the chain because it consumes the enriched
+   copy**. It reads **`output/enriched.md`** (so the rendered visuals survive
+   into the final), strips every authoring scaffold (HTML comments +
+   `origination:` annotations, the rev/END markers, rubric/guidance blockquotes,
+   the per-section `Confidence/Source/Status/Disposition/Hint` lines, and the
+   `<!-- VISUAL ... -->` annotation comments) **but keeps every Mermaid block and
+   summary table**, **relocates** each section's Provenance into the Citation
+   Resolver's "Sources & question log" appendix (rather than deleting the
+   telemetry) and applies its reference-link rewrites, keeps all content and ⚠️
+   warnings, and externalizes it under `final/` named `<PROJECT_SLUG>-<NNN>.md`
+   (zero-padded per-phase counter; idempotency guard skips a new counter when
+   unchanged). Inject `PROJECT_SLUG` (from `initiative.json.project`). The result
+   is the document a human prints or hands off: clean **and** enriched, with
+   traceable, linked provenance.
+4. **`hsb-packager`** writes `output/manifest.md` noting: freeze state,
    the TA-pending flag (if `tech-assessment-ref` disposition is `deferred`),
    open `discovery` dispositions, template hash/version, the handoff note
    to PRD/PM, and an index entry for the Finalizer's `final/` deliverable.
-4. **Record the front in the initiative index.** Update this phase's
+5. **Record the front in the initiative index.** Update this phase's
    `initiative.json` entry: `state: frozen` (or note a provisional freeze), final
    `readiness`, the `artifacts` paths (incl. `canonical: readiness/output/humanized.md`
    and `final: readiness/final/<project>-NNN.md`),
@@ -294,7 +308,7 @@ Once `freezeReady`:
    debt into `owes` (e.g. `{ "ref": "TechAssessmentRef", "to": "tech-assessment",
    "status": "deferred" }`). This turns a debt raised inside the RP document into a
    fact the next front reads from the index.
-5. Report to the PO: what was produced, the readiness score, the TA flag if
+6. Report to the PO: what was produced, the readiness score, the TA flag if
    present, and every item still parked as `discovery` or `deferred`.
 
 ## The phase folder layout

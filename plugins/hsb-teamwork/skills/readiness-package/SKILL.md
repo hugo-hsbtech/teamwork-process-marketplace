@@ -61,7 +61,9 @@ Before doing anything else, bind yourself to these invariants:
    Draft pass **fan-out** — one `hsb-section-drafter` per product section
    (`business-rules` ∥ `user-journey` ∥ `user-stories` ∥ `nfrs` ∥ `edge-cases`), all in one turn;
    Production `hsb-humanizer` ∥ `hsb-enrichment-analyst` (both write what the
-   rest read), then `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer`. The
+   rest read), then `hsb-translator` ∥ `hsb-visual-enricher` ∥
+   `hsb-citation-resolver`, and **last** `hsb-finalizer` (it consumes the
+   enriched copy + the citation map, so it ends the chain). The
    draft-pass fan-out is the main lever against slow runs — the read-only drafters
    run concurrently and converge on the single `hsb-doc-updater`.
 4. **Track the run with TodoWrite.** Create the checklist below *before* Phase A.
@@ -92,7 +94,8 @@ these invariants matter most.
 - [ ] Phase B2 · spawn `hsb-escalation-flagger` (carry the triage early-flag as a hint); route → `hsb-doc-updater`
 - [ ] Phase B3 · loop: `hsb-confidence-auditor` (incremental — only touched `SECTIONS`) → (fallback) `hsb-question-strategist` → `hsb-ledger-writer` → `hsb-doc-updater` until `freezeReady`
 - [ ] Phase B4 · **same message:** `hsb-humanizer` ∥ `hsb-enrichment-analyst` (await — they write the copy + the sourced visual plan the rest read)
-- [ ] Phase B4 · **same message:** `hsb-translator` ∥ `hsb-visual-enricher` (renders the plan) ∥ `hsb-finalizer`
+- [ ] Phase B4 · **same message:** `hsb-translator` ∥ `hsb-visual-enricher` (renders the plan) ∥ `hsb-citation-resolver` (appendix + link map)
+- [ ] Phase B4 · then `hsb-finalizer` **last** (reads `output/enriched.md` + the citation map → clean **and** enriched `final/<project>-NNN.md`)
 - [ ] Phase B4 · spawn `hsb-packager`; report to the PO
 
 ## First, read these (once per run)
@@ -193,7 +196,8 @@ keyed by stable id, never clobbers, and the document ends with a
 | 4 | `hsb-enrichment-analyst` | catalog the sourced visual/analytics opportunities into `output/enrichment-plan.md` (read-only on `DOC`; runs parallel with the Humanizer) |
 | 4 | `hsb-translator` | write `output/translated.pt-BR.md` |
 | 4 | `hsb-visual-enricher` | render the plan's visuals into `output/enriched.md` |
-| 4 | `hsb-finalizer` | externalize the clean, printable final `final/<project>-NNN.md` |
+| 4 | `hsb-citation-resolver` | propose the "Sources & question log" appendix + the in-text reference→anchor rewrite map (read-only; routed to the Finalizer as `CITATION`) |
+| 4 | `hsb-finalizer` | externalize the clean **and** enriched final `final/<project>-NNN.md` — consumes `output/enriched.md` + the citation map (visuals survive, provenance relocated/linked) |
 | 4 | `hsb-packager` | write `output/manifest.md` |
 
 ### Stage-agnostic agents this skill drives (3)
@@ -220,10 +224,11 @@ the `PHASE_DIR` is `readiness/`, the template is the RP template, and `DOC` is
 `readiness-document.md`. The Section Drafter also takes `SECTION` (the one section to
 draft, for the fan-out); the Confidence Auditor takes `SECTIONS` (touched ids, for
 incremental re-audit); the **Finalizer** needs `PROJECT_SLUG` (from
-`initiative.json.project`). **Run independent agents in the same turn** so they execute
-in parallel (Indexer ∥ Analyst at each setup; the Drafter fan-out across product
-sections in Phase B2; Humanizer ∥ Enrichment Analyst, then Translator ∥ Visual
-Enricher ∥ Finalizer in Phase B4).
+`initiative.json.project`) and `CITATION` (the Citation Resolver's appendix +
+link-map proposal you route to it). **Run independent agents in the same turn** so
+they execute in parallel (Indexer ∥ Analyst at each setup; the Drafter fan-out across
+product sections in Phase B2; Humanizer ∥ Enrichment Analyst, then Translator ∥ Visual
+Enricher ∥ Citation Resolver, then the Finalizer last in Phase B4).
 
 **You broker everything above `PHASE_DIR`.** The initiative-level files
 (`initiative.json`, `glossary.md`, `decisions.md`) are yours; agents stay
@@ -357,9 +362,11 @@ annotation markers stay in the engine's canonical form regardless of output lang
    Enrichment Analyst catalogs the sourced visual opportunities into
    `output/enrichment-plan.md` (both must finish first — they write what the rest
    read); then Translator ∥ Visual Enricher (renders the plan into
-   `output/enriched.md`) ∥ Finalizer in parallel — the
-   Finalizer externalizes the **printable final deliverable** at
-   `final/<project>-NNN.md` (scaffolding stripped, counter-suffixed); then Packager
+   `output/enriched.md`) ∥ Citation Resolver (proposes the appendix + link map) in
+   parallel; then the Finalizer **last** — it consumes `output/enriched.md` (so the
+   visuals survive into the deliverable) plus the citation map, and externalizes the
+   clean **and** enriched **printable final** at `final/<project>-NNN.md`
+   (scaffolding stripped, provenance relocated/linked, counter-suffixed); then Packager
    writes `output/manifest.md` (indexing the `final/` deliverable too). **Record the
    front in the initiative index:** set the `readiness/` entry to `frozen` (or
    provisional), final `readiness`, `artifacts` (incl. the `final` deliverable),

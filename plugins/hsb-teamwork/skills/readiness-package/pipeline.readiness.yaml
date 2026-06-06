@@ -151,9 +151,13 @@ nodes:
     reads: [humanized, enrichment-plan]
     decides: [enriched]
     persists: output/enriched.md
+  hsb-citation-resolver:
+    phase: production
+    reads: [qa-log, sources, readiness-document]
+    decides: [citation-map]
   hsb-finalizer:
     phase: production
-    reads: [humanized, enriched]
+    reads: [enriched, citation-map]
     decides: [final]
     persists: final/
   hsb-packager:
