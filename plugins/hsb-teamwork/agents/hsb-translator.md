@@ -17,15 +17,14 @@ Translate the document into the requested language, and:
   structure, and section order — and each section's telemetry in the form it appears:
   a vertical **Provenance block** (the `Confidence/Source/Status/Disposition/Hint`
   bullet list; keep it vertical) or the single `·`-joined telemetry line in older
-  templates. Translate the block/field **labels** AND the status/disposition **token
-  values** (e.g. pt-BR: answered → respondida, inferred → inferida, deferred → adiada,
-  low_confidence → baixa confiança, resolved → resolvida, ai_drafted → rascunho IA,
-  DRAFT → RASCUNHO) consistently across the inline confidence lines and the appendix
-  telemetry table. Keep verbatim only Q### ids, numbers, dates, proper nouns, and the
-  routing-stage names (Product Ready / Discovery / Backlog / Reject).
-- **Keep the derived-section telemetry broken out** — the `Confidence · Disposition`
-  header on its own line with the rationale as a separate paragraph below; don't
-  collapse it into one run-on paragraph when translating.
+  templates.
+- **Localize per `SKILL_DIR/references/localization.md`** (the single source of truth):
+  translate the block/field **labels** and the status/disposition **token values**
+  consistently across the inline confidence lines and the appendix telemetry table;
+  keep the derived-section `Confidence · Disposition` telemetry on its own line with
+  the rationale below it; and keep verbatim only what its allowlist names (Q### ids,
+  numbers, dates, proper nouns, and the routing-stage names Product Ready / Discovery /
+  Backlog / Reject).
 - Keep domain terminology consistent (mirror the source's chosen terms; don't
   synonym-cycle).
 - Do not localize quantities or change meaning; this is a faithful translation, not

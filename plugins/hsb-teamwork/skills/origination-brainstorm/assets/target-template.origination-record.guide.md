@@ -29,11 +29,10 @@ rubrics in the annotations are sufficient).
 
 **Formatting (all derived sections).** Put the telemetry on its own short header line
 — `Confidence · Disposition` (localized) — and the rationale in a **separate paragraph
-below** it (blank line between), never mashed into one run-on paragraph. When the
-output language is not English, the fixed scaffolding prose (the intro blockquotes /
-⚠️ banners and the Handoff destination bullets) and the status/disposition tokens are
-**translated**, not pasted verbatim from the template; only Q### ids, numbers, dates,
-proper nouns, and the routing-stage names stay in English.
+below** it (blank line between), never mashed into one run-on paragraph. Localization
+of the scaffolding prose (the ⚠️ banners, the Handoff bullets) and the
+status/disposition tokens follows `references/localization.md` (the single source of
+truth); don't paste the template's English verbatim.
 
 ### `triage` — the routing draft (handle with care)
 

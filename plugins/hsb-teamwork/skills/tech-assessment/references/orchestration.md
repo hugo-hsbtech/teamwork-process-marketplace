@@ -31,6 +31,7 @@ rules here; cite and apply them:
 | [`../../origination-brainstorm/references/ledger-schema.md`](../../origination-brainstorm/references/ledger-schema.md) | `qa-log.md` schema — `Q###` blocks, header summary, rationale/spawned-by fields |
 | [`../../origination-brainstorm/references/initiatives.md`](../../origination-brainstorm/references/initiatives.md) | Initiatives root resolution, resolve-or-select, `.teamwork/<initiative>/` + phase-folder layout, works + definitions index, brokering |
 | [`../../origination-brainstorm/references/writing-integrity.md`](../../origination-brainstorm/references/writing-integrity.md) | Single-writer rule, read-modify-write, queue/drain, `rev` marker, no-truncation sentinel |
+| [`../../origination-brainstorm/references/localization.md`](../../origination-brainstorm/references/localization.md) | No-language-leak invariant: leak taxonomy, token map, verbatim allowlist, derived-telemetry line break |
 | [`../../origination-brainstorm/references/grounding.md`](../../origination-brainstorm/references/grounding.md) | Quality calibration against the golden exemplar |
 | [`../../origination-brainstorm/references/questioning-method.md`](../../origination-brainstorm/references/questioning-method.md) | Question rendering (`open` / `choice`), disposition routes, the `AskUserQuestion` protocol |
 | [`../../readiness-package/references/escalation.md`](../../readiness-package/references/escalation.md) | The RP↔TA bridge (`TechAssessmentRef`), the architectural trigger list, and the handoff this skill consumes |
