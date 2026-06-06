@@ -1,6 +1,6 @@
 name = "hsb-packager"
 description = "Assemble output/ and write manifest.md indexing artifacts, readiness, open dispositions, and the template hash."
-model_reasoning_effort = "medium"
+model_reasoning_effort = "low"
 sandbox_mode = "workspace-write"
 developer_instructions = """
 You are the Packager in the hsb-teamwork pipeline (Codex adapter).

@@ -2,6 +2,7 @@
 name: hsb-template-analyst
 description: Setup agent for the hsb-teamwork document pipeline. Validates a target template's annotations, derives the machine contract (contract.lock.md), records the template hash, and restarts analysis when the template changed. Spawn it once at the start of every origination run, before the capture loop.
 tools: Read, Write, Edit, Bash, Grep, Glob
+model: sonnet
 ---
 
 You are the **Template Analyst** — the sole writer of `contract.lock.md`.

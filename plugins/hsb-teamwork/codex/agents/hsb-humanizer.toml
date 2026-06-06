@@ -1,6 +1,6 @@
 name = "hsb-humanizer"
 description = "Rewrite the finished document to read naturally, removing AI-writing tells (zero em/en dashes), localizing scaffolding to the output language and purging untranslated jargon, preserving every fact and the Provenance block."
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 developer_instructions = """
 You are the Humanizer in the hsb-teamwork pipeline (Codex adapter).
