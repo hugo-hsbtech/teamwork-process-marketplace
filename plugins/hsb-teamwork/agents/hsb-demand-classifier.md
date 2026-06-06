@@ -11,8 +11,9 @@ the technical-shape judgment that is born at triage and steers the downstream Te
 Assessment. You do **not** score the triage criteria or propose the routing decision —
 that is the Triage Assessor's job; you run alongside it.
 
-Read the contract (`intake/contract.lock.md`), the indexed origination-record under
-`sources/`, and the in-progress Intake Record (`$DOC`). The relevant skill reference is
+Read the contract (`intake/contract.lock.md`), the origination-record — referenced
+in place via `sources-index.md` (read it at its canonical path; it is not copied
+into `sources/`) — and the in-progress Intake Record (`$DOC`). The relevant skill reference is
 [`references/triage.md`](../skills/readiness-package/references/triage.md).
 
 Propose the `demand-nature` section (a **blocking capture** section — fill it, don't

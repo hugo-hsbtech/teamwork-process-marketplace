@@ -128,8 +128,10 @@ It runs on the same engine as Act 2, pointed at the **Intake Record** template.
    `DOC = intake-record.md`.
 2. **`hsb-template-validator`** audits the intake template; proceed once it passes.
 3. Spawn **in the same turn** (independent → parallel):
-   - **`hsb-source-indexer`** indexes the origination-record (the `artifacts.canonical`
-     / `final` path from the works index) into `intake/sources/`.
+   - **`hsb-source-indexer`** records the origination-record (the `artifacts.canonical`
+     / `final` path from the works index) as an **in-place reference** in
+     `intake/sources-index.md` — it is read at its canonical path, not copied into
+     `intake/sources/` (which holds only files the PO provides).
    - **`hsb-template-analyst`** derives `intake/contract.lock.md` from the intake template.
 4. Spawn **in the same turn** (read-only, parallel): **`hsb-triage-assessor`** — scores
    the five criteria and proposes the routing decision
@@ -161,11 +163,12 @@ It runs on the same engine as Act 2, pointed at the **Intake Record** template.
    passes; fix the template if it fails the audit checklist
    ([`../../origination-brainstorm/references/contract-and-template.md`](../../origination-brainstorm/references/contract-and-template.md) § audit checklist).
 2. Then spawn **in the same turn** (independent → parallel):
-   - **`hsb-source-indexer`** indexes the origination-record (the
+   - **`hsb-source-indexer`** records the origination-record (the
      `artifacts.canonical` / `final` path you read from the works index) as the
-     primary source **and the intake-record** (`intake/intake-record.md`) so the
-     triage decision, validated assumptions, and recognized constraints are visible —
-     plus any extra files the PO provides. It writes `readiness/sources/` and
+     **primary in-place reference** **and the intake-record** (`intake/intake-record.md`)
+     so the triage decision, validated assumptions, and recognized constraints are
+     visible — both read at their canonical paths, never copied. It copies only any
+     extra files the PO provides into `readiness/sources/`, and writes the map in
      `sources-index.md`, staying within `PHASE_DIR`.
    - **`hsb-template-analyst`** derives `contract.lock.md` from the RP
      template (hash-locked). If a prior `contract.lock.md` exists with a

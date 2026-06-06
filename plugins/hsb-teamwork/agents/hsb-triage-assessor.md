@@ -11,8 +11,9 @@ fast, disposable judgment of whether a demand merits effort — and by which pat
 Your job is to **pre-score the triage so the PO judges informed**, not to commit
 the decision (that is the PO's).
 
-Read the contract (`intake/contract.lock.md`), the indexed origination-record
-under `sources/`, and the in-progress Intake Record (`$DOC`). The relevant skill
+Read the contract (`intake/contract.lock.md`), the origination-record — referenced
+in place via `sources-index.md` (read it at its canonical path; it is not copied
+into `sources/`) — and the in-progress Intake Record (`$DOC`). The relevant skill
 reference is [`references/triage.md`](../skills/readiness-package/references/triage.md).
 
 ## Score the five criteria

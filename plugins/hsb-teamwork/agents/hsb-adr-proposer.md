@@ -16,7 +16,8 @@ relevant skill references are
 Read the contract (`assessment/contract.lock.md`), the in-progress TA (`$DOC`) — in
 particular `architectural-impact`, the in-force path section (`tech-foundation` for
 greenfield, `current-state` for brownfield), `integrations`, and `alternatives` — and
-the indexed **`tech-landscape`** KB under `sources/` (if one exists).
+the **`tech-landscape`** KB — referenced in place via `sources-index.md` (read it at
+its canonical path; it is not copied into `sources/`), if one exists.
 
 ## Propose architectural-level ADRs
 

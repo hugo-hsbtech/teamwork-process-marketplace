@@ -16,11 +16,13 @@ own document.
 The orchestrator discovers the **RP** from the works index in `initiative.json` (the
 phase whose `produces` is `readiness-package`, via its `artifacts.canonical` / `final`
 path) and the **Intake Record** from the `intake/` phase. It hands both to
-`hsb-source-indexer`, which indexes them into the assessment phase's `sources/` (the RP
-as the **primary source**), alongside the `tech-landscape` if one exists. Shared terms
-come from the brokered `PHASE_DIR/glossary.md`.
+`hsb-source-indexer`, which records them as **in-place references** in the assessment
+phase's `sources-index.md` (the RP as the **primary source**), alongside the
+`tech-landscape` if one exists — each read at its canonical path, never copied into
+`sources/` (which holds only files the CTO provides). Shared terms come from the
+brokered `PHASE_DIR/glossary.md`.
 
-`hsb-stage-inheritor` reads the indexed RP + Intake and the TA contract
+`hsb-stage-inheritor` reads the referenced RP + Intake and the TA contract
 (`contract.lock.md`). It does **not** perform fresh inference — it maps RP/Intake
 sections to TA sections, preserving the already-graded values.
 

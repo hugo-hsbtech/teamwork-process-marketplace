@@ -14,7 +14,8 @@ not to commit it yourself. The relevant skill reference is
 
 Read the contract (`assessment/contract.lock.md`), the in-progress TA (`$DOC`) — in
 particular the drafted `architectural-impact`, `nfr-feasibility`, `integrations`,
-`tech-risks`, and `hard-constraints` — and the indexed RP under `sources/`.
+`tech-risks`, and `hard-constraints` — and the RP, referenced in place via
+`sources-index.md` (read it at its canonical path; it is not copied into `sources/`).
 
 ## Propose one verdict (with the decision model)
 

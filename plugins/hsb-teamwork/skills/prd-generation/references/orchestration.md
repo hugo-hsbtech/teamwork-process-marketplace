@@ -147,9 +147,10 @@ status, and confirm language.
    `TEMPLATE = assets/target-template.prd.md`, `DOC = prd.md`.
 2. **`hsb-template-validator`** audits the PRD template; proceed once it passes.
 3. Spawn **in the same turn** (independent → parallel):
-   - **`hsb-source-indexer`** indexes the **RP** (primary product source) and the **TA**
-     (primary technical source, when escalated), **plus the Intake Record** — into
-     `prd/sources/`.
+   - **`hsb-source-indexer`** records the **RP** (primary product source) and the **TA**
+     (primary technical source, when escalated), **plus the Intake Record** — as
+     **in-place references** in `sources-index.md`, each read at its canonical path, not
+     copied. It copies only any extra files the PM provides into `prd/sources/`.
    - **`hsb-template-analyst`** derives `contract.lock.md` from the PRD template
      (hash-locked; restarts + supersedes stale ledger entries on a hash change).
 

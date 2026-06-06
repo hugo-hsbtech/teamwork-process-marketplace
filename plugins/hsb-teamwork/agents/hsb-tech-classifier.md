@@ -14,9 +14,10 @@ assessed on unknown terrain* (`03-cto.md` §3), classifying whether the terrain 
 the first thing the CTO settles. The relevant skill reference is
 [`references/classification.md`](../skills/tech-assessment/references/classification.md).
 
-Read the contract (`assessment/contract.lock.md`), the indexed **Intake Record** and
-**Readiness Package** under `sources/`, the `tech-landscape` if one was indexed, and the
-in-progress TA (`$DOC`).
+Read the contract (`assessment/contract.lock.md`), the **Intake Record** and
+**Readiness Package** — referenced in place via `sources-index.md` (read them at their
+canonical paths; they are not copied into `sources/`) — the `tech-landscape` if one is
+referenced, and the in-progress TA (`$DOC`).
 
 ## Confirm the demand nature (don't re-invent it)
 

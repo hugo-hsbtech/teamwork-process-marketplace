@@ -12,8 +12,9 @@ act: readiness
 
 external_inputs:
   - rp-template
-  - origination-record
-  - intake-record          # carries the triage decision + demand-nature
+  - origination-record     # referenced in place (canonical path), not copied into sources/
+  - intake-record          # carries the triage decision + demand-nature (referenced in place)
+  - file-refs              # any external files the PO provides (optional; the only thing copied into sources/)
 
 # Section datums (inherited bundle + drafted sections + the two RP-specific derived
 # sections, which here are composed by the Inheritor and the Escalation Flagger, NOT the
@@ -58,7 +59,9 @@ nodes:
     persists: contract.lock.md
   hsb-source-indexer:
     phase: setup
-    reads: [origination-record, intake-record]
+    # copies file-refs into sources/; records origination-record + intake-record as
+    # in-place reference rows (canonical paths, not duplicated).
+    reads: [origination-record, intake-record, file-refs]
     decides: [sources]
     persists: [sources/, sources-index.md]
 

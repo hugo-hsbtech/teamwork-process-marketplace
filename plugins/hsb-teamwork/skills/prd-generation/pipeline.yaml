@@ -9,9 +9,10 @@ skill: prd-generation
 
 external_inputs:
   - prd-template
-  - rp            # frozen Readiness Package (Part A source)
-  - ta            # signed Technical Assessment (Part B source; absent if no escalation)
-  - intake-record
+  - rp            # frozen Readiness Package (Part A source; referenced in place, not copied)
+  - ta            # signed Technical Assessment (Part B source; absent if no escalation; referenced in place)
+  - intake-record # referenced in place
+  - file-refs     # any external files the PM provides (optional; the only thing copied into sources/)
 
 # Inherited (Part A + Part B) + carried datums. Derived sections (scope-reconciliation,
 # consolidated-risk, inherited-readiness, exec-summary, handoff-gate) are NOT listed here,
@@ -63,7 +64,9 @@ nodes:
     persists: contract.lock.md
   hsb-source-indexer:
     phase: setup
-    reads: [rp, ta, intake-record]
+    # copies file-refs into sources/; records rp + ta + intake-record as in-place
+    # reference rows (canonical paths, not duplicated).
+    reads: [rp, ta, intake-record, file-refs]
     decides: [sources]
     persists: [sources/, sources-index.md]
 

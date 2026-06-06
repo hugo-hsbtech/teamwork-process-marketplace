@@ -195,7 +195,7 @@ sentinel the Auditor checks for truncation. Full rules:
 | Phase | `subagent_type` | Role |
 |---|---|---|
 | 1 | `hsb-template-validator` | validate the TA template (read-only) |
-| 1 | `hsb-source-indexer` | normalize the RP + intake-record + tech-landscape into `sources/` |
+| 1 | `hsb-source-indexer` | copy the CTO's extra files into `sources/`; reference the RP + intake-record + tech-landscape in place (canonical path, not copied) in `sources-index.md` |
 | 1 | `hsb-template-analyst` | derive `contract.lock.md`, hash, restart-on-change |
 | 2/4 | `hsb-question-strategist` | propose questions targeting unsettled classification / low-confidence gaps (fallback) |
 | 4 | `hsb-evidence-extractor` | propose answers from the indexed RP / tech-landscape (read-only) |

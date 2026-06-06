@@ -10,18 +10,20 @@ blank form.
 
 `inherited = partial confidence, traceable` (`personas/02-po.md:245`).
 
-## How the origination-record is indexed
+## How the origination-record is referenced
 
 The orchestrator discovers the origination-record from the **works index** in
 `initiative.json` (the phase whose `produces` is `origination-record`, via its
 `artifacts.canonical` path) — not by assuming `origination/`. It hands that path to
-`hsb-source-indexer`, which indexes the artefact into the readiness phase's
-`sources/` alongside any extra files the PO provides, flagging it as the **primary
-source** in `sources-index.md`. Shared terms come from the brokered
-`PHASE_DIR/glossary.md` (seeded from the initiative's glossary store), so the RP
-uses the same vocabulary the origination settled on.
+`hsb-source-indexer`, which records it as an **in-place reference** in the readiness
+phase's `sources-index.md`, flagging it as the **primary source**. The artefact is
+**not copied** — it lives once in the `origination/` phase folder of the same
+initiative, and the index points there; `sources/` holds only the extra files the PO
+provides. Shared terms come from the brokered `PHASE_DIR/glossary.md` (seeded from
+the initiative's glossary store), so the RP uses the same vocabulary the origination
+settled on.
 
-`hsb-stage-inheritor` reads the indexed origination-record and the RP contract
+`hsb-stage-inheritor` reads the referenced origination-record and the RP contract
 (`contract.lock.md`). It does **not** perform fresh inference — it maps
 origination sections to RP sections, preserving the origination's already-graded values.
 
