@@ -102,6 +102,21 @@ empty:
 The gate is **"every blocking section has an honest disposition"** — not "the
 person knows everything." Never let the run stall on a blank.
 
+### A disposition is an offer the person accepts — never a default the skill imposes
+
+`assumption` / `discovery` / `deferred` are routes you **propose** when an answer is
+uncertain; the person takes them by choosing the escape hatch. The engine must never
+*silently* park a blocking gap and end the run on its own. If a section is below
+confidence — including one the engine could not draft — **ask the question** (or
+surface it at the readiness checkpoint, § Phase 2.5 in `orchestration.md`) and let the
+person decide whether to **answer it now or defer it**. Doing the work end-to-end in one
+sitting must always be available as a path.
+
+**Postponing work is the user's decision, never the skill's.** A gap is only "parked"
+once the person has seen it and chosen to park it, with the owner / time-box recorded —
+"the skill stopped here because a draft was thin" is not a deferral the person made. When
+in doubt, offer the choice rather than assume the answer is owed to someone downstream.
+
 ## Tensions — the value mirror
 
 If the template carries value indicators (impact / reach / urgency, scored

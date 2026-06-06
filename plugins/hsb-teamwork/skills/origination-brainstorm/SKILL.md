@@ -80,6 +80,13 @@ one at a time and awaiting each, which is what makes a run drag. Bind yourself t
 4. **Track the run with TodoWrite.** Create the checklist below *before* Phase 1; this
    is the mechanism that stops a multi-agent run from collapsing into serial,
    one-at-a-time spawns.
+5. **Deferral is the human's decision, never the skill's.** The gate clearing on honest
+   dispositions (`assumption` / `discovery` / `deferred`) is *necessary, not
+   sufficient*. Never silently park a gap the human could close and end the run on its
+   own. Phase 2.5 is **mandatory**: classify the residuals and ask the human whether to
+   *close them now (end-to-end)* or defer — doing the whole thing in one sitting is
+   always an offered path, and postponing anything is the human's explicit, recorded
+   call. The only exception is headless / batch (no human to ask, § Modes).
 
 ### The phase checklist (TodoWrite this before Phase 1)
 

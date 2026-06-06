@@ -61,10 +61,22 @@ and confirming** — not filling blanks. For each section the PO either:
 - **Accepts an inherited entry** as sufficient for the RP → origin stays
   `inherited` at confirmed confidence.
 - **Marks as discovery** → counts as *resolved-as-unknown, time-boxed*
-  (`:242-247`); does not block freeze.
+  (`:242-247`); does not block freeze. This is a route the **PO chooses**, not one
+  the engine applies on its behalf.
 
 The loop repeats until `freezeReady` (see [`orchestration.md`](orchestration.md)
 § Phase B3 gate check).
+
+**Clearing the gate is not the same as choosing to stop.** `freezeReady` becomes true
+when every blocking section is resolved *or honestly disposed* — but an honest
+disposition is permission for the gate to clear, not permission to freeze. Before
+production, the orchestrator runs the **Phase B3.5 readiness checkpoint**
+([`orchestration.md`](orchestration.md) § Phase B3.5): it classifies the residuals
+into PO-closeable-now vs. genuinely-downstream-owner and asks the PO whether to **close
+them now (end-to-end)** or defer them. Postponing any item is the **PO's explicit
+decision**, never the skill's — the RP must never silently auto-defer a gap the PO
+could close and freeze without surfacing the choice. The only exception is headless /
+batch, where there is no PO to ask (see SKILL.md § Modes).
 
 ## The Origin lifecycle
 
@@ -100,6 +112,11 @@ the system pre-rationalizes; the PO judges.
 In all other cases, the PO judges the draft directly. The `hsb-confidence-auditor`
 identifies the low-confidence gaps and the `hsb-question-strategist` targets
 only those. This keeps the interaction as a judgment surface, not an interview.
+
+A section the drafter could not raise to confidence is a gap the PO is **asked about**
+— it is brought back as a question (case 1) so the PO can answer it now, or chosen for
+deferral at the B3.5 checkpoint. It is never parked as `discovery` / `deferred` on the
+engine's own initiative; the routing only becomes final when the PO takes it.
 
 ## How proposals flow to the single writer
 

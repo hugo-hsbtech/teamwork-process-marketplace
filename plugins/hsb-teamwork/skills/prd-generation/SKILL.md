@@ -75,14 +75,24 @@ Before doing anything else, bind yourself to these invariants:
    feasibility verdict is **carried from the TA, never re-decided**. A fact in neither frozen
    source belongs upstream, not in the merge.
 6. **Track the run with TodoWrite.** Create the checklist below *before* Phase 1.
+7. **A blocking upstream gap is offered end-to-end, never silently bounced back.** When the
+   merge cannot run because an upstream half is owed but unwritten (the TA debt is open) — or
+   because a veto needs the RP re-scoped — do **not** simply hard-stop and tell the PO to "go
+   run that skill first." **Offer to do it now**: chain the missing front
+   (`/hsb-teamwork:tech-assessment` for an open debt; the readiness Revisit for a veto re-scope)
+   to completion in this session, then resume the merge. Finishing the chain in one sitting must
+   always be an offered path; postponing it is the PO's explicit, recorded decision — not the
+   skill's. (The veto still blocks the PRD itself — there is no PRD on an infeasible verdict —
+   but the *next step* is the PO's choice, surfaced, not imposed.)
 
 **Headless / batch changes none of this.** "No live PO/CTO" means *no questions* and *honest
 dispositions* — it does **not** mean skip the agents or skip the sign-off (the output is then
-"draft PRD for PO+CTO sign-off," never an accepted PRD).
+"draft PRD for PO+CTO sign-off," never an accepted PRD). With no PO to ask, a blocking upstream
+gap is reported as the documented blocker rather than auto-chained.
 
 ### The phase checklist (TodoWrite this before Phase 1)
 
-- [ ] Phase 0 · select initiative; locate the **frozen RP** (works index: `produces: readiness-package`); resolve the **escalation state** (signed TA → escalated · `not_requested` → RP-alone · debt open → STOP run tech-assessment first · **vetoed → HALT, signal PO to re-scope**); confirm language
+- [ ] Phase 0 · select initiative; locate the **frozen RP** (works index: `produces: readiness-package`); resolve the **escalation state** (signed TA → escalated · `not_requested` → RP-alone · debt open → **OFFER to run tech-assessment now end-to-end, then resume; or defer (PO's call)** · **vetoed → HALT the PRD; OFFER to re-scope the RP now or defer**); confirm language
 - [ ] Phase 1 · resolve `prd/`; spawn `hsb-template-validator`; gate on pass
 - [ ] Phase 1 · **same message:** `hsb-source-indexer` (RP + TA + intake-record) ∥ `hsb-template-analyst`
 - [ ] Phase 2 · **same message (fan-out):** `hsb-stage-inheritor` `PART: A` (RP → Part A) ∥ `PART: B` (TA → Part B, or N/A dispositions); also carry `effort-cost` + `success-metrics`; route → `hsb-ledger-writer` → `hsb-doc-updater`

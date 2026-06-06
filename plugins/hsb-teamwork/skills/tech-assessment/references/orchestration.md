@@ -239,9 +239,50 @@ effort or ADRs.
 
 See [`feasibility.md`](feasibility.md) for the full gate and the Discovery exit.
 
+## Phase 4.5 — Assessment checkpoint (you + the CTO)
+
+`signOffReady` clearing means *the verdict is committed and every blocking section is
+resolved or honestly disposed* — it does **not** mean the CTO chose to stop. An honest
+`discovery` is what *lets* the gate clear; it is not permission to sign. Before producing,
+**make the close-now-vs-defer choice explicit**. Refresh **`hsb-gap-reporter`** so
+`assessment-report.md` is current, then **classify each residual** (every unconfirmed
+`ai_drafted` draft, soft-confidence section, and `discovery` disposition) by who can close
+it:
+
+- **CTO-closeable-now** — a soft draft the CTO can firm, an assumption the CTO actually
+  holds, a constraint / ADR / estimate the CTO can confirm this session. Fair to offer to
+  close end-to-end.
+- **Genuine spike** — an unknown that truly blocks assessment until investigated (the
+  KB-does-not-exist documentation spike is the classic case). This is **real terrain work**,
+  correctly deferred — but the deferral is *named and surfaced*, with owner + time-box, never
+  silent.
+
+Then ask via `AskUserQuestion` (prose-enumerated on hosts without it), **recommending the
+end-to-end path**:
+
+| Option | Effect |
+|---|---|
+| **Close the gaps now (recommended)** | Re-enter the Phase 4 confirm loop targeting the CTO-closeable residuals — `hsb-question-strategist` fires on exactly those — so the CTO firms them now and the TA reaches its maximum confidence in one sitting. Genuine spikes stay deferred. |
+| Pick specific items | `multiSelect` the residuals to close; loop on those only. |
+| Sign and defer the rest as-is | Proceed to production; residual items travel as honest `discovery` dispositions with named owners / time-box. |
+
+Only after the CTO's explicit call do you proceed to Phase 5. Record the decision through
+`hsb-ledger-writer` so the run is auditable.
+
+**Two outcomes are not re-litigated here.** A **veto** (`Infeasible as scoped`) is a signed
+conclusion — the TA freezes as a signed veto and the checkpoint does not offer to "close" it
+(see [`feasibility.md`](feasibility.md) § The veto path). A **genuine Discovery exit** (no
+defensible verdict is reachable yet) is real work, not a parked gap — the spike is defined and
+the TA does not sign until it resolves. The checkpoint exists for the *middle* case: drafts the
+CTO could firm now but that the engine parked on its own initiative.
+
+**Headless / batch is the sole exception.** With no live CTO there is no one to ask, so honest
+dispositions stand and the output is "draft for CTO sign-off" (see SKILL.md § Modes).
+
 ## Phase 5 — Production & wrap
 
-Once `signOffReady`:
+Once `signOffReady` **and the CTO has settled the Phase 4.5 checkpoint** (closed what they
+chose to close, explicitly deferred the rest):
 
 1. **`hsb-humanizer`** writes `output/humanized.md` — the canonical clean copy all
    production agents read. Must finish first. Then spawn **`hsb-language-auditor`**

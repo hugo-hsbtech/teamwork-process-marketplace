@@ -100,8 +100,19 @@ resolved, the terrain documented, and any Discovery spike defined*) requires:
      not a guess the proposers make: the orchestrator routes the re-disposition through
      `hsb-doc-updater` so a signed veto never carries a confident estimate or ADR set.
 
-When `signOffReady`, the TA freezes (`Status: Signed off` or `Status: Vetoed`) and the
-orchestrator discharges the RP's `TechAssessmentRef` debt in the initiative index
+**Clearing the gate is not the same as choosing to sign.** When the gate clears on an honest
+`discovery` for a section the CTO could actually firm now, that is permission for the gate to
+clear, not permission to freeze. Before production the orchestrator runs the **Phase 4.5
+assessment checkpoint** ([`orchestration.md`](orchestration.md) § Phase 4.5): it separates
+*CTO-closeable-now* residuals from *genuine spikes* and asks the CTO whether to close them now
+(end-to-end) or defer. Deferring any closeable item is the **CTO's explicit decision**, never
+the skill's. The two outcomes above — a **veto** and a **genuine Discovery exit** — are not
+re-litigated at the checkpoint: the veto is a signed conclusion and the spike is real terrain
+work; both stand. Headless / batch has no CTO to ask, so honest dispositions stand.
+
+When `signOffReady` **and the checkpoint is settled**, the TA freezes (`Status: Signed off`
+or `Status: Vetoed`) and the orchestrator discharges the RP's `TechAssessmentRef` debt in the
+initiative index
 (`status: signed` / `vetoed`, with the verdict and link). This is the migration the
 readiness-package's `references/escalation.md` anticipated: with the tech-assessment
 skill present, the RP's freeze gate tightens to require a **signed** TA instead of the

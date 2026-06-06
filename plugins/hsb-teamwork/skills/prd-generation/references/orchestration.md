@@ -123,12 +123,21 @@ seed the phase's read-only `PHASE_DIR/glossary.md`; spawn the Glossary Keeper wi
      - **owed and a phase `produces: technical-assessment` exists with the debt
        discharged `signed`** → **escalated path.** That phase's `artifacts.canonical` /
        `final` is the **linked TA**. Proceed with both halves.
-     - **owed but the TA does not exist yet (debt still open)** → **stop.** The TA is a
-       prerequisite — tell the PO to run `tech-assessment` first; the PRD cannot merge a
-       half that has not been written.
-     - **the TA was discharged `vetoed` (`Infeasible as scoped`)** → **stop — the veto
-       halt.** There is no PRD on a veto: signal the PO to revise the RP scope and
-       re-escalate. See [`reconciliation.md`](reconciliation.md) § The veto halt.
+     - **owed but the TA does not exist yet (debt still open)** → the PRD cannot merge a
+       half that has not been written, **but do not silently bounce the PO away.** Surface
+       the choice via `AskUserQuestion`: **(a) run the Technical Assessment now (recommended,
+       end-to-end)** — chain `/hsb-teamwork:tech-assessment` to completion as the
+       `assessment/` phase (it discharges the debt), then resume this merge against the freshly
+       signed TA; or **(b) defer** — stop here with the open-debt blocker recorded. Finishing
+       in one sitting is the offered path; deferring is the PO's explicit call. (Headless: no
+       PO to ask → report the open-debt blocker and stop.)
+     - **the TA was discharged `vetoed` (`Infeasible as scoped`)** → **the veto halts the
+       PRD** — there is no PRD on an infeasible verdict — but the *next step* is still the PO's
+       to choose, not a dead-end the skill imposes. Surface it via `AskUserQuestion`: **(a)
+       re-scope the RP now** — re-open the `readiness/` phase (Revisit) to revise scope and
+       re-escalate so the CTO can re-assess, all in this session; or **(b) defer** the
+       re-scope. Either way the PRD does not assemble until a non-veto TA is signed. See
+       [`reconciliation.md`](reconciliation.md) § The veto halt.
    - Also note the `intake/` phase's `intake-record.md` (for IDs and demand nature) and
      the shared `definitions`.
 3. **Confirm output language** (default `en-US` when ambiguous; mirror the PO's

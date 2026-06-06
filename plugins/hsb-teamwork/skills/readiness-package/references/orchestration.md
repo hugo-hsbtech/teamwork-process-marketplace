@@ -246,9 +246,56 @@ again before production). It writes the **initiative's** shared `glossary.md` /
 `decisions.md`; you then re-seed the brokered `PHASE_DIR/glossary.md`. Terms coined
 during readiness become available to later fronts because the store is shared.
 
+## Phase B3.5 — Readiness checkpoint (you + the PO)
+
+`freezeReady` clearing means *every blocking section is resolved or honestly
+disposed* — it does **not** mean the PO chose to stop. Honest dispositions
+(`discovery` / `deferred` / `assumption`) are what *let* the gate clear; they are not
+permission to freeze. Before producing, **make the close-now-vs-defer choice
+explicit** — the RP must never auto-freeze on items the PO never chose to park.
+Refresh the **`hsb-gap-reporter`** so `readiness-report.md` is current, then
+**classify each residual** (every unconfirmed `ai_drafted` draft, soft-confidence
+section, and `discovery` / `deferred` disposition) by who can actually close it:
+
+- **PO-closeable now** — a soft-confidence section, an unconfirmed `ai_drafted` draft
+  the PO can judge, an assumption the PO actually holds, a missing rule / number the
+  PO knows. These are fair to offer to close in this session, end-to-end.
+- **Downstream-owner** — a residual that structurally belongs to a *later* role: the
+  technical half (feasibility / architecture / technical risk) owned by the CTO's
+  **Technical Assessment** (`TechAssessmentRef`), or a fact owned by another
+  stakeholder. These are **correctly deferred** — do not pretend the PO can close
+  them — but the deferral is still *named and surfaced*, never silent.
+
+Then ask via `AskUserQuestion` (prose-enumerated on hosts without it), **recommending
+the end-to-end path**:
+
+| Option | Effect |
+|---|---|
+| **Close the gaps now (recommended)** | Re-enter the Phase B3 confirm loop targeting the PO-closeable residuals — `hsb-question-strategist` fires on exactly those sections — so the PO answers them now and the RP reaches its maximum readiness in one sitting. Downstream-owner items stay deferred. |
+| Pick specific items | `multiSelect` the residuals to close; loop on those only. |
+| Freeze and defer the rest as-is | Proceed to production; residual items travel as honest dispositions with named owners / time-box for a downstream owner to resolve. |
+
+Only after the PO's explicit call do you proceed to Phase B4. Record the decision
+(and any newly-closed items) through `hsb-ledger-writer` so the run is auditable: a
+deferred item carries *who deferred it (the PO) and why*, never "the skill stopped
+here."
+
+**Escalation is the one structural deferral, surfaced — not a silent shortcut.** A
+demand that owes a Technical Assessment defers the *technical* half to the CTO by
+design (see [`escalation.md`](escalation.md)). That deferral is presented at this
+checkpoint — the PO is told the TA is owed and that the product half can be frozen now
+— and the PO confirms it; the skill does not provisional-freeze on the PO's behalf
+without surfacing it.
+
+**Headless / batch is the sole exception.** With no live PO there is no one to ask, so
+honest dispositions stand and the output is explicitly "draft for review" (see
+SKILL.md § Modes). The checkpoint is skipped *because* the decider is absent, not
+because the choice does not exist.
+
 ## Phase B4 — Production & wrap
 
-Once `freezeReady`:
+Once `freezeReady` **and the PO has settled the Phase B3.5 checkpoint** (closed what
+they chose to close, explicitly deferred the rest):
 
 1. Spawn **in the same turn** (parallel, distinct files):
    - **`hsb-humanizer`** writes `output/humanized.md` — the canonical clean

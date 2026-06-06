@@ -80,10 +80,20 @@ Before doing anything else, bind yourself to these invariants:
 5. **The verdict is the CTO's.** `hsb-feasibility-assessor` *proposes*; the CTO
    *commits*. Never freeze without a committed `feasibility-verdict`.
 6. **Track the run with TodoWrite.** Create the checklist below *before* Phase 1.
+7. **Deferral is the CTO's decision, never the skill's.** The sign-off gate clearing on an
+   honest `discovery` disposition is *necessary, not sufficient*. Before sign-off, run the
+   **Phase 4.5 assessment checkpoint**: classify each residual into *CTO-closeable-now* (a
+   soft draft, an assumption the CTO actually holds, a constraint the CTO can confirm) vs. a
+   *genuine spike* (an unknown that truly blocks assessment until investigated), and ask the
+   CTO whether to **close them now (end-to-end)** or defer. Never silently park a closeable
+   gap as `discovery` and freeze. (Two things are **not** this kind of deferral and are not
+   re-litigated at the checkpoint: a **veto** is a signed conclusion, and a **genuine Discovery
+   exit** is real terrain work — both stand. See [`references/feasibility.md`](references/feasibility.md).)
 
 **Headless / batch changes none of this.** "No live CTO" means *no questions* and
 *honest dispositions* — it does **not** mean skip the agents or skip the verdict (the
-output is then "draft for CTO sign-off," never a real sign-off).
+output is then "draft for CTO sign-off," never a real sign-off). With no CTO to ask, the
+Phase 4.5 checkpoint is skipped *because the decider is absent*, and honest dispositions stand.
 
 ### The phase checklist (TodoWrite this before Phase 1)
 
@@ -98,6 +108,7 @@ output is then "draft for CTO sign-off," never a real sign-off).
 - [ ] Phase 3 · spawn `hsb-feasibility-assessor` (after impact/NFR/risks exist); route → `hsb-doc-updater`
 - [ ] Phase 4 · loop: `hsb-confidence-auditor` (incremental `SECTIONS`) → (fallback) `hsb-question-strategist` → CTO reviews/approves/signs → `hsb-ledger-writer` → `hsb-doc-updater` until `signOffReady`
 - [ ] Phase 4 · if KB had to be created/updated: spawn `hsb-landscape-keeper`
+- [ ] Phase 4.5 · refresh `hsb-gap-reporter`; classify residuals (CTO-closeable-now vs genuine spike / veto); **ask the CTO** (close gaps now end-to-end / pick items / sign & defer as-is) before producing — deferral is the CTO's call
 - [ ] Phase 5 · spawn `hsb-humanizer` (await — it writes the copy the rest read)
 - [ ] Phase 5 · **same message:** `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer` (∥ `hsb-landscape-keeper` if seeding greenfield)
 - [ ] Phase 5 · spawn `hsb-packager`; **discharge the RP's `TechAssessmentRef` debt** in the index; report to the CTO (verdict, artifacts, veto signal if any)

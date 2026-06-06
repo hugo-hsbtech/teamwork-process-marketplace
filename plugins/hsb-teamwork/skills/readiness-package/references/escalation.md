@@ -69,7 +69,13 @@ Hint: "TA needed; tech-assessment skill not yet available"
 
 The RP then freezes **provisionally**: the product sections are frozen and the
 package is marked **provisionally frozen**, with the manifest noting
-`tech-assessment-ref: deferred (TA pending — out of current tooling scope)`.
+`tech-assessment-ref: deferred (TA pending — out of current tooling scope)`. This
+provisional freeze is **surfaced to and confirmed by the PO** at the Phase B3.5
+readiness checkpoint ([`orchestration.md`](orchestration.md) § Phase B3.5) — the PO is
+told the technical half is owed to the CTO and that the product half can be frozen now;
+the skill does not provisional-freeze on the PO's behalf without presenting the choice.
+The technical deferral is structural (it belongs to the CTO), but the *decision to
+freeze the product half and proceed* is still the PO's.
 
 The `packager` outputs this flag explicitly in `output/manifest.md` so the
 downstream (PRD/PM handoff) knows the Technical Assessment is still owed.
