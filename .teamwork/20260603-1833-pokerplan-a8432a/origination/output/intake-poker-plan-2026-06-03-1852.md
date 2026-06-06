@@ -52,6 +52,20 @@ urgência        0      70   (vazio)                          abaixo · não blo
 Prontidão = (84+85+78+70+0) / 5 = 317/5 = 63 %        Portão: FECHADO
 ```
 
+> **Visual · Prontidão por dimensão (gráfico Mermaid, escala 0–100).** Os mesmos
+> valores da tabela acima; **barras** = confiança registrada por dimensão,
+> **linha** = limiar mínimo de cada dimensão. Renderiza no GitHub e em editores
+> Mermaid modernos (`xychart-beta`); a coluna Portão permanece na tabela acima.
+
+```mermaid
+xychart-beta
+    title "Prontidão por dimensão · Rev 2 (score 63%)"
+    x-axis ["Problema", "Originador", "Alcance", "Impacto", "Urgência"]
+    y-axis "Confiança (0-100)" 0 --> 100
+    bar [84, 85, 78, 70, 0]
+    line [80, 70, 70, 70, 70]
+```
+
 > **Nota de cálculo (Rev 2):** a fórmula é a média simples dos 5 campos de captura gradeados = (problema + originador + alcance + impacto + urgência) / 5.
 > - problema: 84 / min 80 · **acima** ✓
 > - originador: 85 / min 70 · **acima** ✓ (atualizado via Q011, de conf 60 parqueado para conf 85 respondido)
