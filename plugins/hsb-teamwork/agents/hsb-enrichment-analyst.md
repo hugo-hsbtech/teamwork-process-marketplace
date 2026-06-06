@@ -25,7 +25,9 @@ visual would make land?" Typical opportunities:
 
 - **Quantitative charts** for any numbers: amounts at risk, %s, counts, capacities,
   headcount splits, per-dimension impact, confidence-by-section. (bar / `xychart`,
-  `pie`, `radar`, waterfall-as-bar.)
+  `pie`, waterfall-as-bar.) For a multi-axis / maturity-profile comparison
+  (confidence-per-dimension against a threshold), plan a grouped `xychart-beta`
+  (value bars + a threshold line) — **not `radar`, which GitHub does not render.**
 - **Flow / process** diagrams for a described sequence (the pain flow, the handoff
   paths, a decision tree for a triage draft).
 - **Stakeholder / reach maps** for who-is-affected.
@@ -49,7 +51,8 @@ Write `output/enrichment-plan.md` as a readable Markdown catalog. Header first:
 <!-- rev: 1 · updated: AAAA-MM-DD · source-doc-rev: <rev of $DOC> -->
 
 > Read-only plan. The Visual Enricher renders these into output/enriched.md.
-> Default render format: Mermaid-native (xychart-beta / pie / radar / flowchart);
+> Default render format: Mermaid-native (xychart-beta / pie / flowchart; GitHub
+> does not render `radar` — use a grouped xychart-beta for maturity profiles);
 > an image asset only when no Mermaid type fits.
 ```
 
@@ -71,7 +74,8 @@ Then one entry per opportunity:
 Field rules:
 
 - **`type`** — name the visual kind and the Mermaid form when one fits
-  (`xychart-beta`, `pie`, `radar`, `flowchart`, `gantt`) or `table`/`callout`/`image`.
+  (`xychart-beta`, `pie`, `flowchart`, `gantt`) or `table`/`callout`/`image`.
+  (Avoid `radar`: GitHub-flavored Markdown does not render it.)
 - **Evidence grade** — `declared` (stated as fact by a source) / `estimated`
   (projection or single-source inference) / `verified` (confirmed against data). This
   is what stops a confident-looking chart from sitting on a soft number.

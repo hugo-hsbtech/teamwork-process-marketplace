@@ -234,8 +234,10 @@ side branch:
      auditable and the data sourced.
 2. Then **Visual Enricher** → `output/enriched.md`: it reads `humanized.md` **and**
    the `enrichment-plan.md` and renders the planned visuals (Mermaid-native by
-   default: `xychart-beta`/`pie`/`radar` for quantitative charts, flow/stakeholder
-   maps otherwise), marking low-confidence visuals DRAFT and keeping every fact.
+   default: `xychart-beta`/`pie` for quantitative charts — a grouped
+   `xychart-beta` for maturity profiles, since GitHub does not render `radar` —
+   flow/stakeholder maps otherwise), marking low-confidence visuals DRAFT and
+   keeping every fact.
 3. In parallel with step 2, spawn the read-only **Citation Resolver**: it reads
    `qa-log.md` + `sources-index.md` + `$DOC` and returns (a) a reader-facing
    "Sources & question log" appendix spec and (b) the rewrite map turning in-text
