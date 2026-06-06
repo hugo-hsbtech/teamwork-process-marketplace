@@ -38,24 +38,10 @@
 | **Requisitos bloqueantes** | Todos resolvidos por disposição honesta (portão): **Sim, FECHADO** |
 | **Disposições em aberto** | 8 premissas a validar (a) a (h) · 1 flag de discovery (validação comercial/mercado em impacto) · urgência ausente (não-bloqueante) |
 
-> **Visual · Prontidão por dimensão (barras textuais, escala 0–100).** Re-apresenta
-> os valores da nota de cálculo abaixo; não introduz números novos. `■` ≈ 5 pontos.
-
-```text
-Dimensão     Conf  Limiar  Barra (0 ──────────── 100)        Portão
-problema       84      80   ■■■■■■■■■■■■■■■■■                acima ✓
-originador     85      70   ■■■■■■■■■■■■■■■■■                acima ✓
-alcance        78      70   ■■■■■■■■■■■■■■■■                 acima ✓
-impacto        70      70   ■■■■■■■■■■■■■■                   no limiar ✓
-urgência        0      70   (vazio)                          abaixo · não bloqueia
-─────────────────────────────────────────────────────────────────
-Prontidão = (84+85+78+70+0) / 5 = 317/5 = 63 %        Portão: FECHADO
-```
-
-> **Visual · Prontidão por dimensão (gráfico Mermaid, escala 0–100).** Os mesmos
-> valores da tabela acima; **barras** = confiança registrada por dimensão,
-> **linha** = limiar mínimo de cada dimensão. Renderiza no GitHub e em editores
-> Mermaid modernos (`xychart-beta`); a coluna Portão permanece na tabela acima.
+> **Visual · Prontidão por dimensão (escala 0–100).** Re-apresenta os valores da
+> nota de cálculo abaixo; não introduz números novos. **Barras** = confiança
+> registrada por dimensão, **linha** = limiar mínimo de cada dimensão; o status do
+> portão por dimensão está descrito na nota de cálculo logo abaixo.
 
 ```mermaid
 xychart-beta
@@ -243,14 +229,13 @@ O problema não é a existência dessas horas (estimar é necessário), e sim o 
 > dois valores em conflito exatamente como a fonte os registra; nenhum é adotado
 > como número de economia.
 
-```text
-   Cálculo derivado das premissas        Valor citado pelo Submitter
-   15–20 min × ~48 sessões × 8 pessoas    "8 a 11 h-h/ano por squad"
-   ≈ 96 a 128 h-h/ano por squad
-            │                                        │
-            └──────────────  DISCREPÂNCIA  ──────────┘
-                   Base do cálculo a confirmar na Discovery
-                   (não bloqueia o portão · não usar em triagem)
+```mermaid
+flowchart TD
+    A["Cálculo derivado das premissas<br/>15–20 min × ~48 sessões × 8 pessoas<br/>≈ 96 a 128 h-h/ano por squad"]
+    B["Valor citado pelo Submitter<br/>8 a 11 h-h/ano por squad"]
+    A -->|DISCREPÂNCIA| B
+    A --> C["Base do cálculo a confirmar na Discovery<br/>não bloqueia o portão · não usar em triagem"]
+    B --> C
 ```
 
 ---
