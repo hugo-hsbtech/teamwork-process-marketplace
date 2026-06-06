@@ -85,10 +85,14 @@ assemble.** A veto means the CTO judged the scope infeasible as written; the res
 is upstream, not in the merge:
 
 1. The orchestrator detects the veto in **Phase 0** (the `assessment/` phase's debt
-   discharged `vetoed`) and **stops before drafting** — it does not create a `prd/` phase
-   with an infeasible verdict.
-2. It **signals the PO** to revise the RP scope and **re-escalate** to the CTO (the
-   tech-assessment skill re-runs against the revised RP and bumps the TA version).
+   discharged `vetoed`) and **does not create a `prd/` phase** with an infeasible verdict —
+   there is nothing to merge.
+2. It **surfaces the next step as the PO's choice**, not a dead-end: via `AskUserQuestion`,
+   offer to **re-scope the RP now** — re-open the `readiness/` phase (Revisit) to revise scope
+   and re-escalate to the CTO (the tech-assessment skill re-runs against the revised RP and
+   bumps the TA version), all in this session — **or defer** that re-scope. The veto blocks the
+   PRD regardless; what is the PO's to decide is *when* the re-scope happens, not whether the
+   skill stops. (Headless: report the veto + the scope-revision-owed signal and stop.)
 3. Only once a **non-veto** TA (`Feasible` / `Feasible with caveats`) is signed does the
    PRD become assemblable. Re-running this skill then picks up the revised RP + the new TA.
 
