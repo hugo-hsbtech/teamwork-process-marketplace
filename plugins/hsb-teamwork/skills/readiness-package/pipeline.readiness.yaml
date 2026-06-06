@@ -1,0 +1,159 @@
+# Declarative dependency graph — readiness-package, ACT 2 (the Readiness Package).
+# Runs only when Act 1 (pipeline.intake.yaml) routed `Product Ready`. The confirm phase
+# is a LOOP the orchestrator repeats; this graph is the single-pass skeleton.
+# Validated by tools/pipeline_graph.py. See ../tech-assessment/references/scheduling.md.
+#
+# NOTE: the demand-nature is INHERITED here from the Intake Record (decided in Act 1),
+# not re-decided — so it is an external input, keeping a single decider per fact.
+
+version: 1
+skill: readiness-package
+act: readiness
+
+external_inputs:
+  - rp-template
+  - origination-record
+  - intake-record          # carries the triage decision + demand-nature
+
+# Section datums (inherited bundle + drafted sections + the two RP-specific derived
+# sections, which here are composed by the Inheritor and the Escalation Flagger, NOT the
+# Synthesizer). Derived sections are excluded from this list so reads_all_sections
+# expansion never makes a node read its own output.
+section_datums:
+  - inherited-sections     # exec-summary, context-problem, objectives, personas, scope, metrics, release-criteria, risks
+  - business-rules
+  - user-journey
+  - user-stories
+  - nfrs
+  - edge-cases
+  - inherited-readiness    # composed by the Stage Inheritor (open upstream dispositions)
+  - tech-assessment-ref    # composed by the Escalation Flagger (escalation decision)
+
+file_writers:
+  contract.lock.md: hsb-template-analyst
+  sources/: hsb-source-indexer
+  sources-index.md: hsb-source-indexer
+  qa-log.md: hsb-ledger-writer
+  readiness-document.md: hsb-doc-updater
+  glossary.md: hsb-glossary-keeper
+  decisions.md: hsb-decisions-keeper
+  readiness-report.md: hsb-gap-reporter
+  output/humanized.md: hsb-humanizer
+  output/translated.md: hsb-translator
+  output/enriched.md: hsb-visual-enricher
+  final/: hsb-finalizer
+  output/manifest.md: hsb-packager
+
+nodes:
+  # ---- Setup -------------------------------------------------------------------
+  hsb-template-validator:
+    phase: setup
+    reads: [rp-template]
+    decides: [rp-template-valid]
+  hsb-template-analyst:
+    phase: setup
+    reads: [rp-template, rp-template-valid]
+    decides: [contract]
+    persists: contract.lock.md
+  hsb-source-indexer:
+    phase: setup
+    reads: [origination-record, intake-record]
+    decides: [sources]
+    persists: [sources/, sources-index.md]
+
+  # ---- Inherit + draft ---------------------------------------------------------
+  hsb-stage-inheritor:
+    phase: inherit
+    reads: [contract, sources]
+    decides: [inherited-sections, inherited-readiness]
+  hsb-section-drafter:
+    phase: draft
+    fanout: per-section
+    reads: [contract, inherited-sections, sources]
+    decides: [business-rules, user-journey, user-stories, nfrs, edge-cases]
+  hsb-escalation-flagger:
+    phase: draft
+    reads: [inherited-sections, business-rules, nfrs]
+    decides: [tech-assessment-ref]
+
+  # ---- Confirm loop (orchestrator repeats) -------------------------------------
+  hsb-ledger-writer:
+    phase: confirm
+    reads: [contract, inherited-sections]
+    decides: [qa-log]
+    persists: qa-log.md
+  hsb-doc-updater:
+    phase: confirm
+    reads: [contract]
+    reads_all_sections: true
+    decides: [readiness-document]
+    persists: readiness-document.md
+  hsb-confidence-auditor:
+    phase: confirm
+    reads: [contract]
+    reads_all_sections: true
+    decides: [readiness-verdict]
+  hsb-integrity-checker:
+    phase: confirm
+    reads: [readiness-document]
+    decides: [integrity-verdict]
+  hsb-question-strategist:
+    phase: confirm
+    reads: [contract]
+    decides: [questions]
+  hsb-evidence-extractor:
+    phase: confirm
+    reads: [contract, sources]
+    decides: [evidence]
+  hsb-reconciler:
+    phase: confirm
+    reads: [contract, sources, qa-log]
+    decides: [conflict-resolution]
+  hsb-glossary-keeper:
+    phase: confirm
+    reads: [qa-log, readiness-document]
+    decides: [glossary]
+    persists: glossary.md
+  hsb-decisions-keeper:
+    phase: confirm
+    reads: [qa-log, readiness-document]
+    decides: [decisions]
+    persists: decisions.md
+  hsb-gap-reporter:
+    phase: confirm
+    reads: [readiness-verdict]
+    decides: [readiness-report]
+    persists: readiness-report.md
+
+  # ---- Production & wrap -------------------------------------------------------
+  hsb-humanizer:
+    phase: production
+    reads: [readiness-document]
+    decides: [humanized]
+    persists: output/humanized.md
+  hsb-language-auditor:
+    phase: production
+    reads: [humanized]
+    decides: [language-verdict]
+  hsb-translator:
+    phase: production
+    reads: [humanized]
+    decides: [translated]
+    persists: output/translated.md
+  hsb-visual-enricher:
+    phase: production
+    reads: [humanized]
+    decides: [enriched]
+    persists: output/enriched.md
+  hsb-finalizer:
+    phase: production
+    reads: [humanized, enriched]
+    decides: [final]
+    persists: final/
+  hsb-packager:
+    phase: production
+    reads: [final, humanized, translated, readiness-verdict, tech-assessment-ref]
+    decides: [manifest]
+    persists: output/manifest.md
+
+reconciliations: []

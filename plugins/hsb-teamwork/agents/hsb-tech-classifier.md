@@ -28,7 +28,11 @@ Record. You **confirm it under the technical lens** — you do not re-run triage
 - **Confirm or override.** If the code reality contradicts the triage classification
   (e.g. triage said "new feature" but it modifies an existing module → Brownfield),
   propose an override **with a rationale**. Carry the full decision model
-  (`verdict` + `rationale` + `basis`/`source`).
+  (`verdict` + `rationale` + `basis`/`source`). Emit an override as an explicit
+  **`nature-override`** signal (`from → to`, with rationale and basis), not just a
+  confirmed value — the triage nature is already frozen into the RP and Intake Record,
+  so the orchestrator uses this signal to write the correction back to the index
+  (`initiative.json`) and notify the readiness front. You never rewrite the frozen RP.
 - **Honesty over guessing.** If you genuinely cannot tell the nature, mark it as a
   **CTO-priority question** rather than guessing — the orchestrator asks the CTO first.
 

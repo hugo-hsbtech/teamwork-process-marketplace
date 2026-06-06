@@ -202,7 +202,7 @@ sentinel the Auditor checks for truncation. Full rules:
 | 4 | `hsb-reconciler` | resolve conflicts (RP-said-X / technical-lens-says-Y) (read-only) |
 | 2-4 | `hsb-ledger-writer` | commit questions/answers/proposals to `qa-log.md` |
 | 2-4 | `hsb-doc-updater` | write and update `technical-assessment.md` (`DOC`) |
-| 4 | `hsb-glossary-keeper` | record the verdict + hard constraints as cross-phase decisions (sole writer; `DEFINITIONS_DIR`; optional) |
+| 4 | `hsb-decisions-keeper` | record the verdict + hard constraints as cross-phase decisions (sole writer; `DEFINITIONS_DIR`; optional) |
 | 4 | `hsb-gap-reporter` | write the live gap map `assessment-report.md` (optional) |
 | 4 | `hsb-confidence-auditor` | re-score sections + gate verdict (read-only) |
 | 5 | `hsb-humanizer` | write `output/humanized.md` |

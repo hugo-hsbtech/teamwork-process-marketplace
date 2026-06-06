@@ -5,8 +5,12 @@ origination-brainstorm, readiness-package, and tech-assessment. The conversation
 (the orchestrator) run is Layer 0 — the only layer that talks to the **PO** (owner of
 the PRD) and, for the technical-half sign-off, the **CTO**. Everything else is a
 specialized subagent you spawn with a focused prompt and tear down. This file is the
-authoritative spec for *who runs when, who may write what, and what runs in parallel* in
-the PRD flow.
+**narrative** view of *who runs when, who may write what, and what runs in parallel* in
+the PRD flow; the **machine** view — validated ordering + the single-writer/single-decider
+invariants — is declared in [`../pipeline.yaml`](../pipeline.yaml) and checked by
+`tools/pipeline_graph.py` (see
+[`../../tech-assessment/references/scheduling.md`](../../tech-assessment/references/scheduling.md)).
+When the prose and the graph disagree, the graph wins.
 
 The PRD is the **merge** of two frozen upstream artifacts: the **Readiness Package**
 (product, PO) and the **Technical Assessment** (technical, CTO). It **stitches,
@@ -67,9 +71,12 @@ sections, and the **Reconciler** resolves the scope.
 | `hsb-evidence-extractor` | read-only | Confirm loop — satisfies an open question from the indexed RP / TA |
 | `hsb-ledger-writer` | **writer** (`qa-log.md`) | Records questions, answers, proposed entries, and the sign-off |
 | `hsb-doc-updater` | **writer** (`$DOC` = `prd.md`) | Sole writer of the PRD document |
-| `hsb-glossary-keeper` | **writer** (initiative `glossary.md` + `decisions.md`) | Optional — records the PRD freeze + dual sign-off as a cross-phase decision; spawned with `DEFINITIONS_DIR` |
+| `hsb-glossary-keeper` | **writer** (initiative `glossary.md`) | Optional — canonical terms; spawned with `DEFINITIONS_DIR` |
+| `hsb-decisions-keeper` | **writer** (initiative `decisions.md`) | Optional — records the PRD freeze + dual sign-off as a cross-phase decision; spawned with `DEFINITIONS_DIR` |
 | `hsb-gap-reporter` | **writer** (`prd-report.md`) | Optional — live gap map for the PO |
 | `hsb-confidence-auditor` | read-only | Confirm loop — re-scores sections (incremental via `SECTIONS`), flags conflicts/contradictions between the halves |
+| `hsb-integrity-checker` | read-only | Confirm loop — mechanically verifies the PRD is complete/untruncated (sentinel, no elision) |
+| `hsb-language-auditor` | read-only | Phase 5 — verifies the humanized copy for language leaks; leaks route back to the Humanizer |
 | `hsb-humanizer` | **writer** (`output/humanized.md`) | Phase 5 — must finish before translator/enricher/finalizer |
 | `hsb-translator` | **writer** (`output/translated.<lang>.md`) | Phase 5, parallel |
 | `hsb-visual-enricher` | **writer** (`output/enriched.md`) | Phase 5, parallel |
@@ -205,6 +212,9 @@ Repeats until the freeze gate clears:
    or a scope item the TA constrained but `a-scope` still lists unchanged), and returns
    the gap verdict. First pass scores every section; later passes take `SECTIONS` (ids
    touched since the last audit).
+   - In the same turn, spawn **`hsb-integrity-checker`** (read-only, mechanical): it
+     verifies the PRD ends with the sentinel and has no truncation/elision;
+     `integrity = fail` is a hard block on the gate.
    - On a flagged contradiction: spawn **`hsb-reconciler`** (read-only); route to
      `hsb-ledger-writer` → `hsb-doc-updater`.
    - Optional: spawn **`hsb-gap-reporter`** for a live gap map.
@@ -234,7 +244,9 @@ See [`handoff.md`](handoff.md) for the full gate and the PM-rejection loop.
 Once `handoffReady`:
 
 1. **`hsb-humanizer`** writes `output/humanized.md` — the canonical clean copy all
-   production agents read. Must finish first.
+   production agents read. Must finish first. Then spawn **`hsb-language-auditor`**
+   (read-only) to verify it for language leaks; route any leaks back to the Humanizer
+   before the rest read it.
 2. Then spawn **in the same turn** (parallel, distinct files):
    - **`hsb-translator`** → `output/translated.<lang>.md` (the confirmed output language).
    - **`hsb-visual-enricher`** → `output/enriched.md` (the consolidated risk table, the

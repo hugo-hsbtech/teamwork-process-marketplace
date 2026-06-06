@@ -79,7 +79,8 @@ these invariants matter most.
 - [ ] Phase A · spawn `hsb-template-validator` on the intake template; gate on pass
 - [ ] Phase A · **same message:** `hsb-source-indexer` ∥ `hsb-template-analyst` (intake contract)
 - [ ] Phase A · spawn `hsb-triage-assessor`; ask the PO only the unsettled criteria; route → `hsb-ledger-writer` → `hsb-doc-updater`
-- [ ] Phase A · record the routing decision in `decisions.md` (via `hsb-glossary-keeper`)
+- [ ] Phase A · spawn `hsb-demand-classifier` (demand-nature / KB) alongside the Triage Assessor
+- [ ] Phase A · record the routing decision in `decisions.md` (via `hsb-decisions-keeper`)
 - [ ] **GATE** · `Product Ready` → continue to Act 2. `Discovery`/`Backlog`/`Reject` → finalize the Intake Record, set `intake` `frozen`, report, **STOP**.
 
 **Act 2 — Rationalization** (`readiness/` phase; template = the RP) — only if `Product Ready`
@@ -183,7 +184,8 @@ keyed by stable id, never clobbers, and the document ends with a
 | 2 | `hsb-ledger-writer` | commit questions/answers/proposals to `qa-log.md` |
 | 2 | `hsb-doc-updater` | write and update `readiness-document.md` (`DOC`) |
 | 2 | `hsb-synthesizer` | compose generic `derived` sections for the Doc Updater (read-only, optional — in the RP the `inherited-readiness` and `tech-assessment-ref` derived sections are composed by the Stage Inheritor and Escalation Flagger instead) |
-| 2 | `hsb-glossary-keeper` | maintain the initiative's shared `glossary.md` + `decisions.md` (sole writer; spawned with `DEFINITIONS_DIR`; optional) |
+| 2 | `hsb-glossary-keeper` | maintain the initiative's shared `glossary.md` — canonical terms (sole writer; `DEFINITIONS_DIR`; optional) |
+| 2 | `hsb-decisions-keeper` | maintain the initiative's shared `decisions.md` — cross-phase decisions incl. the triage routing (sole writer; `DEFINITIONS_DIR`; optional) |
 | 2 | `hsb-gap-reporter` | write the live gap map `readiness-report.md` (optional) |
 | 2 | `hsb-confidence-auditor` | re-score sections + gate verdict (read-only) |
 | 4 | `hsb-humanizer` | write `output/humanized.md` |

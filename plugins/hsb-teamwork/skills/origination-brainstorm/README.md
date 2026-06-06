@@ -179,10 +179,13 @@ same roster is reused by `readiness-package` and the planned stages.
 | 2 | `hsb-ledger-writer` | writes `qa-log.md` |
 | 2 | `hsb-doc-updater` | writes the target document (`DOC`) |
 | 2 | `hsb-synthesizer` | composes `derived` sections for the writer (read-only) |
-| 2 | `hsb-glossary-keeper` | writes the initiative's shared `glossary.md` + `decisions.md` |
+| 2 | `hsb-glossary-keeper` | writes the initiative's shared `glossary.md` (canonical terms) |
+| 2 | `hsb-decisions-keeper` | writes the initiative's shared `decisions.md` (cross-phase decisions) |
 | 2 | `hsb-gap-reporter` | writes `readiness-report.md` |
 | 2 | `hsb-confidence-auditor` | re-scores + gate verdict (read-only) |
+| 2 | `hsb-integrity-checker` | mechanically verifies completeness/no-truncation (read-only) |
 | 3 | `hsb-humanizer` | writes `output/humanized.md` (localizes labels/headings, purges jargon) |
+| 3 | `hsb-language-auditor` | verifies the humanized copy for language leaks (read-only) |
 | 3 | `hsb-enrichment-analyst` | writes `output/enrichment-plan.md` (sourced visual catalog; read-only on `DOC`) |
 | 3 | `hsb-translator` | writes `output/translated.<lang>.md` |
 | 3 | `hsb-visual-enricher` | renders the plan into `output/enriched.md` |

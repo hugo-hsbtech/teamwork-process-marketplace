@@ -102,7 +102,8 @@ one at a time and awaiting each, which is what makes a run drag. Bind yourself t
 | 2 | `hsb-ledger-writer` | commit questions/answers to `qa-log.md` |
 | 2 | `hsb-doc-updater` | fill `target-document.md` (`DOC`) |
 | 2 | `hsb-synthesizer` | compose `derived` sections (exec summary, triage draft) for the Doc Updater (read-only) |
-| 2 | `hsb-glossary-keeper` | maintain the initiative's shared `glossary.md` + `decisions.md` (sole writer) |
+| 2 | `hsb-glossary-keeper` | maintain the initiative's shared `glossary.md` — canonical terms (sole writer) |
+| 2 | `hsb-decisions-keeper` | maintain the initiative's shared `decisions.md` — cross-phase decisions (sole writer) |
 | 2 | `hsb-gap-reporter` | write the live gap map `readiness-report.md` |
 | 2 | `hsb-confidence-auditor` | re-score + gate verdict (read-only) |
 | 3 | `hsb-humanizer` | write `output/humanized.md` (localizes labels/headings, purges untranslated jargon) |

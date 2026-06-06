@@ -28,7 +28,10 @@ On each commit:
    parent's `Follow-ups` and the child's `spawned-by`.
 4. **Never delete** — retire obsolete entries as `superseded` (e.g. after a template
    restart).
-5. Refresh the header summary: readiness %, gate state, open blocking sections.
+5. Refresh the header summary from the **Confidence Auditor's canonical verdict**
+   (do not recompute the score): the readiness %, its `as-of-rev` stamp, gate state,
+   and open blocking sections. This header is the one persisted copy of the readiness
+   number; the Gap Reporter and Packager quote it from here.
 6. If a conflict was reported (source vs. human, source vs. source), record both
    values with provenance and mark it for the **Reconciler** in the entry's `Hint`;
    keep the Reconciler-recommended (or higher-confidence) value as primary.

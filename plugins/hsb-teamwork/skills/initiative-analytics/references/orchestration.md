@@ -5,7 +5,10 @@ adds nothing to the demand; it **measures** an initiative that the four upstream
 skills already produced. You (the orchestrator, Layer 0) resolve the initiative,
 spawn read-only collectors that propose findings, and route them to one writer
 that emits the report. Same engine, same single-writer discipline as the rest of
-the toolkit.
+the toolkit. The validated ordering and the single-writer/single-decider invariants are
+declared in [`../pipeline.yaml`](../pipeline.yaml) and checked by
+`tools/pipeline_graph.py` (see
+[`../../tech-assessment/references/scheduling.md`](../../tech-assessment/references/scheduling.md)).
 
 ## The one rule that still holds
 
@@ -53,10 +56,13 @@ Spawn **in the same turn** (independent → parallel):
   absent, it returns a `notCaptured` verdict with the reason.
 - **Metrics Analyst** (`hsb-metrics-analyst`) — reads each phase's `qa-log.md`,
   `contract.lock.md`, the frozen documents, and `initiative.json`, and returns the
-  §C/§D process & outcome metrics **and** the §E value score (from the documents,
-  per `roi-model.md`).
+  §C/§D process & outcome metrics.
+- **Value Scorer** (`hsb-value-scorer`) — reads `initiative.json` and the frozen
+  documents and returns the §E value score (0–100, **from the documents only**, per
+  `roi-model.md`), each dimension cited to a document line. Split from the Metrics
+  Analyst so the value *judgment* is separate from the metric *counting*.
 
-Both are read-only proposers. They write nothing.
+All three are read-only proposers. They write nothing.
 
 ## Phase 2 — Compose ROI (you)
 
@@ -86,10 +92,11 @@ debts/parked dispositions. Offer the report path.
 | Phase | `subagent_type` | Role |
 |---|---|---|
 | 1 | `hsb-cost-collector` | aggregate the cost ledger → investment metrics (read-only) |
-| 1 | `hsb-metrics-analyst` | process/outcome metrics + document-derived value score (read-only) |
+| 1 | `hsb-metrics-analyst` | process/outcome metrics (read-only) |
+| 1 | `hsb-value-scorer` | document-derived value score 0–100 (read-only) |
 | 3 | `hsb-roi-reporter` | write `roi-report.md` + `roi.json` (sole writer) |
 
-Run the two collectors **in one turn** (parallel). The Reporter runs after, once
+Run the three collectors **in one turn** (parallel). The Reporter runs after, once
 you have composed the ROI set. Add any future capability as its own agent under
 the same single-writer rule.
 

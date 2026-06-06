@@ -68,3 +68,14 @@ Section Drafter** in Phase 3 (only the in-force path), and tells
   routes it through `hsb-ledger-writer` → `hsb-doc-updater`.
 - It does not re-run triage — it confirms (or overrides with rationale) a
   classification that already exists upstream.
+
+## On an override (write the correction to the index, not the frozen RP)
+
+An override does **not** rewrite the frozen RP or Intake Record — they stay canonical
+for what they decided at triage. Instead the classifier emits a `nature-override`
+signal and the orchestrator records the correction where cross-front truth lives: it
+updates this front's `initiative.json` (`nature`, `kbStatus`) and pushes a
+`nature-corrected` note to the `readiness/` front. The **index**, not the frozen
+document, is what later fronts read, so the corrected nature is the one that travels.
+The TA's `tech-classification` (and the PRD's `b-nature-landscape`, which inherits from
+the TA) are authoritative over the superseded RP metadata.

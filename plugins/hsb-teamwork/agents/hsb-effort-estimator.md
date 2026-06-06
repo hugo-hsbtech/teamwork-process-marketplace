@@ -39,7 +39,11 @@ a Build-vs-Buy still open) so the CTO firms it.
   by the Tech Lead in the Tech Backlog — propose the CTO-level firm number, not a task
   breakdown.
 - If the verdict is heading toward `Infeasible as scoped`, the estimate may be N/A —
-  flag that rather than estimating a scope that will be vetoed.
+  flag that rather than estimating a scope that will be vetoed. You draft in parallel
+  with the verdict and cannot see it, so you are not expected to predict the veto: if
+  the CTO commits `Infeasible as scoped`, the orchestrator re-disposes this entry to
+  "N/A — vetoed (see feasibility-verdict)" at the gate (verdict reconciliation). Just
+  avoid over-claiming on a shaky scope.
 - Honesty over precision: if a part cannot be estimated without a Discovery spike, say so
   and flag it for `discovery-path`.
 

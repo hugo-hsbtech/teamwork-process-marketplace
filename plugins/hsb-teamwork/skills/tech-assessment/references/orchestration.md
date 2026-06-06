@@ -4,8 +4,15 @@ This skill is a **multi-agent pipeline** that extends the same engine as
 origination-brainstorm and readiness-package. The conversation you (the
 orchestrator) run is Layer 0 — the only layer that talks to the **CTO**.
 Everything else is a specialized subagent you spawn with a focused prompt and
-tear down. This file is the authoritative spec for *who runs when, who may write
-what, and what runs in parallel* in the tech-assessment flow.
+tear down. This file is the **narrative** view of *who runs when, who may write
+what, and what runs in parallel* in the tech-assessment flow. The **machine** view —
+the authoritative, validated ordering — is declared in
+[`../pipeline.yaml`](../pipeline.yaml) and checked by `tools/pipeline_graph.py`; see
+[`scheduling.md`](scheduling.md). When the prose and the graph disagree, the graph
+wins and the prose is the bug. In particular, the parallel batches, the single-writer
+and single-decider invariants, and the **provisional-then-reconcile** handling of the
+draft-pass proposers (effort/ADRs drafted before the verdict) are derived from the
+graph, not hand-maintained here.
 
 The TA is the **CTO's** artefact — the persona's *technical-strategy* mandate
 (`personas/03-cto.md` §2). It **responds** to the Readiness Package and is authored
@@ -51,9 +58,12 @@ through the TA template and guide, not through code changes.
 | `hsb-reconciler` | read-only | Confirm loop — on conflicts (e.g. RP asserted X, the technical lens says Y) |
 | `hsb-ledger-writer` | **writer** (`qa-log.md`) | Records questions, answers, proposed entries |
 | `hsb-doc-updater` | **writer** (`$DOC` = `technical-assessment.md`) | Sole writer of the TA document |
-| `hsb-glossary-keeper` | **writer** (initiative `glossary.md` + `decisions.md`) | Optional — records the feasibility verdict + hard constraints as cross-phase decisions; spawned with `DEFINITIONS_DIR` |
+| `hsb-glossary-keeper` | **writer** (initiative `glossary.md`) | Optional — canonical terms; spawned with `DEFINITIONS_DIR` |
+| `hsb-decisions-keeper` | **writer** (initiative `decisions.md`) | Optional — records the feasibility verdict + hard constraints as cross-phase decisions; spawned with `DEFINITIONS_DIR` |
 | `hsb-gap-reporter` | **writer** (`assessment-report.md`) | Optional — gap map for the CTO |
 | `hsb-confidence-auditor` | read-only | Confirm loop — re-scores sections (incremental via `SECTIONS`), flags conflicts |
+| `hsb-integrity-checker` | read-only | Confirm loop — mechanically verifies the TA is complete/untruncated (sentinel, no elision) |
+| `hsb-language-auditor` | read-only | Phase 5 — verifies the humanized copy for language leaks; leaks route back to the Humanizer |
 | `hsb-humanizer` | **writer** (`output/humanized.md`) | Phase 5 — must finish before translator/enricher |
 | `hsb-translator` | **writer** (`output/translated.<lang>.md`) | Phase 5, parallel with visual-enricher |
 | `hsb-visual-enricher` | **writer** (`output/enriched.md`) | Phase 5, parallel with translator |
@@ -189,7 +199,13 @@ Repeats until the freeze gate clears:
 
 1. **`hsb-confidence-auditor`** (read-only) re-scores against the rubric, flags
    conflicts, returns the gap verdict. First pass scores every section; later passes
-   take `SECTIONS` (ids touched since the last audit) and re-score only those.
+   take `SECTIONS` (ids touched since the last audit) and re-score only those. Its
+   verdict is the **single source** of the readiness number (`readiness` + `as-of-rev`):
+   `hsb-ledger-writer` persists it in the qa-log header and `hsb-packager` quotes it —
+   no other agent recomputes the score.
+   - In the same turn, spawn **`hsb-integrity-checker`** (read-only, mechanical): it
+     verifies the TA ends with the sentinel and has no truncation/elision;
+     `integrity = fail` is a hard block on the gate.
    - On a flagged conflict: spawn **`hsb-reconciler`** (read-only); route to
      `hsb-ledger-writer`.
    - Optional: spawn **`hsb-gap-reporter`** for a live gap map.
@@ -213,6 +229,13 @@ Repeats until the freeze gate clears:
      (the TA freezes as a signed veto; see [`feasibility.md`](feasibility.md) § The
      veto path).
 
+**Verdict reconciliation (on a veto).** `effort-cost` and `adrs` are drafted in Phase 3
+in parallel, **before** the verdict exists, so a committed `Infeasible as scoped` can
+leave them holding a confident estimate / ADR set for a scope ruled unbuildable. Before
+freeze, route both through `hsb-doc-updater` to be re-dispositioned `Disposition: decided`,
+content "N/A — vetoed (see feasibility-verdict)". A signed veto carries no confident
+effort or ADRs.
+
 See [`feasibility.md`](feasibility.md) for the full gate and the Discovery exit.
 
 ## Phase 5 — Production & wrap
@@ -220,7 +243,9 @@ See [`feasibility.md`](feasibility.md) for the full gate and the Discovery exit.
 Once `signOffReady`:
 
 1. **`hsb-humanizer`** writes `output/humanized.md` — the canonical clean copy all
-   production agents read. Must finish first.
+   production agents read. Must finish first. Then spawn **`hsb-language-auditor`**
+   (read-only) to verify it for language leaks; route any leaks back to the Humanizer
+   before the rest read it.
 2. Then spawn **in the same turn** (parallel, distinct files):
    - **`hsb-translator`** → `output/translated.<lang>.md` (the confirmed output
      language).
@@ -244,6 +269,10 @@ Once `signOffReady`:
    debt**: resolve the `owes` entry the RP pushed (set its `status` to `signed` or
    `vetoed`, and link this TA). If the verdict is a veto, also push a
    `scope-revision-owed` note back to the `readiness/` phase so the PO re-escalates.
+   If the Tech Classifier **overrode** the demand nature (a `nature-override` signal),
+   write the corrected `nature`/`kbStatus` into this front's `initiative.json` and push
+   a `nature-corrected` note to the `readiness/` front — the frozen RP/Intake keep the
+   triage value, but the index carries the correction the next front reads.
 5. Report to the CTO: the verdict, the artifacts produced, the `tech-landscape`
    seeded/updated, every item parked as `discovery`, and (if vetoed) the scope-revision
    signal to the PO.
