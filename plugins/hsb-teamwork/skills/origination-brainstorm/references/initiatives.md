@@ -315,10 +315,19 @@ Resuming is always safe because of the idempotency rules below.
      { "initiative": "<INITIATIVE_DIR name>", "phase": "<phase>", "updated": "<ISO ts>" }
    ```
 
-   `<session_id>` is the current Claude Code / Codex session id. This is the only
-   initiative-level write the binding needs; it is harmless if analytics is never
-   run, and it is what lets `initiative-analytics` measure cost per phase. Overwrite
-   it on resume (the latest phase the session touched wins). See
+   **Where `<session_id>` comes from.** The orchestrator does not otherwise know
+   its own session id — only hook payloads carry it. So the plugin's `SessionStart`
+   hook (`teamwork-session-stamp.py`) stamps it once per session to
+   `<TEAMWORK_ROOT>/.sessions/.current` (a small JSON `{ "session_id": "…",
+   "cwd": "…" }`). **Read `.current` to obtain `<session_id>`**, then write the
+   binding file named by it. If `.current` is missing (the stamp hook is not
+   registered in this environment), skip the binding write silently — analytics is
+   simply not captured this run, exactly as when no binding exists; never block the
+   run over it.
+
+   This is the only initiative-level write the binding needs; it is harmless if
+   analytics is never run, and it is what lets `initiative-analytics` measure cost
+   per phase. Overwrite it on resume (the latest phase the session touched wins). See
    [`../../initiative-analytics/references/cost-telemetry.md`](../../initiative-analytics/references/cost-telemetry.md).
 
 ## Why re-running never duplicates (within a phase)
