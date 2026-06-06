@@ -3,8 +3,12 @@
 This skill is a **multi-agent pipeline**. The conversation you (the orchestrator)
 run is **Layer 0** — the only layer that talks to the human. Everything else is a
 **specialized subagent** you spawn with a focused prompt and tear down. This file
-is the authoritative spec for *who runs when, who may write what, and what runs
-in parallel*.
+is the **narrative** view of *who runs when, who may write what, and what runs
+in parallel*; the **machine** view — the validated ordering, the single-writer and
+single-decider invariants — is declared in [`../pipeline.yaml`](../pipeline.yaml) and
+checked by `tools/pipeline_graph.py` (see
+[`../../tech-assessment/references/scheduling.md`](../../tech-assessment/references/scheduling.md)).
+When the prose and the graph disagree, the graph wins.
 
 ## The one rule that makes parallelism safe
 
@@ -19,7 +23,8 @@ the pen on the same file, so concurrent writes are impossible by construction.
 | `sources/`, `sources-index.md` | Source Indexer | read-only |
 | `qa-log.md` | Ledger Writer | read-only |
 | `target-document.md` | Doc Updater | read-only |
-| `<initiative>/glossary.md`, `<initiative>/decisions.md` | Glossary Keeper | read-only |
+| `<initiative>/glossary.md` | Glossary Keeper | read-only |
+| `<initiative>/decisions.md` | Decisions Keeper | read-only |
 | `readiness-report.md` | Gap Reporter | read-only |
 | `output/humanized.md` | Humanizer | read-only |
 | `output/enrichment-plan.md` | Enrichment Analyst | read-only |
@@ -55,9 +60,10 @@ an agent assume a location:
 - `SKILL_DIR` — this skill's base directory (you are told it at launch).
 - `PHASE_DIR` — `<INITIATIVE_DIR>/origination/`, resolved per [`initiatives.md`](initiatives.md) (resume if it exists). The origination front of the selected initiative.
 - `TEMPLATE` — the target template file (default: `SKILL_DIR/assets/target-template.origination-record.md`, or a user-supplied template).
-- `DEFINITIONS_DIR` — `<INITIATIVE_DIR>` — injected to the **Glossary Keeper only**,
-  the sole writer of the shared `glossary.md` + `decisions.md`. No other agent
-  receives it; readers get the brokered `PHASE_DIR/glossary.md` instead.
+- `DEFINITIONS_DIR` — `<INITIATIVE_DIR>` — injected to the **Glossary Keeper** (sole
+  writer of `glossary.md`) and the **Decisions Keeper** (sole writer of `decisions.md`)
+  only. No other agent receives it; readers get the brokered `PHASE_DIR/glossary.md`
+  instead.
 
 ## The phase folder
 
@@ -163,10 +169,11 @@ Each iteration:
      **distinct files**, so when both are due you spawn them **in the same turn**
      (parallel). Spawn the **Gap Reporter** for the live gap map; and
    - when domain terms or cross-phase decisions accumulate (typically after the
-     first capture rounds, and again before production), spawn the **Glossary
-     Keeper** with `DEFINITIONS_DIR` injected: it reads `qa-log.md` and
-     `target-document.md` and writes canonical terms to the initiative's shared
-     `glossary.md` (and cross-phase decisions to `decisions.md`). You then **re-seed**
+     first capture rounds, and again before production), spawn — in the same turn,
+     distinct files — the **Glossary Keeper** (canonical terms → `glossary.md`) and
+     the **Decisions Keeper** (cross-phase decisions → `decisions.md`), both with
+     `DEFINITIONS_DIR` injected; they read `qa-log.md` and `target-document.md`. You
+     then **re-seed**
      the brokered `PHASE_DIR/glossary.md` so the **Doc Updater** (this phase) and the
      **Humanizer** and **Translator** (Phase 3) read the refreshed terms — and so do
      later fronts. Terminology never drifts because it is defined once, at the
@@ -270,11 +277,14 @@ side branch:
 
 - **Setup:** Template Validator, Source Indexer, Template Analyst.
 - **Loop:** Question Strategist, Evidence Extractor, Reconciler, Synthesizer
-  (read-only proposers); Ledger Writer, Doc Updater, Glossary Keeper, Gap Reporter
-  (writers); Confidence Auditor (read-only gate).
+  (read-only proposers); Ledger Writer, Doc Updater, Glossary Keeper, Decisions
+  Keeper, Gap Reporter (writers); Confidence Auditor + Integrity Checker (read-only
+  gate — the Auditor judges quality/readiness, the Integrity Checker mechanically
+  verifies completeness/no-truncation).
 - **Production:** Humanizer ∥ Enrichment Analyst, then Visual Enricher ∥ Citation
-  Resolver ∥ Translator, then Finalizer (consumes the enriched copy + the Citation
-  Resolver's appendix/link map).
+  Resolver ∥ Translator, then Language Auditor (read-only — verifies the humanized
+  copy for language leaks; leaks route back to the Humanizer), then Finalizer
+  (consumes the enriched copy + the Citation Resolver's appendix/link map).
 - **Wrap:** Packager.
 
 Every writer obeys the single-writer + serialize/queue/merge/RMW rules in

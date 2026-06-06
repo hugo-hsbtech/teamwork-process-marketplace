@@ -40,12 +40,15 @@ For every section in scope (`capture` and `derived`):
 4. **Quality bar:** compare against the exemplar — is the problem pain-not-solution,
    are soft sections hinted, are tensions resolved, are derived sections flagged
    drafts? Note shortfalls.
-5. **Completeness / truncation:** confirm `$DOC` ends with the
-   `<!-- END OF DOCUMENT -->` sentinel and that no section was truncated or replaced
-   by a placeholder (`...`, `unchanged`, `omitted`). A missing sentinel or an
-   elision is a hard finding — the document was truncated and must be rewritten
-   before it can pass.
+(Document completeness — the `<!-- END OF DOCUMENT -->` sentinel and no truncation /
+elision — is verified separately by the mechanical **`hsb-integrity-checker`**, which
+runs alongside you. You focus on the judgment; it owns the deterministic structural
+check. If it returns `integrity = fail`, the gate cannot clear regardless of your
+verdict.)
 
-Return a structured verdict: `gate = clear | open`; the list of failing blocking
-sections with *why* and *what would close them*; conflict recommendations; and any
-quality findings. Do not edit any file.
+Return a structured verdict: `gate = clear | open`; a single **canonical readiness
+value** (`readiness = NN%`) stamped with the document rev it was scored against
+(`as-of-rev: N`), so downstream writers quote it instead of recomputing the score;
+the list of failing blocking sections with *why* and *what would close them*; conflict
+recommendations; and any quality findings. Your verdict is the **single source** of the
+readiness number — no other agent recomputes it. Do not edit any file.

@@ -1,0 +1,41 @@
+# Declarative dependency graph — initiative-analytics (read-then-report, no capture loop).
+# Validated by tools/pipeline_graph.py. See ../tech-assessment/references/scheduling.md.
+#
+# The cost ledger is written ONLY by the cost-capture hook, never by an agent, so it is an
+# external input and has no entry in file_writers.
+
+version: 1
+skill: initiative-analytics
+
+external_inputs:
+  - cost-ledger       # analytics/cost-ledger.jsonl — written by the hook, not an agent
+  - pricing           # assets/pricing.json
+  - initiative-json   # the works + definitions index
+  - phase-artifacts   # each phase's qa-log, contract, frozen documents
+
+section_datums: []
+
+file_writers:
+  analytics/roi-report.md: hsb-roi-reporter
+  analytics/roi.json: hsb-roi-reporter
+
+nodes:
+  hsb-cost-collector:
+    phase: collect
+    reads: [cost-ledger, pricing]
+    decides: [investment-metrics]
+  hsb-metrics-analyst:
+    phase: collect
+    reads: [initiative-json, phase-artifacts]
+    decides: [process-metrics]
+  hsb-value-scorer:
+    phase: collect
+    reads: [initiative-json, phase-artifacts]
+    decides: [value-score]
+  hsb-roi-reporter:
+    phase: report
+    reads: [investment-metrics, process-metrics, value-score]
+    decides: [roi-report, roi-json]
+    persists: [analytics/roi-report.md, analytics/roi.json]
+
+reconciliations: []

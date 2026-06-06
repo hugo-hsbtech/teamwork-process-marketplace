@@ -18,8 +18,10 @@ Write `output/manifest.md` containing:
   the enriched copy, and the Finalizer's `final/<project>-NNN.md` printable
   deliverable. Mark the latest `final/` entry as **the printable final** so the
   human knows which file to hand off.
-- **Readiness** - the final score, gate state (clear/open), and the list of any
-  blocking sections still open.
+- **Readiness** - the final score and gate state **quoted from the Confidence
+  Auditor's canonical verdict** (via the ledger header), carrying its `as-of-rev`
+  stamp so a stale manifest is visible - never recomputed here - plus the list of
+  any blocking sections still open.
 - **Open dispositions** - every assumption / discovery / deferred item still to
   validate, with its owner or time-box, pulled from the ledger and document.
 - **Provenance** - template name, `template_version`, and `template_hash` from the

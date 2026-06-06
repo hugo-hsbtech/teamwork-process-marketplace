@@ -15,7 +15,9 @@ Read `PHASE_DIR/contract.lock.md`, `$DOC`, and `qa-log.md`. Follow
 `SKILL_DIR/references/writing-integrity.md`.
 
 Write `readiness-report.md` containing:
-- **Headline:** readiness score, gate state (clear / open), date.
+- **Headline:** the readiness score and gate state **quoted from the Confidence
+  Auditor's canonical verdict** (via the ledger header), carrying its `as-of-rev`
+  stamp — never recomputed here — plus the date.
 - **Section map:** a table of every section - `id · blocks? · current confidence ·
   status · what would raise it` (the hint) - sorted blocking-first, then lowest
   confidence. This is the at-a-glance gap map.

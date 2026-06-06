@@ -1,0 +1,32 @@
+name: pipeline-graphs
+
+# Validate every declarative pipeline graph (single-writer, single-decider, no dangling
+# reads, acyclic, and provisional-outputs-are-reconciled) on every push and PR.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "plugins/hsb-teamwork/skills/**/pipeline*.yaml"
+      - "plugins/hsb-teamwork/tools/**"
+      - ".github/workflows/pipeline-graphs.yml"
+  pull_request:
+    paths:
+      - "plugins/hsb-teamwork/skills/**/pipeline*.yaml"
+      - "plugins/hsb-teamwork/tools/**"
+      - ".github/workflows/pipeline-graphs.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install PyYAML
+        run: python -m pip install --quiet pyyaml
+      - name: Validate all pipeline graphs
+        run: bash plugins/hsb-teamwork/tools/check_pipelines.sh
+      - name: Self-test the validator
+        run: python plugins/hsb-teamwork/tools/test_pipeline_graph.py

@@ -3,8 +3,14 @@
 This skill is a **multi-agent pipeline** that extends the origination engine. The
 conversation you (the orchestrator) run is Layer 0 — the only layer that talks
 to the PO. Everything else is a specialized subagent you spawn with a focused
-prompt and tear down. This file is the authoritative spec for *who runs when,
-who may write what, and what runs in parallel* in the readiness-package flow.
+prompt and tear down. This file is the **narrative** view of *who runs when,
+who may write what, and what runs in parallel* in the readiness-package flow. The
+**machine** view — validated ordering + the single-writer/single-decider invariants —
+is declared per act in [`../pipeline.intake.yaml`](../pipeline.intake.yaml) (Act 1) and
+[`../pipeline.readiness.yaml`](../pipeline.readiness.yaml) (Act 2), checked by
+`tools/pipeline_graph.py` (see
+[`../../tech-assessment/references/scheduling.md`](../../tech-assessment/references/scheduling.md)).
+When the prose and the graph disagree, the graph wins.
 
 ## What this reuses (no duplication)
 
@@ -54,9 +60,12 @@ code changes.
 | `hsb-reconciler` | read-only | Confirm loop (B3) — on conflicts (e.g. origination said X, PO now says Y) |
 | `hsb-ledger-writer` | **writer** (`qa-log.md`, per phase) | Both acts — records questions, answers, proposed entries (intake then RP) |
 | `hsb-doc-updater` | **writer** (`$DOC` per phase) | Both acts — sole writer of `intake-record.md` (Act 1) and `readiness-document.md` (Act 2), selected via injected `DOC` |
-| `hsb-glossary-keeper` | **writer** (initiative `glossary.md` + `decisions.md`) | Optional, when domain terms / cross-phase decisions accumulate; spawned with `DEFINITIONS_DIR` |
+| `hsb-glossary-keeper` | **writer** (initiative `glossary.md`) | Optional, when domain terms accumulate; spawned with `DEFINITIONS_DIR` |
+| `hsb-decisions-keeper` | **writer** (initiative `decisions.md`) | Optional, when cross-phase decisions accumulate (incl. the triage routing decision); spawned with `DEFINITIONS_DIR` |
 | `hsb-gap-reporter` | **writer** (`readiness-report.md`) | Optional, gap map for the PO |
 | `hsb-confidence-auditor` | read-only | Confirm loop (B3) — re-scores sections (incremental via `SECTIONS`), flags conflicts |
+| `hsb-integrity-checker` | read-only | Confirm loop (B3) — mechanically verifies the document is complete/untruncated (sentinel, no elision) |
+| `hsb-language-auditor` | read-only | Phase B4 — verifies the humanized copy for language leaks; leaks route back to the Humanizer |
 | `hsb-synthesizer` | read-only | Optional — composes generic `derived` sections; in the RP the `inherited-readiness` and `tech-assessment-ref` derived sections are composed by the Stage Inheritor and Escalation Flagger instead |
 | `hsb-humanizer` | **writer** (`output/humanized.md`) | Phase B4 — must finish before translator/enricher |
 | `hsb-translator` | **writer** (`output/translated.pt-BR.md`) | Phase B4, parallel with visual-enricher |
@@ -72,12 +81,13 @@ readiness-package skill is their first consumer.
 | Agent | Writer? | When spawned |
 |---|---|---|
 | `hsb-triage-assessor` | read-only proposer | **Phase A (triage)** — scores the five triage criteria and proposes the routing decision; the gate proposer for Act 1 |
+| `hsb-demand-classifier` | read-only proposer | **Phase A (triage)** — proposes the demand-nature / KB classification (born at triage; steers the TA path); runs alongside the Triage Assessor |
 | `hsb-stage-inheritor` | read-only proposer | Phase B1, after source-indexer completes — pre-fills inheritable sections from the origination-record (+ the triage outcome) |
 | `hsb-section-drafter` | read-only proposer | Phase B2 (draft pass) — proposes `ai_drafted` sections; **fanned out one per `SECTION`** for parallelism |
 | `hsb-escalation-flagger` | read-only proposer | Phase B2, once scope and business-rules are drafted |
 
 **`hsb-doc-updater` and `hsb-ledger-writer` are the only writers of
-`readiness-document.md` and `qa-log.md` respectively.** All three stage-agnostic
+`readiness-document.md` and `qa-log.md` respectively.** All four stage-agnostic
 agents above are read-only proposers; they return structured proposals
 to the orchestrator, who routes them through the single writers.
 
@@ -118,13 +128,15 @@ It runs on the same engine as Act 2, pointed at the **Intake Record** template.
    - **`hsb-source-indexer`** indexes the origination-record (the `artifacts.canonical`
      / `final` path from the works index) into `intake/sources/`.
    - **`hsb-template-analyst`** derives `intake/contract.lock.md` from the intake template.
-4. Spawn **`hsb-triage-assessor`** (read-only). It scores the five criteria and proposes
-   the routing decision with the decision model
-   (`verdict`/`rationale`/`basis`/`source`/`reversible`), flagging any it cannot settle.
+4. Spawn **in the same turn** (read-only, parallel): **`hsb-triage-assessor`** — scores
+   the five criteria and proposes the routing decision
+   (`verdict`/`rationale`/`basis`/`source`/`reversible`); and **`hsb-demand-classifier`** —
+   proposes the demand-nature / KB classification (born at triage, steers the TA path).
+   Each flags anything it cannot settle.
 5. **Ask the PO only the unsettled criteria** (triage-priority questions, engine
    `open`/`choice` protocol); the PO commits the final routing decision. Route confirmed
    verdicts through **`hsb-ledger-writer`** → **`hsb-doc-updater`** (writes
-   `intake-record.md`). Spawn **`hsb-glossary-keeper`** (with `DEFINITIONS_DIR`) to record
+   `intake-record.md`). Spawn **`hsb-decisions-keeper`** (with `DEFINITIONS_DIR`) to record
    the routing decision in the initiative's `decisions.md` (a cross-phase fact).
 
 ### Gate — the routing decision
@@ -199,7 +211,13 @@ Repeats until the freeze gate clears:
    conflicts, returns the gap verdict. On the **first** pass it scores every
    section; on later passes inject `SECTIONS` (the ids touched since the last
    audit) so it **re-scores only those**, reusing the prior verdicts you carry
-   forward for untouched sections — each loop iteration stays cheap.
+   forward for untouched sections — each loop iteration stays cheap. The auditor's
+   verdict is the **single source** of the readiness number (`readiness` + `as-of-rev`):
+   `hsb-ledger-writer` persists it in the qa-log header, and `hsb-gap-reporter` /
+   `hsb-packager` **quote** it from there — no other agent recomputes the score.
+   - In the same turn, spawn **`hsb-integrity-checker`** (read-only, mechanical): it
+     verifies the document ends with the sentinel and has no truncation/elision.
+     `integrity = fail` is a **hard block** on the gate regardless of the score.
    - On a flagged conflict (e.g. origination said X, PO now says Y): spawn
      **`hsb-reconciler`** (read-only) to recommend resolution; route to
      `hsb-ledger-writer`.
@@ -230,7 +248,10 @@ during readiness become available to later fronts because the store is shared.
 Once `freezeReady`:
 
 1. **`hsb-humanizer`** writes `output/humanized.md` — the canonical clean
-   copy all production agents read. Must finish first.
+   copy all production agents read. Must finish first. Then spawn
+   **`hsb-language-auditor`** (read-only) to verify it for language leaks
+   (untranslated jargon, unlocalized labels, terminology drift, em/en dashes);
+   route any leaks back to the Humanizer to fix before the rest read it.
 2. Then spawn **in the same turn** (parallel, distinct files):
    - **`hsb-translator`** → `output/translated.pt-BR.md` (or the confirmed
      output language).

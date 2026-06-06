@@ -99,7 +99,8 @@ read-only and returns proposals you route to the writer.
 | Phase | `subagent_type` | Role |
 |---|---|---|
 | 1 | `hsb-cost-collector` | aggregate `cost-ledger.jsonl` (+ `PRICING`) → investment & time metrics (read-only) |
-| 1 | `hsb-metrics-analyst` | process/outcome metrics + document-derived value score (read-only) |
+| 1 | `hsb-metrics-analyst` | process/outcome metrics (read-only) |
+| 1 | `hsb-value-scorer` | document-derived value score 0–100 (read-only) |
 | 3 | `hsb-roi-reporter` | write `analytics/roi-report.md` + `analytics/roi.json` (sole writer) |
 
 When spawning, inject: `SKILL_DIR` (told to you at launch), `INITIATIVE_DIR`,
