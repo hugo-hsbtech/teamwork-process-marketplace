@@ -33,8 +33,29 @@ attribute consumption to the right `<INITIATIVE_DIR>/<phase>`. If no binding
 exists for the session (a run that is not an `hsb-teamwork` run), the hook exits
 silently — it captures nothing it cannot attribute.
 
+### How the skill learns its own `session_id` — the `SessionStart` stamp
+
+There is a chicken-and-egg problem: the binding file is *named* by `session_id`,
+but the skill orchestrator does **not** otherwise know its session id — only hook
+payloads carry it. The plugin closes the gap with a tiny **`SessionStart` hook**,
+`hooks/teamwork-session-stamp.py`, registered alongside the capture hook. On every
+session start it receives `session_id` + `cwd` on stdin and stamps:
+
+```
+<TEAMWORK_ROOT>/.sessions/.current
+  { "session_id": "<session_id>", "cwd": "<cwd>" }
+```
+
+The skill then **reads `.current`** to learn its id and writes
+`<TEAMWORK_ROOT>/.sessions/<session_id>.json`. The stamp is best-effort and
+crash-safe (always exits 0) and writes only the id — at `SessionStart` the active
+initiative is not yet known. If the stamp hook is not registered, `.current` is
+absent, the skill skips the binding write, and capture is simply silent for that
+run — never a failure.
+
 `TEAMWORK_ROOT` is resolved exactly as the skills resolve it: `$TEAMWORK_HOME`,
-else the git top-level + `/.teamwork`, else `cwd/.teamwork`.
+else the git top-level + `/.teamwork`, else `cwd/.teamwork` — and the stamp hook
+uses the identical rule so `.current` lands under the same root the skill reads.
 
 ---
 
