@@ -197,7 +197,7 @@ the scope.
 | 4 | `hsb-confidence-auditor` | re-score sections + gate verdict; **flag A↔B contradictions** (read-only) |
 | 4 | `hsb-question-strategist` | propose questions (**fallback only** — genuine conflict / missing source) (read-only) |
 | 4 | `hsb-evidence-extractor` | satisfy an open question from the indexed RP / TA (read-only) |
-| 4 | `hsb-glossary-keeper` | record the PRD freeze + dual sign-off as a cross-phase decision (writer; `DEFINITIONS_DIR`; optional) |
+| 4 | `hsb-decisions-keeper` | record the PRD freeze + dual sign-off as a cross-phase decision (writer; `DEFINITIONS_DIR`; optional) |
 | 4 | `hsb-gap-reporter` | write the live gap map `prd-report.md` (writer; optional) |
 | 5 | `hsb-humanizer` | write `output/humanized.md` (writer) |
 | 5 | `hsb-translator` | write `output/translated.<lang>.md` (writer) |

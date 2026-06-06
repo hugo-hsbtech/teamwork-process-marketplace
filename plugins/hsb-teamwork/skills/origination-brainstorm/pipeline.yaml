@@ -26,7 +26,7 @@ file_writers:
   qa-log.md: hsb-ledger-writer
   target-document.md: hsb-doc-updater
   glossary.md: hsb-glossary-keeper
-  decisions.md: hsb-glossary-keeper
+  decisions.md: hsb-decisions-keeper
   readiness-report.md: hsb-gap-reporter
   output/humanized.md: hsb-humanizer
   output/enrichment-plan.md: hsb-enrichment-analyst
@@ -84,11 +84,20 @@ nodes:
     phase: capture
     reads: [contract, capture-content, derived-content]
     decides: [readiness-verdict]
+  hsb-integrity-checker:
+    phase: capture
+    reads: [target-document]
+    decides: [integrity-verdict]
   hsb-glossary-keeper:
     phase: capture
     reads: [qa-log, target-document]
     decides: [glossary]
-    persists: [glossary.md, decisions.md]
+    persists: glossary.md
+  hsb-decisions-keeper:
+    phase: capture
+    reads: [qa-log, target-document]
+    decides: [decisions]
+    persists: decisions.md
   hsb-gap-reporter:
     phase: capture
     reads: [readiness-verdict]
@@ -101,6 +110,10 @@ nodes:
     reads: [target-document, glossary]
     decides: [humanized]
     persists: output/humanized.md
+  hsb-language-auditor:
+    phase: production
+    reads: [humanized]
+    decides: [language-verdict]
   hsb-enrichment-analyst:
     phase: production
     reads: [target-document, qa-log, sources]

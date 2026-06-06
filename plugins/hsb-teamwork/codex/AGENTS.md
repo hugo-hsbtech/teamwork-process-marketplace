@@ -59,8 +59,9 @@ by performing each role yourself as a step, in this order:
    answers from files (Extraction role) → record them in `qa-log.md` (Ledger
    role) → ask the human only the still-open questions → fill `target-document.md`
    (Doc Updater role) → re-score against the rubric and gate (Auditor role).
-   Resolve conflicts (Reconciler role) and keep terms consistent (Glossary role) by
-   writing the initiative's shared `glossary.md` + `decisions.md`. Loop until every
+   Resolve conflicts (Reconciler role), keep terms consistent (Glossary role →
+   `glossary.md`), and record cross-phase decisions (Decisions role → `decisions.md`).
+   Loop until every
    blocking section is at or above its `min-confidence` or has an honest disposition.
    Telemetry is a vertical **Provenance block** in the origination template (localize
    its labels and the headings when the output language is not English).
@@ -414,8 +415,9 @@ as a step, in this order:
    Write only under `INITIATIVE_DIR/analytics/`. Mirror the initiative's language.
 2. **Collect:** Cost Collector role (`hsb-cost-collector`) aggregates the cost ledger →
    investment metrics (or `notCaptured`); Metrics Analyst role (`hsb-metrics-analyst`) reads the
-   qa-logs + documents + `initiative.json` → process/outcome metrics + the document-extracted
-   value score (each dimension cited).
+   qa-logs + documents + `initiative.json` → process/outcome metrics; Value Scorer role
+   (`hsb-value-scorer`) reads the documents → the document-extracted value score (each dimension
+   cited). The value judgment is split from the metric counting.
 3. **Compose:** the ROI composites (`roi-model.md`) — cost-to-readiness, throughput per
    dollar/hour/token, value-anchored ROI (estimate), gate savings (only on a real early stop),
    automation leverage, cache discipline.
@@ -423,12 +425,13 @@ as a step, in this order:
    `analytics/roi-report.md` (from `assets/target-template.roi-report.md`) and
    `analytics/roi.json`. Then report the headline to the human.
 
-### The three subagents this skill drives
+### The subagents this skill drives
 
 | Subagent TOML | Role here |
 |---|---|
 | `agents/hsb-cost-collector.toml` | aggregate the cost ledger → investment metrics (read-only) |
-| `agents/hsb-metrics-analyst.toml` | process/outcome metrics + document-extracted value score (read-only) |
+| `agents/hsb-metrics-analyst.toml` | process/outcome metrics (read-only) |
+| `agents/hsb-value-scorer.toml` | document-extracted value score 0–100 (read-only) |
 | `agents/hsb-roi-reporter.toml` | sole writer of `analytics/roi-report.md` + `analytics/roi.json` |
 
 Each reads its full role spec from `../agents/<role>.md` and the shared references. Run them

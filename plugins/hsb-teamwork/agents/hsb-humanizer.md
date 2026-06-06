@@ -35,6 +35,11 @@ language is not English:
   with no translation (e.g. "greenfield", gloss it on first use). Use the glossary's
   canonical terms; never synonym-cycle.
 
+After you write the copy, an independent **`hsb-language-auditor`** (read-only) re-checks
+it for language leaks (untranslated jargon, unlocalized headings/labels, terminology
+drift, stray em/en dashes). The orchestrator routes any leaks it finds back to you to
+fix. You hold the pen on `humanized.md`; the auditor never edits it.
+
 **Rewrite, don't delete.** Replace AI-isms with natural alternatives; keep the
 paragraph count and meaning.
 

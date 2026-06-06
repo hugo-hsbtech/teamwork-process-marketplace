@@ -190,7 +190,8 @@ once explains all of them.
   they perform, not the phase they run in, so the same roster serves every step. A
   shared core writes the artefacts in every skill — `hsb-doc-updater` (the target
   document), `hsb-ledger-writer` (`qa-log.md`), `hsb-glossary-keeper` (the shared
-  `glossary.md` + `decisions.md`) — while each step adds its own read-only proposers
+  `glossary.md`) and `hsb-decisions-keeper` (the shared `decisions.md`) — while each
+  step adds its own read-only proposers
   (e.g. origination's `hsb-question-strategist` / `hsb-confidence-auditor`, readiness's
   `hsb-triage-assessor`, tech-assessment's `hsb-feasibility-assessor`). The names are
   identical on Claude and Codex (`hsb-<role>`). Each skill's README lists its full

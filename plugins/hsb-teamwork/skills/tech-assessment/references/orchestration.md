@@ -58,9 +58,12 @@ through the TA template and guide, not through code changes.
 | `hsb-reconciler` | read-only | Confirm loop — on conflicts (e.g. RP asserted X, the technical lens says Y) |
 | `hsb-ledger-writer` | **writer** (`qa-log.md`) | Records questions, answers, proposed entries |
 | `hsb-doc-updater` | **writer** (`$DOC` = `technical-assessment.md`) | Sole writer of the TA document |
-| `hsb-glossary-keeper` | **writer** (initiative `glossary.md` + `decisions.md`) | Optional — records the feasibility verdict + hard constraints as cross-phase decisions; spawned with `DEFINITIONS_DIR` |
+| `hsb-glossary-keeper` | **writer** (initiative `glossary.md`) | Optional — canonical terms; spawned with `DEFINITIONS_DIR` |
+| `hsb-decisions-keeper` | **writer** (initiative `decisions.md`) | Optional — records the feasibility verdict + hard constraints as cross-phase decisions; spawned with `DEFINITIONS_DIR` |
 | `hsb-gap-reporter` | **writer** (`assessment-report.md`) | Optional — gap map for the CTO |
 | `hsb-confidence-auditor` | read-only | Confirm loop — re-scores sections (incremental via `SECTIONS`), flags conflicts |
+| `hsb-integrity-checker` | read-only | Confirm loop — mechanically verifies the TA is complete/untruncated (sentinel, no elision) |
+| `hsb-language-auditor` | read-only | Phase 5 — verifies the humanized copy for language leaks; leaks route back to the Humanizer |
 | `hsb-humanizer` | **writer** (`output/humanized.md`) | Phase 5 — must finish before translator/enricher |
 | `hsb-translator` | **writer** (`output/translated.<lang>.md`) | Phase 5, parallel with visual-enricher |
 | `hsb-visual-enricher` | **writer** (`output/enriched.md`) | Phase 5, parallel with translator |
@@ -200,6 +203,9 @@ Repeats until the freeze gate clears:
    verdict is the **single source** of the readiness number (`readiness` + `as-of-rev`):
    `hsb-ledger-writer` persists it in the qa-log header and `hsb-packager` quotes it —
    no other agent recomputes the score.
+   - In the same turn, spawn **`hsb-integrity-checker`** (read-only, mechanical): it
+     verifies the TA ends with the sentinel and has no truncation/elision;
+     `integrity = fail` is a hard block on the gate.
    - On a flagged conflict: spawn **`hsb-reconciler`** (read-only); route to
      `hsb-ledger-writer`.
    - Optional: spawn **`hsb-gap-reporter`** for a live gap map.
@@ -237,7 +243,9 @@ See [`feasibility.md`](feasibility.md) for the full gate and the Discovery exit.
 Once `signOffReady`:
 
 1. **`hsb-humanizer`** writes `output/humanized.md` — the canonical clean copy all
-   production agents read. Must finish first.
+   production agents read. Must finish first. Then spawn **`hsb-language-auditor`**
+   (read-only) to verify it for language leaks; route any leaks back to the Humanizer
+   before the rest read it.
 2. Then spawn **in the same turn** (parallel, distinct files):
    - **`hsb-translator`** → `output/translated.<lang>.md` (the confirmed output
      language).

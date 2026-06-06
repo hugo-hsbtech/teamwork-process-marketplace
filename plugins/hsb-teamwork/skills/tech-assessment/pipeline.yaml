@@ -142,6 +142,10 @@ nodes:
     reads: [contract]
     reads_all_sections: true   # re-scores every section + the verdict
     decides: [readiness-verdict]
+  hsb-integrity-checker:
+    phase: confirm
+    reads: [ta-document]
+    decides: [integrity-verdict]
 
   hsb-doc-updater:
     phase: confirm
@@ -162,6 +166,10 @@ nodes:
     reads: [ta-document]
     decides: [humanized]
     persists: output/humanized.md
+  hsb-language-auditor:
+    phase: production
+    reads: [humanized]
+    decides: [language-verdict]
 
   hsb-translator:
     phase: production

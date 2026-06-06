@@ -21,7 +21,7 @@ file_writers:
   qa-log.md: hsb-ledger-writer
   intake-record.md: hsb-doc-updater
   glossary.md: hsb-glossary-keeper
-  decisions.md: hsb-glossary-keeper
+  decisions.md: hsb-decisions-keeper
 
 nodes:
   hsb-template-validator:
@@ -43,7 +43,11 @@ nodes:
     phase: triage
     governs: true                       # routing decision gates whether Act 2 runs
     reads: [contract, sources]
-    decides: [triage-decision, demand-nature]   # demand-nature is BORN here (seeds the TA)
+    decides: [triage-decision]
+  hsb-demand-classifier:
+    phase: triage
+    reads: [contract, sources]
+    decides: [demand-nature]            # demand-nature is BORN here (seeds the TA)
   hsb-ledger-writer:
     phase: triage
     reads: [contract, triage-decision, demand-nature]
@@ -58,6 +62,11 @@ nodes:
     phase: triage
     reads: [qa-log, intake-record]
     decides: [glossary]
-    persists: [glossary.md, decisions.md]
+    persists: glossary.md
+  hsb-decisions-keeper:
+    phase: triage
+    reads: [qa-log, intake-record]
+    decides: [decisions]
+    persists: decisions.md
 
 reconciliations: []

@@ -43,7 +43,8 @@ Read-then-report (no capture loop). Resolve-or-select the initiative (closed one
 included), then:
 
 1. **Collect (parallel):** `hsb-cost-collector` (ledger → investment) ∥
-   `hsb-metrics-analyst` (documents → process/outcome + value score).
+   `hsb-metrics-analyst` (documents → process/outcome) ∥ `hsb-value-scorer`
+   (documents → value score 0–100).
 2. **Compose (you):** the ROI composites, including gate savings vs sibling
    baselines.
 3. **Report:** `hsb-roi-reporter` (sole writer) → `analytics/roi-report.md` +

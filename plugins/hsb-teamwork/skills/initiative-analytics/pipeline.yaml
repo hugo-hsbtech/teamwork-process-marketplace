@@ -27,7 +27,11 @@ nodes:
   hsb-metrics-analyst:
     phase: collect
     reads: [initiative-json, phase-artifacts]
-    decides: [process-metrics, value-score]
+    decides: [process-metrics]
+  hsb-value-scorer:
+    phase: collect
+    reads: [initiative-json, phase-artifacts]
+    decides: [value-score]
   hsb-roi-reporter:
     phase: report
     reads: [investment-metrics, process-metrics, value-score]

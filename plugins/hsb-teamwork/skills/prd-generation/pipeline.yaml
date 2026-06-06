@@ -42,7 +42,7 @@ file_writers:
   qa-log.md: hsb-ledger-writer
   prd.md: hsb-doc-updater
   glossary.md: hsb-glossary-keeper
-  decisions.md: hsb-glossary-keeper
+  decisions.md: hsb-decisions-keeper
   prd-report.md: hsb-gap-reporter
   output/humanized.md: hsb-humanizer
   output/translated.md: hsb-translator
@@ -125,6 +125,10 @@ nodes:
     reads: [contract, scope-reconciliation, consolidated-risk, inherited-readiness, exec-summary, handoff-gate]
     reads_all_sections: true
     decides: [readiness-verdict]
+  hsb-integrity-checker:
+    phase: confirm
+    reads: [prd-document]
+    decides: [integrity-verdict]
   hsb-question-strategist:
     phase: confirm
     reads: [contract]
@@ -137,7 +141,12 @@ nodes:
     phase: confirm
     reads: [qa-log, prd-document]
     decides: [glossary]
-    persists: [glossary.md, decisions.md]
+    persists: glossary.md
+  hsb-decisions-keeper:
+    phase: confirm
+    reads: [qa-log, prd-document]
+    decides: [decisions]
+    persists: decisions.md
   hsb-gap-reporter:
     phase: confirm
     reads: [readiness-verdict]
@@ -150,6 +159,10 @@ nodes:
     reads: [prd-document]
     decides: [humanized]
     persists: output/humanized.md
+  hsb-language-auditor:
+    phase: production
+    reads: [humanized]
+    decides: [language-verdict]
   hsb-translator:
     phase: production
     reads: [humanized]
