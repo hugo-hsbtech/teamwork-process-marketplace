@@ -21,7 +21,7 @@ source for the complete detail — it summarizes to the PRD's altitude, it does 
 | `a-personas` | RP personas / jobs-to-be-done | who is impacted + the job each hires the product to do |
 | `a-journey` | RP user journey (happy path) | the end-to-end flow the stories derive from; alt paths stay in the RP |
 | `a-business-rules` | RP business rules, validations, state transitions | a summary or pointed reference — enough to size the work |
-| `a-user-stories` | RP user stories + acceptance criteria | stories + their **primary** Given/When/Then; full criteria stay in the RP |
+| `a-user-stories` | RP epics + user stories + acceptance criteria | epics (deliverables) with their stories + **primary** Given/When/Then; preserve the RP's epic grouping, every story under exactly one epic; full criteria stay in the RP |
 | `a-nfrs` | RP §8 (non-functional requirements) | each NFR + its verification (pairs 1:1 with `b-nfr-feasibility`) |
 | `a-edge-cases` | RP §9 (edge cases / failure modes) | each case + expected behavior |
 | `success-metrics` | RP metrics with guardrails / success criteria | primary metrics + guardrails, with target / window / confidence |

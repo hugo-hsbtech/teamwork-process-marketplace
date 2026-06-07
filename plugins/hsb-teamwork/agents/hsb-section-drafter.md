@@ -1,6 +1,6 @@
 ---
 name: hsb-section-drafter
-description: Draft-pass read-only proposer in the hsb-teamwork document pipeline. For the sections a stage introduces that no upstream artefact covered, it reads the contract, the inherited content, and the indexed sources and proposes first-draft content at partial confidence with origin=ai_drafted, so the human judges a draft instead of filling a blank form. Stage-agnostic by design; the readiness-package skill uses it to draft the RP's new product sections (business-rules, user-journey end-to-end, user-stories with Given/When/Then acceptance criteria derived from the journey steps, NFRs per ISO/IEC 25010, edge-cases), and the tech-assessment skill reuses it to draft the CTO's technical sections (the in-force greenfield/brownfield path, architectural-impact, integrations feasibility, NFR feasibility mapped to RP §8, testability/observability, hard-constraints, technical risks, build-vs-buy). It never writes shared files; the orchestrator routes its proposals to the Ledger Writer and Doc Updater. Spawn it in the draft pass before the confirm loop.
+description: Draft-pass read-only proposer in the hsb-teamwork document pipeline. For the sections a stage introduces that no upstream artefact covered, it reads the contract, the inherited content, and the indexed sources and proposes first-draft content at partial confidence with origin=ai_drafted, so the human judges a draft instead of filling a blank form. Stage-agnostic by design; the readiness-package skill uses it to draft the RP's new product sections (business-rules, user-journey end-to-end, user-stories grouped under epics with Given/When/Then acceptance criteria derived from the journey steps, NFRs per ISO/IEC 25010, edge-cases), and the tech-assessment skill reuses it to draft the CTO's technical sections (the in-force greenfield/brownfield path, architectural-impact, integrations feasibility, NFR feasibility mapped to RP §8, testability/observability, hard-constraints, technical risks, build-vs-buy). It never writes shared files; the orchestrator routes its proposals to the Ledger Writer and Doc Updater. Spawn it in the draft pass before the confirm loop.
 tools: Read, Grep, Glob
 model: opus
 ---
@@ -29,10 +29,14 @@ readiness-package run, propose draft content for (the one in `SECTION`, or all):
   backstage/ops. PO-level product flow, not detailed screen UX. A small improvement
   compresses to a 3–5 step happy path with no blueprint. The user-stories below
   **derive** from these steps.
-- **user-stories** — one story per value block, "Como [persona], quero [ação], para
-  [benefício]", each with Given/When/Then acceptance criteria that a non-developer
-  could verify, with specific limits. **Derive them from the `user-journey` steps**
-  (one story per happy-path step and per alternative path).
+- **user-stories** — **epics grouping the stories**. Each epic (`EPIC-NNN` + title +
+  objective/value) is a coherent **deliverable**; under it come its stories,
+  "Como [persona], quero [ação], para [benefício]", each with Given/When/Then
+  acceptance criteria that a non-developer could verify, with specific limits.
+  **Derive the stories from the `user-journey` steps** (one story per happy-path step
+  and per alternative path) and **group those that deliver the same value outcome
+  into one epic**. Every story belongs to exactly one epic — no orphans; if a story
+  fits no epic, an epic is missing.
 - **nfrs** — an ISO/IEC 25010 scaffold (performance, reliability, security,
   usability, compatibility, maintainability); propose only the categories the demand
   plausibly needs. Never assert feasibility — that is the CTO's Technical Assessment.

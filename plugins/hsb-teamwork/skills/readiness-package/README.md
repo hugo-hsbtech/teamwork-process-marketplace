@@ -20,8 +20,9 @@ A portable, PO-facing Claude skill that runs the **Product Owner's two acts**
    artefact.
 
 The RP contains: executive summary, problem/context, objectives, personas,
-scope in/out, business rules, user stories with Given/When/Then acceptance
-criteria, NFRs, edge cases, metrics, release criteria, and risks.
+scope in/out, business rules, epics grouping the user stories with
+Given/When/Then acceptance criteria, NFRs, edge cases, metrics, release
+criteria, and risks.
 
 > This README is the orientation. The authoritative spec lives in
 > [`SKILL.md`](SKILL.md) (the orchestrator) and [`references/`](references/).

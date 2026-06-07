@@ -43,7 +43,11 @@ Enterprise admins não conseguem adicionar ou remover assentos sem abrir ticket 
 
 ---
 
-**User Stories + Critérios de Aceite** — `Confidence: 80 · Origin: ai_drafted · Source: derivado dos passos da Jornada (6.5) + origination personas · Status: resolved · Disposition: ai_drafted · Hint: PO confirmou ST-001 e ST-002; AC verificáveis por QA sem acesso ao código`
+**Épicos e User Stories + Critérios de Aceite** — `Confidence: 80 · Origin: ai_drafted · Source: derivado dos passos da Jornada (6.5) + origination personas · Status: resolved · Disposition: ai_drafted · Hint: PO confirmou EPIC-001 e suas histórias ST-001/ST-002; AC verificáveis por QA sem acesso ao código`
+
+### EPIC-001 — Gestão self-service de assentos
+
+> Objetivo / valor: dar ao admin enterprise autonomia completa sobre licenças (adicionar, remover e auditar assentos) sem depender do suporte — o entregável que elimina o gargalo de tickets de provisionamento.
 
 **ST-001 — Self-service seat add/remove**
 Como admin enterprise, quero adicionar ou remover assentos no painel de faturamento, para não depender do suporte para gestão de licenças.
