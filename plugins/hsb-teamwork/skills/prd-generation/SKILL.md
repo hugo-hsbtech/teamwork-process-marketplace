@@ -196,7 +196,7 @@ the scope.
 | Phase | `subagent_type` | Role here |
 |---|---|---|
 | 1 | `hsb-template-validator` | validate the PRD template (read-only) |
-| 1 | `hsb-source-indexer` | normalize the RP + TA + intake-record into `sources/` (writer) |
+| 1 | `hsb-source-indexer` | copy the PM's extra files into `sources/`; reference the RP + TA + intake-record in place (canonical path, not copied) in `sources-index.md` (writer) |
 | 1 | `hsb-template-analyst` | derive `contract.lock.md`, hash, restart-on-change (writer) |
 | 2 | `hsb-stage-inheritor` | read-only proposer — carries the RP into Part A (`PART: A`) and the TA into Part B (`PART: B`); **fanned out one per part** |
 | 3 | `hsb-synthesizer` | read-only proposer — composes the `derived` sections (`exec-summary`, `consolidated-risk`, `inherited-readiness`); **fanned out one per `SECTION`** |

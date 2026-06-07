@@ -11,8 +11,10 @@ reach the origin**. Those ids point at the internal ledger, which the reader nev
 receives. You make provenance **navigable**.
 
 Inputs (injected): `PHASE_DIR`, `SKILL_DIR`. Read `PHASE_DIR/qa-log.md` (the question
-ledger), `PHASE_DIR/sources-index.md` and `PHASE_DIR/sources/` (the indexed input
-files), and `PHASE_DIR/$DOC` (where the references appear). Work in the document's
+ledger), `PHASE_DIR/sources-index.md` (the map of every input — user files under
+`PHASE_DIR/sources/`, internal initiative artefacts referenced in place at their
+canonical path), and `PHASE_DIR/$DOC` (where the references appear). When you cite a
+referenced artefact, point at the canonical path the index gives, not a `sources/` copy. Work in the document's
 language; never translate content.
 
 ## What you produce (a proposal, not a file)

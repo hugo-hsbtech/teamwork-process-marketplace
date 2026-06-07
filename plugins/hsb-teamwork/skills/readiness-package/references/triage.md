@@ -134,8 +134,9 @@ When the decision is `Product Ready`, the `readiness/` phase consumes **both**
 the origination-record **and** the intake-record:
 
 - `initiative.json`: `readiness.consumes = ["origination-record", "intake-record"]`.
-- The readiness `hsb-source-indexer` indexes the intake-record alongside the
-  origination-record, so the Stage Inheritor and Section Drafter see the triage
+- The readiness `hsb-source-indexer` references the intake-record in place alongside
+  the origination-record (canonical paths in `sources-index.md`, not copied into
+  `sources/`), so the Stage Inheritor and Section Drafter see the triage
   decision, the validated assumptions, the recognized constraints, and the
   **demand nature + Knowledge Base** classification — and the RP's "Prontidão
   herdada" section and metadata reflect them.

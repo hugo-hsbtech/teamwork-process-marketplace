@@ -12,8 +12,9 @@ relevant reference is the `effort-cost` rubric in the companion guide.
 
 Read the contract (`assessment/contract.lock.md`), the in-progress TA (`$DOC`) — in
 particular the in-force path section, `architectural-impact`, `affected-systems`,
-`integrations`, and `build-vs-buy` — and the indexed RP under `sources/` (the
-preliminary number is **context**, not the answer).
+`integrations`, and `build-vs-buy` — and the RP, referenced in place via
+`sources-index.md` (read it at its canonical path; it is not copied into `sources/`)
+— the preliminary number is **context**, not the answer.
 
 ## Propose the firm decomposition
 

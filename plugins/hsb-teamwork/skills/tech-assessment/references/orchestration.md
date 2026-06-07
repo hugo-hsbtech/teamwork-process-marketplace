@@ -137,9 +137,11 @@ owed escalation, and confirm language.
    `DOC = technical-assessment.md`.
 2. **`hsb-template-validator`** audits the TA template; proceed once it passes.
 3. Spawn **in the same turn** (independent → parallel):
-   - **`hsb-source-indexer`** indexes the **RP** (the `artifacts.canonical` / `final`
-     path) as the primary source, **plus the intake-record** (for the demand nature +
-     KB) and the **`tech-landscape`** if one exists — into `assessment/sources/`.
+   - **`hsb-source-indexer`** records the **RP** (the `artifacts.canonical` / `final`
+     path) as the primary **in-place reference**, **plus the intake-record** (for the
+     demand nature + KB) and the **`tech-landscape`** if one exists — each read at its
+     canonical path, not copied. It copies only any extra files the CTO provides into
+     `assessment/sources/` and writes the map in `sources-index.md`.
    - **`hsb-template-analyst`** derives `contract.lock.md` from the TA template
      (hash-locked; restarts + supersedes stale ledger entries on a hash change).
 

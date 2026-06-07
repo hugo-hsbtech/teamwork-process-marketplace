@@ -190,7 +190,7 @@ keyed by stable id, never clobbers, and the document ends with a
 | Phase | `subagent_type` | Role |
 |---|---|---|
 | 1 | `hsb-template-validator` | validate the RP template (read-only) |
-| 1 | `hsb-source-indexer` | normalize the origination-record folder + extra files into `sources/` |
+| 1 | `hsb-source-indexer` | copy the PO's extra files into `sources/`; reference the origination-record + intake-record in place (canonical path, not copied) in `sources-index.md` |
 | 1 | `hsb-template-analyst` | derive `contract.lock.md`, hash, restart-on-change |
 | 2 | `hsb-question-strategist` | propose questions targeting low-confidence gaps (fallback only) |
 | 2 | `hsb-evidence-extractor` | propose answers from indexed sources (read-only) |

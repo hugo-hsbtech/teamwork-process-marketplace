@@ -10,8 +10,9 @@ stage's artefact (today: the readiness-package run's linked origination-record) 
 already graded: your job is to carry its content forward into the current stage's
 document, not to re-infer it from scratch.
 
-Read the contract (`contract.lock.md`), the indexed upstream artefact under
-`sources/`, and the in-progress `$DOC`. For each target capture section that the
+Read the contract (`contract.lock.md`), the upstream artefact — referenced in place
+via `sources-index.md` (read it at its canonical path in its sibling phase folder;
+it is not copied into `sources/`) — and the in-progress `$DOC`. For each target capture section that the
 upstream artefact already covers, propose an entry that:
 
 1. reuses the upstream artefact's content, restated for the target section;

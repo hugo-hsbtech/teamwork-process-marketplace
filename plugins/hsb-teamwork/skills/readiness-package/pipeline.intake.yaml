@@ -9,7 +9,8 @@ act: intake
 
 external_inputs:
   - intake-template
-  - origination-record    # the upstream artifact being triaged
+  - origination-record    # the upstream artifact being triaged (referenced in place, not copied)
+  - file-refs             # any external files the PO provides (optional; the only thing copied into sources/)
 
 section_datums:
   - intake-content        # the recorded triage criteria + routing decision content
@@ -35,7 +36,9 @@ nodes:
     persists: contract.lock.md
   hsb-source-indexer:
     phase: setup
-    reads: [origination-record]
+    # copies file-refs into sources/; records the origination-record as an in-place
+    # reference row (canonical path, not duplicated).
+    reads: [origination-record, file-refs]
     decides: [sources]
     persists: [sources/, sources-index.md]
 

@@ -23,9 +23,10 @@ skill: tech-assessment
 # Inputs that exist before the pipeline runs (no node decides them).
 external_inputs:
   - template                 # the TA target template
-  - rp                       # the frozen, escalated Readiness Package
-  - intake-record            # the Intake Record (demand nature + KB classification)
-  - tech-landscape-existing  # the persistent KB, IF one already exists
+  - rp                       # the frozen, escalated Readiness Package (referenced in place, not copied)
+  - intake-record            # the Intake Record (demand nature + KB classification; referenced in place)
+  - tech-landscape-existing  # the persistent KB, IF one already exists (referenced in place)
+  - file-refs                # any external files the CTO provides (optional; the only thing copied into sources/)
 
 # Section datums of the TA document. `reads_all_sections: true` on a node expands to
 # these (used by the auditor, the doc transcriber, and the humanizer so we don't list
@@ -78,7 +79,9 @@ nodes:
 
   hsb-source-indexer:
     phase: setup
-    reads: [rp, intake-record, tech-landscape-existing]
+    # copies file-refs into sources/; records rp + intake-record + tech-landscape as
+    # in-place reference rows (canonical paths, not duplicated).
+    reads: [rp, intake-record, tech-landscape-existing, file-refs]
     decides: [sources]
     persists: sources/
 
