@@ -142,13 +142,20 @@ Full rules in RP-2026-002 v2 §6. Summary for the PM:
 State flow: Member invited → role assigned (default Member) → role may be changed by an Owner →
 every change audited.
 
-### A.6 User Stories + Acceptance Criteria
+### A.6 Epics + User Stories + Acceptance Criteria
+
+#### EPIC-001 — Role-based workspace governance · only authorized roles can change configuration
 
 | ID | Story | Acceptance criterion (Given/When/Then) |
 |---|---|---|
 | ST-001 | As an Owner, I want to assign roles to members so that only authorized people change configuration | Given I am an Owner, when I set a member's role to Facilitator, then their permissions update immediately and the change is recorded in the audit log |
 | ST-002 | As a security admin, I want configuration actions blocked for non-Owners so that the workspace cannot be altered by participants | Given a Member or Facilitator, when they call any workspace-settings mutation, then the server rejects it with HTTP 403 and a clear message, regardless of the UI state |
 | ST-003 | As an Owner, I want last-Owner protection so that a workspace is never left without an administrator | Given I am the only Owner, when I try to demote or remove myself, then the system blocks it and explains why |
+
+#### EPIC-002 — Configuration change auditability · every change is reviewable
+
+| ID | Story | Acceptance criterion (Given/When/Then) |
+|---|---|---|
 | ST-004 | As an auditor, I want a log of configuration changes so that I can review who changed what | Given configuration or role changes occurred, when I open the audit log, then I see each change with actor, action, target, and timestamp |
 
 Full acceptance criteria in RP-2026-002 v2 §7.

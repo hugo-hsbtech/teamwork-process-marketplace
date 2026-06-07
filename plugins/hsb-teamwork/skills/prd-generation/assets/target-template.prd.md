@@ -160,14 +160,25 @@ Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 
-### A.6 User Stories + Acceptance Criteria
+### A.6 Epics + User Stories + Acceptance Criteria
 <!-- origination: id=a-user-stories; blocks=true; min-confidence=80; kind=capture -->
-> Rubric: the stories with their primary Given/When/Then acceptance criteria, inherited from
-> the RP. These are what QA/UAT validates — they must be testable. Full criteria stay in the RP.
+> Rubric: the stories **grouped under their epics**, with their primary Given/When/Then
+> acceptance criteria, inherited from the RP. Each epic (`EPIC-NNN` + objective/value) is a
+> coherent **deliverable** — the unit the PM sequences and the stakeholder recognises; every
+> story belongs to exactly one epic. These are what QA/UAT validates — they must be testable.
+> Full criteria stay in the RP.
+
+#### EPIC-001 — [Deliverable title] · [objective/value]
 
 | ID | Story | Acceptance criterion (Given/When/Then) |
 |---|---|---|
 | ST-001 | [As… I want… so that…] | [Given/When/Then] |
+
+#### EPIC-002 — [Deliverable title] · [objective/value]
+
+| ID | Story | Acceptance criterion (Given/When/Then) |
+|---|---|---|
+| ST-002 | [As… I want… so that…] | [Given/When/Then] |
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 

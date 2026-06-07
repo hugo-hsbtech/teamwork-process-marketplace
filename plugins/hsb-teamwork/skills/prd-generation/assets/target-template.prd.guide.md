@@ -78,8 +78,10 @@ do not rewrite** — the full source is the linked RP; Part A is what the PM nee
 - **`a-journey`** (blocks, 70) — the end-to-end happy path the User Stories derive from.
 - **`a-business-rules`** (blocks, 70) — rules, validations, state transitions (summary or
   pointed RP reference) — enough to size the work without surprises.
-- **`a-user-stories`** (blocks, 80) — stories with their primary Given/When/Then criteria
-  (what QA/UAT validates — they must be testable). Full criteria stay in the RP.
+- **`a-user-stories`** (blocks, 80) — stories **grouped under their epics** (each epic a
+  coherent deliverable, `EPIC-NNN` + objective/value, inherited from the RP), with their
+  primary Given/When/Then criteria (what QA/UAT validates — they must be testable). Every
+  story belongs to exactly one epic. Full criteria stay in the RP.
 - **`a-nfrs`** (blocks, 75) — the product NFRs (RP §8), each with verification. When escalated,
   each pairs 1:1 with a `b-nfr-feasibility` row — keep them consistent.
 - **`a-edge-cases`** (blocks, 70) — edge cases and failure modes (RP §9) with expected behavior.

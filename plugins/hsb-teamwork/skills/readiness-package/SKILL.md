@@ -6,8 +6,8 @@ description: >-
   decision (Product Ready / Discovery / Backlog / Reject) recorded as an Intake Record;
   only Product Ready opens Act 2 — the others short-circuit. Act 2 (rationalization):
   turn the Product Ready demand into a frozen Readiness Package (RP): executive summary,
-  problem/context, objectives, personas, scope in/out, business rules, user stories with
-  Given/When/Then acceptance criteria, NFRs, edge cases, metrics, release criteria, and
+  problem/context, objectives, personas, scope in/out, business rules, epics grouping the
+  user stories with Given/When/Then acceptance criteria, NFRs, edge cases, metrics, release criteria, and
   risks. Use this skill WHENEVER someone wants to triage, rationalize, specify, "write the
   RP for", or turn a demand / origination record into a product-ready definition. It reuses
   the origination-brainstorm engine: triage questions come first; then rationalization is
@@ -270,7 +270,7 @@ the document:
   from the origination-record at preserved confidence, tagged `Origin: inherited`.
 - **`hsb-section-drafter`** proposes first drafts for the new product sections
   (`business-rules`, `user-journey` (end-to-end happy path + alternative paths),
-  `user-stories` with Given/When/Then ACs derived from the journey steps, `nfrs`,
+  `user-stories` (epics grouping the stories, with Given/When/Then ACs derived from the journey steps), `nfrs`,
   `edge-cases`), tagged `Origin: ai_drafted` at partial confidence with an explicit
   hint naming what the PO must confirm.
 - If the drafter cannot produce a defensible draft, it proposes

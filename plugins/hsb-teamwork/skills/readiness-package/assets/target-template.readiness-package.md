@@ -204,15 +204,42 @@ Default confidence threshold (X) = 70. Raise per-section for high-stakes fields.
 
 ---
 
-## Seção 7 — User Stories + Critérios de Aceite
+## Seção 7 — Épicos e User Stories + Critérios de Aceite
 <!-- origination: id=user-stories; blocks=true; min-confidence=80; kind=capture -->
-> Rubric: uma história por bloco de valor, "Como [persona], quero [ação], para
+> Rubric: as histórias **agrupam-se sob Épicos** — cada épico é um **entregável**
+> coerente de valor (o bloco que o time entrega e que o stakeholder reconhece como
+> resultado). Um épico tem ID (`EPIC-NNN`), título e objetivo/valor; sob ele vêm as
+> user stories que o compõem. Cada história: "Como [persona], quero [ação], para
 > [benefício]"; critérios de aceite em Given/When/Then, verificáveis por não-dev,
-> com limites específicos. **Derivam dos passos da Jornada (Seção 6.5)** — cada
-> passo do happy path gera ou valida uma história. origin=ai_drafted no draft pass;
-> o PO confirma.
+> com limites específicos. **Épicos e histórias derivam da Jornada (Seção 6.5) e do
+> Escopo (Seção 5)** — cada passo do happy path gera ou valida uma história, e as
+> histórias que entregam o mesmo resultado de valor formam um épico. origin=ai_drafted
+> no draft pass; o PO confirma os épicos e as histórias. **Regra de evidência dos
+> entregáveis:** toda história pertence a exatamente um épico e nenhuma história fica
+> órfã — se uma história não cabe em nenhum épico, falta um épico.
 
-[fill]
+### EPIC-001 — [Título do entregável]
+
+> Objetivo / valor: [o resultado de negócio que este épico entrega de ponta a ponta]
+
+**ST-001 — [título curto da história]**
+Como [persona], quero [ação], para [benefício].
+
+*Given* [contexto] *when* [ação] *then* [resultado verificável].
+
+**ST-002 — [título curto da história]**
+Como [persona], quero [ação], para [benefício].
+
+*Given* [contexto] *when* [ação] *then* [resultado verificável].
+
+### EPIC-002 — [Título do entregável]
+
+> Objetivo / valor: [o resultado de negócio que este épico entrega de ponta a ponta]
+
+**ST-003 — [título curto da história]**
+Como [persona], quero [ação], para [benefício].
+
+*Given* [contexto] *when* [ação] *then* [resultado verificável].
 
 `Confidence:` __ · `Origin:` __ · `Source:` __ · `Status:` __ · `Disposition:` __ · `Hint:` __
 

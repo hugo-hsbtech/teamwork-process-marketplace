@@ -98,16 +98,21 @@ confirmation each entry becomes `Origin: po_authored`.
   the main journey's happy path, the section is NOT satisfied. Draft from scope,
   personas, and business-rules; `Origin: ai_drafted` at partial confidence.
 
-- **`user-stories`** (blocks, min-conf 80) — one story per value block, in the
-  format "Como [persona], quero [ação], para [benefício]"; acceptance criteria in
-  Given/When/Then, verifiable by a non-developer, with specific limits (not "should
-  work well"). This is the behaviour contract that QA validates. **Derive the stories
-  from the journey steps (`user-journey`)** — one story per happy-path step (and the
-  alternative paths) — and from scope and personas; mark each as
-  `Origin: ai_drafted` at partial confidence. The PO confirms the story set,
-  adjusts scope, and verifies that each acceptance criterion is testable by someone
-  without code access. At least one story required; no upper limit, but prefer
-  atomic stories over omnibus ones.
+- **`user-stories`** (blocks, min-conf 80) — **epics and the user stories grouped
+  under them**. Each **epic** is a coherent **deliverable** of value (`EPIC-NNN` +
+  title + objective/value): the block the team ships and the stakeholder recognises
+  as a result. Under each epic come its stories, in the format "Como [persona],
+  quero [ação], para [benefício]"; acceptance criteria in Given/When/Then, verifiable
+  by a non-developer, with specific limits (not "should work well"). This is the
+  behaviour contract that QA validates. **Derive the stories from the journey steps
+  (`user-journey`)** — one story per happy-path step (and the alternative paths) —
+  from scope and personas, and **group stories that deliver the same value outcome
+  into one epic**; mark each as `Origin: ai_drafted` at partial confidence. The PO
+  confirms the epics and the story set, adjusts scope, and verifies that each
+  acceptance criterion is testable by someone without code access. **Deliverable-
+  evidence rule: every story belongs to exactly one epic and no story is orphaned —
+  if a story fits no epic, an epic is missing.** At least one epic with one story
+  required; no upper limit, but prefer atomic stories over omnibus ones.
 
 ### `nfrs` — non-functional requirements (ai_drafted, PO confirms)
 

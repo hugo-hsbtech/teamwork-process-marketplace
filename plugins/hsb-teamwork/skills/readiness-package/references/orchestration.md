@@ -190,7 +190,7 @@ before moving to Phase B2.
 1. Spawn **`hsb-section-drafter`** **once per product section, all in the same
    turn** (independent → parallel), each injected with a single `SECTION`:
    `business-rules` ∥ `user-journey` (end-to-end happy path + alternative paths) ∥
-   `user-stories` (Given/When/Then ACs derived from the journey steps) ∥ `nfrs`
+   `user-stories` (epics grouping the stories — Given/When/Then ACs derived from the journey steps) ∥ `nfrs`
    (ISO/IEC 25010 scaffold) ∥ `edge-cases`. Each is a read-only proposer that reads
    the contract, the inherited entries, and the indexed sources and returns drafts
    for **its one section** at `Origin: ai_drafted`, partial confidence, with a hint.
