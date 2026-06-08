@@ -7,3 +7,6 @@
 # Python bytecode (e.g. from the cost-capture hook)
 __pycache__/
 *.pyc
+
+# Teamwork harness runtime session state (transient per-session pointer; not an artifact)
+.teamwork/.sessions/
