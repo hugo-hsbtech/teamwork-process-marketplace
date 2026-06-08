@@ -31,8 +31,47 @@ visual would make land?" Typical opportunities:
 - **Flow / process** diagrams for a described sequence (the pain flow, the handoff
   paths, a decision tree for a triage draft).
 - **Stakeholder / reach maps** for who-is-affected.
+- **Risk matrices** for any probability×impact register (the consolidated risk view,
+  a §-risks table) → `quadrantChart`. Map each risk's probability to x and impact to y
+  (Low→High on both); the four quadrants name the action (act now / monitor / plan
+  mitigation / accept). **Plan the labels as plain text** — quadrant/axis/title labels
+  must carry **no parentheses or other special punctuation** (they trip the
+  quadrantChart lexer on GitHub); fold any "(act now)" qualifier into the words
+  themselves. Note in the render note that point labels with spaces must be quoted.
 - **Summary tables / callouts** that condense dense prose into an at-a-glance.
 - **Timelines** (`gantt`) only when there are real dates/deadlines.
+
+### Didactic decomposition of epics & user stories
+
+Epics and user stories are the part a reader most needs *taught*, not just listed. When
+the document carries an epics/stories section (e.g. a PRD's A.6, an RP's epics), a user
+journey, business rules/flows, or a domain the demand acts on, plan the **didactic
+visuals the prose already supports** — pick the form that fits what is described, do not
+force all of them:
+
+- **Activity / process flow** (`flowchart`) — the steps a story or epic walks through
+  end to end (the happy path plus the named alternate/failure branches the text states).
+- **Sequence diagram** (`sequenceDiagram`) — when a story describes an **interaction
+  across actors/systems** (user → UI → API → service → store), show the ordered messages.
+- **State machine** (`stateDiagram-v2`) — **only when an entity in the story is genuinely
+  stateful** (e.g. an invite: invited → assigned → changed → revoked; a session:
+  draft → open → closed). Skip it when nothing transitions through named states.
+- **Domain model** (`classDiagram` or `erDiagram`) — the **models/entities involved** and
+  their relationships, drawn from the nouns the stories and business rules name (e.g.
+  Workspace 1—* Membership, Membership *—1 Role). Use `erDiagram` when it reads as data,
+  `classDiagram` when behavior/attributes matter.
+- **Domains / bounded contexts involved** (`flowchart`/`graph` with subgraphs) — which
+  areas/services each epic touches, when the text names more than one.
+- **C4 view** (Context / Container) — plan it as a **`flowchart TB` with subgraphs**
+  (person, the system, external systems for Context; containers/services for Container),
+  **not** Mermaid's `C4Context`, which GitHub does not render reliably. Reserve it for
+  when an escalated PRD's architectural-impact / nature-landscape content actually
+  describes systems and containers; say in the render note which C4 level it represents.
+
+Each didactic visual must be **traceable to the text it teaches** (cite the epic/story
+ID, the journey row, the business rule, or the arch-impact row it derives from) and must
+**invent no structure the document does not state**. Attach each to the section it
+illuminates and keep it proportionate — one clear diagram per epic/flow beats a wall.
 
 ## Never invent data
 
@@ -51,9 +90,12 @@ Write `output/enrichment-plan.md` as a readable Markdown catalog. Header first:
 <!-- rev: 1 · updated: AAAA-MM-DD · source-doc-rev: <rev of $DOC> -->
 
 > Read-only plan. The Visual Enricher renders these into output/enriched.md.
-> Default render format: Mermaid-native (xychart-beta / pie / flowchart; GitHub
-> does not render `radar` — use a grouped xychart-beta for maturity profiles);
-> an image asset only when no Mermaid type fits.
+> Default render format: Mermaid-native (xychart-beta / pie / flowchart /
+> sequenceDiagram / stateDiagram-v2 / classDiagram / erDiagram / quadrantChart;
+> GitHub does not render `radar` — use a grouped xychart-beta for maturity
+> profiles — nor `C4Context` — render C4 views as a flowchart TB with subgraphs).
+> quadrantChart labels must be plain text (no parentheses/special punctuation).
+> An image asset only when no Mermaid type fits.
 ```
 
 Then one entry per opportunity:
@@ -74,8 +116,11 @@ Then one entry per opportunity:
 Field rules:
 
 - **`type`** — name the visual kind and the Mermaid form when one fits
-  (`xychart-beta`, `pie`, `flowchart`, `gantt`) or `table`/`callout`/`image`.
-  (Avoid `radar`: GitHub-flavored Markdown does not render it.)
+  (`xychart-beta`, `pie`, `flowchart`, `gantt`, `quadrantChart`, `sequenceDiagram`,
+  `stateDiagram-v2`, `classDiagram`, `erDiagram`) or `table`/`callout`/`image`.
+  (Avoid `radar` and `C4Context`: GitHub-flavored Markdown does not render them —
+  use a grouped `xychart-beta` for maturity profiles and a `flowchart TB` with
+  subgraphs for a C4 view. For `quadrantChart`, keep every label plain text.)
 - **Evidence grade** — `declared` (stated as fact by a source) / `estimated`
   (projection or single-source inference) / `verified` (confirmed against data). This
   is what stops a confident-looking chart from sitting on a soft number.

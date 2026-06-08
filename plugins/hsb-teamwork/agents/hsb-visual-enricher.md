@@ -26,6 +26,36 @@ produce the visual it specifies from the data points it lists. Default to
   Markdown does not render it, so the chart shows up as an unrecognized block.**
 - **Flow / process / decision:** `flowchart`; **timelines:** `gantt` (only with real
   dates); **stakeholder maps:** `flowchart`/`graph`. Use fenced ```mermaid blocks.
+- **Risk matrix (probability×impact):** `quadrantChart`. **GitHub's quadrantChart lexer
+  rejects parentheses and other special punctuation in the title, `x-axis`, `y-axis`, and
+  `quadrant-1..4` labels** — keep all four label kinds plain text (rewrite "Critical (act
+  now)" as "Critical — act now" or "Critical act now"; never leave the parentheses). Data
+  points use `"Label with spaces": [x, y]` — **quote any point label** that is not a bare
+  word, and keep x/y in 0–1. This is the exact failure to avoid:
+
+  ````
+  ```mermaid
+  quadrantChart
+      title Consolidated risk matrix
+      x-axis Low probability --> High probability
+      y-axis Low impact --> High impact
+      quadrant-1 Critical act now
+      quadrant-2 High priority monitor
+      quadrant-3 Low priority accept
+      quadrant-4 Moderate plan mitigation
+      "Low adoption": [0.75, 0.85]
+  ```
+  ````
+- **Didactic epics & user stories** (when the plan asks for them): render the form the
+  entry names — **`sequenceDiagram`** for an interaction across actors/systems,
+  **`flowchart`** for a story/epic's activity flow, **`stateDiagram-v2`** for a stateful
+  entity's transitions, **`classDiagram`**/**`erDiagram`** for the domain model
+  (entities + relationships), and **`flowchart`/`graph` with subgraphs** for the
+  domains/bounded contexts touched. Place each next to the epic/story it teaches.
+- **C4 views:** render as a **`flowchart TB` with subgraphs** (person · the system ·
+  external systems for Context; containers/services for Container) and name the C4 level
+  in the caption. **Do not emit `C4Context`/`C4Container`: GitHub does not render them
+  reliably**, so the block shows up unrendered — the flowchart form always renders.
 - An **image asset** only when no Mermaid type fits the planned `type`; otherwise stay
   in Mermaid.
 - **Summary tables / callouts** as plain Markdown.
