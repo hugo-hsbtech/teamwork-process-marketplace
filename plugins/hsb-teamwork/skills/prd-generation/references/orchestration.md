@@ -79,8 +79,9 @@ sections, and the **Reconciler** resolves the scope.
 | `hsb-integrity-checker` | read-only | Confirm loop — mechanically verifies the PRD is complete/untruncated (sentinel, no elision) |
 | `hsb-language-auditor` | read-only | Phase 5 — verifies the humanized copy for language leaks; leaks route back to the Humanizer |
 | `hsb-humanizer` | **writer** (`output/humanized.md`) | Phase 5 — must finish before translator/enricher/finalizer |
+| `hsb-enrichment-analyst` | **writer** (`output/enrichment-plan.md`) | Phase 5 — read-only over the settled `prd.md`; catalogs the sourced + didactic visual opportunities the Enricher then renders; parallel with the Humanizer |
 | `hsb-translator` | **writer** (`output/translated.<lang>.md`) | Phase 5, parallel |
-| `hsb-visual-enricher` | **writer** (`output/enriched.md`) | Phase 5, parallel |
+| `hsb-visual-enricher` | **writer** (`output/enriched.md`) | Phase 5 — renders the Analyst's plan; parallel with translator |
 | `hsb-finalizer` | **writer** (`final/<project>-NNN.md`) | Phase 5, parallel — externalizes the clean, printable final |
 | `hsb-packager` | **writer** (`output/manifest.md`) | Phase 5 (wrap) |
 
@@ -97,7 +98,7 @@ Section Drafter take `SECTION`; the Confidence Auditor takes `SECTIONS` (touched
 the Finalizer needs `PROJECT_SLUG` (from `initiative.json.project`). **Run independent
 agents in the same turn** so they execute in parallel (Indexer ∥ Analyst at setup; the
 Inheritor fan-out in Phase 2; the Synthesizer/Drafter/Reconciler fan-out in Phase 3;
-Translator ∥ Visual Enricher ∥ Finalizer in Phase 5).
+Humanizer ∥ Enrichment Analyst, then Translator ∥ Visual Enricher ∥ Finalizer in Phase 5).
 
 **You broker everything above `PHASE_DIR`** (the initiative-level `initiative.json`,
 `glossary.md`, `decisions.md`). Read the works index to find the RP
@@ -254,14 +255,28 @@ See [`handoff.md`](handoff.md) for the full gate and the PM-rejection loop.
 
 Once `handoffReady`:
 
-1. **`hsb-humanizer`** writes `output/humanized.md` — the canonical clean copy all
-   production agents read. Must finish first. Then spawn **`hsb-language-auditor`**
-   (read-only) to verify it for language leaks; route any leaks back to the Humanizer
-   before the rest read it.
+1. Spawn **in the same turn** (independent → parallel):
+   - **`hsb-humanizer`** writes `output/humanized.md` — the canonical clean copy all
+     production agents read. Then spawn **`hsb-language-auditor`** (read-only) to verify
+     it for language leaks; route any leaks back to the Humanizer before the rest read it.
+   - **`hsb-enrichment-analyst`** → `output/enrichment-plan.md` — a read-only pass over the
+     **settled `prd.md`** (plus `qa-log.md` / `sources-index.md`) cataloging every visual
+     the data **already supports**, each with its citation and evidence grade. It runs on
+     the frozen document, so it is independent of the Humanizer and goes out in the same
+     turn. Separating *what to visualize* from *how to render it* is what makes the
+     enrichment auditable — its absence left the visual-enricher in legacy fallback. The
+     plan should cover the PRD's quantitative content **and the didactic decomposition of
+     the epics & user stories** (A.6) — see the agent's didactic-decomposition rubric.
+   Both must finish before step 2 (the rest read what they write).
 2. Then spawn **in the same turn** (parallel, distinct files):
    - **`hsb-translator`** → `output/translated.<lang>.md` (the confirmed output language).
-   - **`hsb-visual-enricher`** → `output/enriched.md` (the consolidated risk table, the
-     scope-reconciliation diff, the effort breakdown, an A→B NFR-feasibility map).
+   - **`hsb-visual-enricher`** → `output/enriched.md` — **renders the Analyst's plan**:
+     the consolidated risk view as a `quadrantChart` (probability×impact; plain-text
+     labels — no parentheses), the scope-reconciliation diff, the effort breakdown, an
+     A→B NFR-feasibility map, and the **didactic epics/stories visuals** (activity flows,
+     sequence diagrams, state machines, the domain model, and a `flowchart`-based C4 view
+     where the architectural content supports one). Never invents a number the plan did
+     not source. (No plan → legacy fallback, additive visuals only.)
    - **`hsb-finalizer`** → `final/<project>-NNN.md` — the clean, **printable final
      deliverable** (strips authoring scaffold; counter-suffixed; idempotent). Inject
      `PROJECT_SLUG`.
@@ -304,7 +319,8 @@ INITIATIVE_DIR/                  # shared by every front
     ├── output/
     │   ├── humanized.md        # hsb-humanizer
     │   ├── translated.<lang>.md # hsb-translator
-    │   ├── enriched.md         # hsb-visual-enricher
+    │   ├── enrichment-plan.md  # hsb-enrichment-analyst — sourced + didactic visual catalog (insumo for the Enricher)
+    │   ├── enriched.md         # hsb-visual-enricher — renders the plan
     │   └── manifest.md         # hsb-packager
     └── final/                  # hsb-finalizer — clean, printable final deliverable(s)
         └── <project>-NNN.md    # externalized, scaffolding-stripped, counter-suffixed

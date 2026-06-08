@@ -82,6 +82,14 @@ do not rewrite** — the full source is the linked RP; Part A is what the PM nee
   coherent deliverable, `EPIC-NNN` + objective/value, inherited from the RP), with their
   primary Given/When/Then criteria (what QA/UAT validates — they must be testable). Every
   story belongs to exactly one epic. Full criteria stay in the RP.
+  *Didactic enrichment:* this is the section the reader most needs **taught**, not just
+  listed. In Phase 5 the `hsb-enrichment-analyst` plans and the `hsb-visual-enricher`
+  renders the didactic visuals the stories already support — an **activity flow** or
+  **sequence diagram** per epic, a **state machine** for any stateful entity, the
+  **domain model** (`classDiagram`/`erDiagram`) of the entities the stories name, the
+  **domains/bounded contexts** touched, and (when an escalated PRD describes systems) a
+  **C4 view** rendered as a `flowchart`. These are additive and traceable — they invent
+  no structure the document does not state.
 - **`a-nfrs`** (blocks, 75) — the product NFRs (RP §8), each with verification. When escalated,
   each pairs 1:1 with a `b-nfr-feasibility` row — keep them consistent.
 - **`a-edge-cases`** (blocks, 70) — edge cases and failure modes (RP §9) with expected behavior.
@@ -126,7 +134,10 @@ disposition that clears the gate (the no-TA path; see references/reconciliation.
   `b-hard-constraints`) — `hsb-synthesizer` merges the RP's product/business risks (§12) with
   the TA's technical risks into one table, each row tagged origin (RP / TA) and type, with
   probability, impact, and mitigation, plus explicit external dependencies. No new risks are
-  invented — only the two registers combined.
+  invented — only the two registers combined. *Didactic enrichment:* the Visual Enricher
+  renders this register as a **`quadrantChart`** (probability × impact), so the highest
+  probability×impact risks read at a glance. quadrantChart labels must be **plain text** —
+  no parentheses or special punctuation (they trip GitHub's quadrantChart lexer).
 
 - **`inherited-readiness`** (blocks, 70; derived from `a-scope`, `b-feasibility`) — the
   assumptions still to validate, the Discovery unknowns (resolved/open), and the delegated

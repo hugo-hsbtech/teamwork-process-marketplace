@@ -47,6 +47,7 @@ file_writers:
   prd-report.md: hsb-gap-reporter
   output/humanized.md: hsb-humanizer
   output/translated.md: hsb-translator
+  output/enrichment-plan.md: hsb-enrichment-analyst
   output/enriched.md: hsb-visual-enricher
   final/: hsb-finalizer
   output/manifest.md: hsb-packager
@@ -171,9 +172,14 @@ nodes:
     reads: [humanized]
     decides: [translated]
     persists: output/translated.md
+  hsb-enrichment-analyst:
+    phase: production
+    reads: [prd-document, qa-log, sources]
+    decides: [enrichment-plan]
+    persists: output/enrichment-plan.md
   hsb-visual-enricher:
     phase: production
-    reads: [humanized]
+    reads: [humanized, enrichment-plan]
     decides: [enriched]
     persists: output/enriched.md
   hsb-finalizer:

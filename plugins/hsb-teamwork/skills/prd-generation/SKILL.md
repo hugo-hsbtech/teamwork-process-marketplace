@@ -66,8 +66,9 @@ Before doing anything else, bind yourself to these invariants:
    are: Setup `hsb-source-indexer` ∥ `hsb-template-analyst`; Inherit **fan-out** —
    `hsb-stage-inheritor` `PART: A` ∥ `PART: B`; Synthesize **fan-out** — `hsb-reconciler`
    (scope) ∥ `hsb-synthesizer` × {`consolidated-risk`, `inherited-readiness`, `exec-summary`}
-   ∥ `hsb-section-drafter` (`handoff-gate`); Production `hsb-translator` ∥
-   `hsb-visual-enricher` ∥ `hsb-finalizer`.
+   ∥ `hsb-section-drafter` (`handoff-gate`); Production `hsb-humanizer` ∥
+   `hsb-enrichment-analyst` (the plan runs on the settled `prd.md`), then `hsb-translator`
+   ∥ `hsb-visual-enricher` ∥ `hsb-finalizer`.
 4. **Resolve the path before you draft.** Phase 0 decides escalated vs. no-escalation vs.
    **veto halt** from the works index. On a veto, **stop before creating the `prd/` phase** —
    there is no PRD on an infeasible TA.
@@ -98,8 +99,8 @@ gap is reported as the documented blocker rather than auto-chained.
 - [ ] Phase 2 · **same message (fan-out):** `hsb-stage-inheritor` `PART: A` (RP → Part A) ∥ `PART: B` (TA → Part B, or N/A dispositions); also carry `effort-cost` + `success-metrics`; route → `hsb-ledger-writer` → `hsb-doc-updater`
 - [ ] Phase 3 · **same message (fan-out):** `hsb-reconciler` (`scope-reconciliation` + reconciled `a-scope`) ∥ `hsb-synthesizer` × {`consolidated-risk`, `inherited-readiness`, `exec-summary`} ∥ `hsb-section-drafter` (`handoff-gate`); route all → `hsb-doc-updater`
 - [ ] Phase 4 · loop: `hsb-confidence-auditor` (incremental `SECTIONS`; flags A↔B contradictions) → (on conflict) `hsb-reconciler` → (fallback) `hsb-question-strategist` → PO confirms product half · CTO co-signs technical half · **dual sign-off** → `hsb-ledger-writer` → `hsb-doc-updater` until `handoffReady`
-- [ ] Phase 5 · spawn `hsb-humanizer` (await — it writes the copy the rest read)
-- [ ] Phase 5 · **same message:** `hsb-translator` ∥ `hsb-visual-enricher` ∥ `hsb-finalizer`
+- [ ] Phase 5 · **same message:** `hsb-humanizer` (await — it writes the copy the rest read) ∥ `hsb-enrichment-analyst` (catalogs the quantitative + **didactic epics/stories** visuals from the settled `prd.md`)
+- [ ] Phase 5 · **same message:** `hsb-translator` ∥ `hsb-visual-enricher` (renders the plan — risk `quadrantChart`, didactic epic/story diagrams) ∥ `hsb-finalizer`
 - [ ] Phase 5 · spawn `hsb-packager`; record the front in the index (`produces: prd`, escalation flag, carried verdict, `delivered-to-pm`); report to the PO (+ CTO)
 
 ## First, read these (once per run)
@@ -210,8 +211,9 @@ the scope.
 | 4 | `hsb-decisions-keeper` | record the PRD freeze + dual sign-off as a cross-phase decision (writer; `DEFINITIONS_DIR`; optional) |
 | 4 | `hsb-gap-reporter` | write the live gap map `prd-report.md` (writer; optional) |
 | 5 | `hsb-humanizer` | write `output/humanized.md` (writer) |
+| 5 | `hsb-enrichment-analyst` | catalog the sourced + didactic visual opportunities → `output/enrichment-plan.md` (writer) |
 | 5 | `hsb-translator` | write `output/translated.<lang>.md` (writer) |
-| 5 | `hsb-visual-enricher` | write `output/enriched.md` (writer) |
+| 5 | `hsb-visual-enricher` | render the plan → `output/enriched.md` (writer) |
 | 5 | `hsb-finalizer` | externalize the clean, printable `final/<project>-NNN.md` (writer; needs `PROJECT_SLUG`) |
 | 5 | `hsb-packager` | write `output/manifest.md` (writer) |
 
